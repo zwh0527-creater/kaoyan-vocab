@@ -1,21 +1,33 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import wordsJson from './data/words.json'
+import wordDetailsMeta from './data/word-details-meta.json'
 import corpusMeta from './data/corpus-meta.json'
-import { completeToday, createInitialState, localDateKey, markSeen, rolloverToDate, roundRemaining, toggleUnfamiliar } from './studyEngine'
+import { MasteredBookScreen } from './components/MasteredBookScreen'
+import { StudyScreen } from './components/StudyScreen'
+import {
+  completeGroup,
+  createInitialState,
+  currentGroupIds,
+  dailyGroupCount,
+  localDateKey,
+  restoreMastered,
+  rolloverToDate,
+  roundRemaining
+} from './studyEngine'
 import { downloadBackup, loadStudyState, parseBackup, saveStudyState } from './storage'
-import type { StudyStateV1, WordEntry } from './types'
+import type { StudyStateV2, WordEntry } from './types'
 import { updatePwa } from './pwa'
 
-type Screen = 'home' | 'study' | 'summary' | 'settings'
+type Screen = 'home' | 'study' | 'group-summary' | 'summary' | 'settings' | 'mastered'
 type Toast = { id: number; message: string }
+type GroupSummary = { reviewed: number; mastered: number; groupNumber: number }
 
 const words = wordsJson as WordEntry[]
 const wordMap = new Map(words.map((word) => [word.id, word]))
 const allWordIds = words.map((word) => word.id)
-const validIds = new Set(allWordIds)
 
 function initializeState() {
-  const saved = loadStudyState(corpusMeta.fingerprint, validIds)
+  const saved = loadStudyState(corpusMeta.fingerprint, allWordIds)
   return rolloverToDate(
     saved ?? createInitialState(allWordIds, corpusMeta.fingerprint, localDateKey()),
     localDateKey()
@@ -30,8 +42,9 @@ function isIosSafari() {
 }
 
 function App() {
-  const [state, setState] = useState<StudyStateV1>(initializeState)
+  const [state, setState] = useState<StudyStateV2>(initializeState)
   const [screen, setScreen] = useState<Screen>('home')
+  const [groupSummary, setGroupSummary] = useState<GroupSummary | null>(null)
   const [toasts, setToasts] = useState<Toast[]>([])
   const [updateReady, setUpdateReady] = useState(false)
   const [showInstallGuide, setShowInstallGuide] = useState(
@@ -84,16 +97,23 @@ function App() {
     setShowInstallGuide(false)
   }
 
-  const finishSession = () => {
-    const next = completeToday(state)
+  const finishGroup = () => {
+    const group = currentGroupIds(state)
+    const pending = new Set(state.pendingMasteredIds)
+    const next = completeGroup(state)
     if (next === state) return
+    setGroupSummary({
+      reviewed: group.length,
+      mastered: group.filter((id) => pending.has(id)).length,
+      groupNumber: state.completedGroups + 1
+    })
     setState(next)
-    setScreen('summary')
+    setScreen(next.completedToday ? 'summary' : 'group-summary')
   }
 
   const importBackup = async (file: File) => {
     try {
-      const restored = parseBackup(await file.text(), corpusMeta.fingerprint, validIds)
+      const restored = parseBackup(await file.text(), corpusMeta.fingerprint, allWordIds)
       setState(rolloverToDate(restored, localDateKey()))
       setScreen('home')
       notify('备份已恢复')
@@ -108,6 +128,11 @@ function App() {
     notify('已重新开始第 1 轮')
   }
 
+  const restoreWord = (wordId: number) => {
+    setState((current) => restoreMastered(current, wordId, allWordIds))
+    notify(`${wordMap.get(wordId)?.word ?? '这个词'} 已放回下一轮`)
+  }
+
   return (
     <div className="app-shell">
       {screen === 'home' ? (
@@ -116,6 +141,7 @@ function App() {
           showInstallGuide={showInstallGuide}
           onDismissInstallGuide={dismissInstallGuide}
           onStudy={() => setScreen('study')}
+          onMastered={() => setScreen('mastered')}
           onSettings={() => setScreen('settings')}
           onUpdate={() => void updatePwa()}
           updateReady={updateReady}
@@ -124,13 +150,31 @@ function App() {
       {screen === 'study' ? (
         <StudyScreen
           state={state}
+          wordMap={wordMap}
           onStateChange={setState}
           onBack={() => setScreen('home')}
-          onFinish={finishSession}
+          onCompleteGroup={finishGroup}
           onNotify={notify}
         />
       ) : null}
+      {screen === 'group-summary' && groupSummary ? (
+        <GroupSummaryScreen
+          summary={groupSummary}
+          nextGroup={state.completedGroups + 1}
+          totalGroups={dailyGroupCount(state)}
+          onContinue={() => setScreen('study')}
+          onHome={() => setScreen('home')}
+        />
+      ) : null}
       {screen === 'summary' ? <SummaryScreen state={state} onHome={() => setScreen('home')} /> : null}
+      {screen === 'mastered' ? (
+        <MasteredBookScreen
+          masteredIds={state.masteredIds}
+          words={words}
+          onBack={() => setScreen('home')}
+          onRestore={restoreWord}
+        />
+      ) : null}
       {screen === 'settings' ? (
         <SettingsScreen
           state={state}
@@ -148,18 +192,36 @@ function App() {
 }
 
 interface HomeProps {
-  state: StudyStateV1
+  state: StudyStateV2
   showInstallGuide: boolean
   onDismissInstallGuide: () => void
   onStudy: () => void
+  onMastered: () => void
   onSettings: () => void
   onUpdate: () => void
   updateReady: boolean
 }
 
-function HomeScreen({ state, showInstallGuide, onDismissInstallGuide, onStudy, onSettings, onUpdate, updateReady }: HomeProps) {
-  const progress = state.dailyBatch.length === 0 ? 100 : Math.round((state.seenCount / state.dailyBatch.length) * 100)
-  const buttonLabel = state.mastered ? '全部过完' : state.completedToday ? '今天已完成' : state.seenCount > 0 ? '继续学习' : '开始今天'
+function HomeScreen({
+  state,
+  showInstallGuide,
+  onDismissInstallGuide,
+  onStudy,
+  onMastered,
+  onSettings,
+  onUpdate,
+  updateReady
+}: HomeProps) {
+  const completedGroups = state.completedToday ? state.lastSummary?.groups ?? 0 : state.completedGroups
+  const totalGroups = state.completedToday ? state.lastSummary?.groups ?? 0 : dailyGroupCount(state)
+  const completedWords = state.completedToday ? state.lastSummary?.reviewed ?? 0 : state.completedGroups * 20
+  const totalWords = state.completedToday ? state.lastSummary?.reviewed ?? 0 : state.dailyBatch.length
+  const progress = totalGroups === 0 ? 100 : Math.round((completedGroups / totalGroups) * 100)
+  const buttonLabel = state.allCompleted ? '全部过完' : state.completedToday
+    ? '今天已完成'
+    : state.completedGroups > 0 || state.groupSeenCount > 0
+      ? `继续第 ${state.completedGroups + 1} 组`
+      : '开始第 1 组'
 
   return (
     <main className="home-page page">
@@ -179,16 +241,17 @@ function HomeScreen({ state, showInstallGuide, onDismissInstallGuide, onStudy, o
       <section className="hero-block">
         <p className="round-label">第 {state.round} 轮</p>
         <h1>考研单词</h1>
-        <p className="method-note">快速过，反复筛。只把不熟的词留到下一轮。</p>
+        <p className="method-note">每天十五组，每组二十词。只有真正吃透的词，才离开下一轮。</p>
       </section>
 
       <section className="today-panel" aria-label="今日进度">
         <div className="progress-copy">
-          <span>今日</span>
-          <strong>{state.completedToday ? state.lastSummary?.reviewed ?? 0 : state.seenCount}<small> / {state.completedToday ? state.lastSummary?.reviewed ?? 0 : state.dailyBatch.length}</small></strong>
+          <span>今日进度</span>
+          <strong>{completedGroups}<small> / {totalGroups} 组</small></strong>
         </div>
         <div className="progress-track" aria-hidden="true"><span style={{ width: `${progress}%` }} /></div>
         <div className="progress-meta">
+          <span>{completedWords} / {totalWords} 词</span>
           <span>本轮还剩 {roundRemaining(state)} 词</span>
           <span>下一轮已留下 {state.nextRoundQueue.length} 词</span>
         </div>
@@ -198,160 +261,64 @@ function HomeScreen({ state, showInstallGuide, onDismissInstallGuide, onStudy, o
         className="primary-button home-action"
         type="button"
         onClick={onStudy}
-        disabled={state.completedToday || state.mastered || state.dailyBatch.length === 0}
+        disabled={state.completedToday || state.allCompleted || state.dailyBatch.length === 0}
       >
         {buttonLabel}
+      </button>
+      <button className="book-link" type="button" onClick={onMastered}>
+        <span><strong>熟词本</strong><small>只收你确认已经吃透的词</small></span>
+        <b>{state.masteredIds.length} 词</b>
       </button>
       {updateReady ? <button className="update-link" type="button" onClick={onUpdate}>应用已下载的新版本</button> : null}
     </main>
   )
 }
 
-interface StudyProps {
-  state: StudyStateV1
-  onStateChange: React.Dispatch<React.SetStateAction<StudyStateV1>>
-  onBack: () => void
-  onFinish: () => void
-  onNotify: (message: string) => void
-}
-
-function StudyScreen({ state, onStateChange, onBack, onFinish, onNotify }: StudyProps) {
-  const [showAll, setShowAll] = useState(false)
-  const scrollRef = useRef<HTMLDivElement>(null)
-  const ticking = useRef(false)
-  const unfamiliar = useMemo(() => new Set(state.unfamiliarIds), [state.unfamiliarIds])
-
-  const measureProgress = useCallback(() => {
-    const container = scrollRef.current
-    if (!container) return
-    const checkpoint = container.getBoundingClientRect().top + container.clientHeight * 0.72
-    let latest = -1
-    for (const element of container.querySelectorAll<HTMLElement>('[data-word-index]')) {
-      if (element.getBoundingClientRect().top <= checkpoint) latest = Number(element.dataset.wordIndex)
-      else break
-    }
-    if (latest >= 0) onStateChange((current) => markSeen(current, latest))
-  }, [onStateChange])
-
-  const handleScroll = () => {
-    if (ticking.current) return
-    ticking.current = true
-    requestAnimationFrame(() => {
-      measureProgress()
-      ticking.current = false
-    })
-  }
-
-  useEffect(() => {
-    const target = scrollRef.current?.querySelector<HTMLElement>(`[data-word-index="${state.scrollIndex}"]`)
-    if (state.scrollIndex > 0) target?.scrollIntoView({ block: 'start' })
-    requestAnimationFrame(measureProgress)
-  }, []) // Restore only when the study screen mounts.
-
-  const speak = (word: string) => {
-    if (!('speechSynthesis' in window)) {
-      onNotify('当前系统无法播放发音')
-      return
-    }
-    window.speechSynthesis.cancel()
-    const utterance = new SpeechSynthesisUtterance(word)
-    const voices = window.speechSynthesis.getVoices()
-    utterance.voice = voices.find((voice) => voice.lang.toLowerCase() === 'en-us') ??
-      voices.find((voice) => voice.lang.toLowerCase().startsWith('en')) ?? null
-    utterance.lang = utterance.voice?.lang ?? 'en-US'
-    utterance.rate = 0.82
-    utterance.onerror = () => onNotify('发音暂时不可用')
-    window.speechSynthesis.speak(utterance)
-  }
-
+function GroupSummaryScreen({
+  summary,
+  nextGroup,
+  totalGroups,
+  onContinue,
+  onHome
+}: {
+  summary: GroupSummary
+  nextGroup: number
+  totalGroups: number
+  onContinue: () => void
+  onHome: () => void
+}) {
   return (
-    <main className="study-page">
-      <header className="study-header">
-        <button className="back-button" type="button" onClick={onBack}>返回</button>
-        <div className="study-title">
-          <strong>第 {state.round} 轮</strong>
-          <span>{state.seenCount} / {state.dailyBatch.length}</span>
-        </div>
-        <button className="text-button meaning-toggle" type="button" onClick={() => setShowAll((value) => !value)}>
-          {showAll ? '隐藏释义' : '显示释义'}
-        </button>
-      </header>
-      <div className="study-progress" aria-hidden="true">
-        <span style={{ width: `${state.dailyBatch.length ? (state.seenCount / state.dailyBatch.length) * 100 : 0}%` }} />
-      </div>
-
-      <div className="word-list" ref={scrollRef} onScroll={handleScroll}>
-        <p className="study-hint">想得起来就继续往下滑；想不起来，点一下留下它。</p>
-        {state.dailyBatch.map((id, index) => {
-          const word = wordMap.get(id)
-          if (!word) return null
-          const isUnfamiliar = unfamiliar.has(id)
-          const revealMeaning = showAll || isUnfamiliar
-          return (
-            <article
-              className={`word-row${isUnfamiliar ? ' unfamiliar' : ''}`}
-              data-word-index={index}
-              key={id}
-            >
-              <button
-                className="word-main"
-                type="button"
-                onClick={() => onStateChange((current) => toggleUnfamiliar(current, id))}
-                aria-pressed={isUnfamiliar}
-                aria-label={`${isUnfamiliar ? '取消' : '标记'} ${word.word} 为不熟`}
-              >
-                <span className="word-copy">
-                  <strong>{word.word}</strong>
-                  <small>{word.phonetic}</small>
-                </span>
-                <span className={`meaning${revealMeaning ? ' visible' : ''}`} aria-hidden={!revealMeaning}>
-                  {revealMeaning ? word.meaning : '释义已隐藏'}
-                </span>
-              </button>
-              <button className="speak-button" type="button" onClick={() => speak(word.word)} aria-label={`播放 ${word.word} 的发音`}>
-                发音
-              </button>
-              {isUnfamiliar ? <span className="unfamiliar-mark">不熟</span> : null}
-            </article>
-          )
-        })}
-        <section className="session-end">
-          <p>今天这批词已经到底。</p>
-          <button
-            className="primary-button"
-            type="button"
-            onClick={onFinish}
-            disabled={state.seenCount < state.dailyBatch.length}
-          >
-            完成今天
-          </button>
-        </section>
-      </div>
+    <main className="summary-page page group-summary-page">
+      <p className="round-label">第 {summary.groupNumber} 组完成</p>
+      <h1>{summary.reviewed} 词</h1>
+      <p className="summary-lead">其中 {summary.mastered} 个词已进入熟词本，其余词会在整轮结束后再见。</p>
+      <button className="primary-button" type="button" onClick={onContinue}>继续第 {nextGroup} / {totalGroups} 组</button>
+      <button className="text-button summary-home" type="button" onClick={onHome}>先回首页</button>
     </main>
   )
 }
 
-function SummaryScreen({ state, onHome }: { state: StudyStateV1; onHome: () => void }) {
+function SummaryScreen({ state, onHome }: { state: StudyStateV2; onHome: () => void }) {
   const summary = state.lastSummary
   return (
     <main className="summary-page page">
       <p className="round-label">今天结束</p>
-      <h1>{summary?.reviewed ?? 0} 词</h1>
-      <p className="summary-lead">先把整张词表走完，比困在一个词上更重要。</p>
+      <h1>{summary?.groups ?? 0} 组</h1>
+      <p className="summary-lead">今天完成 {summary?.reviewed ?? 0} 词，标为熟词 {summary?.mastered ?? 0} 个。</p>
       <dl className="summary-list">
-        <div><dt>留下的不熟词</dt><dd>{summary?.unfamiliar ?? 0}</dd></div>
+        <div><dt>今日学习</dt><dd>{summary?.reviewed ?? 0} 词</dd></div>
         <div><dt>本轮还剩</dt><dd>{summary?.roundRemaining ?? 0}</dd></div>
-        <div><dt>当前轮次</dt><dd>第 {state.round} 轮</dd></div>
+        <div><dt>熟词本</dt><dd>{state.masteredIds.length}</dd></div>
       </dl>
-      {summary?.roundCompleted && !state.mastered ? <p className="round-complete">这一轮已经完成。下一轮只过留下的不熟词。</p> : null}
-      {state.mastered ? <p className="round-complete">词表已经全部过完。</p> : null}
+      {summary?.roundCompleted && !state.allCompleted ? <p className="round-complete">这一轮已经完成，下一轮从明天开始。</p> : null}
+      {state.allCompleted ? <p className="round-complete">当前学习池已经全部过完。</p> : null}
       <button className="primary-button" type="button" onClick={onHome}>返回首页</button>
     </main>
   )
 }
 
 interface SettingsProps {
-  state: StudyStateV1
+  state: StudyStateV2
   onBack: () => void
   onExport: () => void
   onImport: (file: File) => Promise<void>
@@ -372,10 +339,10 @@ function SettingsScreen({ state, onBack, onExport, onImport, onReset }: Settings
       <section className="settings-group">
         <h2>学习进度</h2>
         <button className="settings-row" type="button" onClick={onExport}>
-          <span><strong>导出备份</strong><small>保存当前第 {state.round} 轮和学习位置</small></span><b>导出</b>
+          <span><strong>导出备份</strong><small>保存当前轮次、小组位置和熟词本</small></span><b>导出</b>
         </button>
         <button className="settings-row" type="button" onClick={() => inputRef.current?.click()}>
-          <span><strong>导入备份</strong><small>只接受当前词表生成的备份</small></span><b>选择文件</b>
+          <span><strong>导入备份</strong><small>兼容旧版进度，只接受当前词表</small></span><b>选择文件</b>
         </button>
         <input
           ref={inputRef}
@@ -396,7 +363,7 @@ function SettingsScreen({ state, onBack, onExport, onImport, onReset }: Settings
         <h2>词表</h2>
         <div className="source-note">
           <strong>{corpusMeta.wordCount} 条乱序词汇</strong>
-          <p>整理自《考研大纲词汇乱序版》117 页。App 不包含原 PDF，只保留英文、音标、释义和来源页码。</p>
+          <p>基础词条整理自《考研大纲词汇乱序版》。另收录 {wordDetailsMeta.collocationCount} 条考研常见搭配；App 不包含原 PDF。</p>
         </div>
       </section>
 
@@ -411,14 +378,14 @@ function SettingsScreen({ state, onBack, onExport, onImport, onReset }: Settings
             {resetStep === 1 ? (
               <>
                 <h2 id="reset-title">先留一份备份</h2>
-                <p>清空后无法撤销。建议先导出备份，再继续下一步。</p>
+                <p>清空后无法撤销，熟词本也会清空。建议先导出备份。</p>
                 <button className="secondary-button" type="button" onClick={onExport}>导出备份</button>
                 <button className="danger-button" type="button" onClick={() => setResetStep(2)}>继续重置</button>
               </>
             ) : (
               <>
                 <h2 id="reset-title">确定从第 1 轮重来？</h2>
-                <p>当前轮次、标记和阅读位置都会被清除。</p>
+                <p>当前轮次、小组位置和熟词本都会被清除。</p>
                 <button className="danger-button solid" type="button" onClick={onReset}>确认清空</button>
               </>
             )}

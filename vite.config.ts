@@ -14,10 +14,10 @@ export default defineConfig({
       manifest: {
         name: '考研单词',
         short_name: '考研单词',
-        description: '每天快速过 300 个考研词汇，只把不熟的词留到下一轮。',
+        description: '每天十五组考研词汇，只让明确标熟的词退出下一轮。',
         lang: 'zh-CN',
-        theme_color: '#f3efe5',
-        background_color: '#f3efe5',
+        theme_color: '#f2ede3',
+        background_color: '#f2ede3',
         display: 'standalone',
         orientation: 'portrait-primary',
         start_url: base,
