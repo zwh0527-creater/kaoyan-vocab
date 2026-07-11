@@ -37,3 +37,48 @@ export interface BackupV1 {
   corpusFingerprint: string
   state: StudyStateV1
 }
+
+export interface StudySummaryV2 {
+  reviewed: number
+  groups: number
+  mastered: number
+  roundRemaining: number
+  roundCompleted: boolean
+}
+
+export interface StudyStateV2 {
+  schemaVersion: 2
+  corpusFingerprint: string
+  round: number
+  currentQueue: number[]
+  nextRoundQueue: number[]
+  sessionDate: string
+  dailyBatch: number[]
+  completedGroups: number
+  groupSeenCount: number
+  groupScrollIndex: number
+  pendingMasteredIds: number[]
+  masteredIds: number[]
+  completedToday: boolean
+  allCompleted: boolean
+  lastSummary: StudySummaryV2 | null
+}
+
+export interface BackupV2 {
+  format: 'kaoyan-vocab-backup'
+  version: 2
+  exportedAt: string
+  corpusFingerprint: string
+  state: StudyStateV2
+}
+
+export interface CollocationEntry {
+  phrase: string
+  meaning: string
+  relevance: 'english-1' | 'postgraduate' | 'general'
+}
+
+export interface WordDetailEntry {
+  wordId: number
+  collocations: CollocationEntry[]
+}
