@@ -116,6 +116,16 @@ describe('study engine v2', () => {
     expect(after.allCompleted).toBe(false)
   })
 
+  it('keeps the next-round queue in corpus order after restored and newly completed words meet', () => {
+    let state = createInitialState([10, 20], 'fingerprint', '2026-07-12')
+    state = {
+      ...state,
+      nextRoundQueue: [0, 30]
+    }
+    state = finishCurrentGroup(state)
+    expect(state.nextRoundQueue).toEqual([0, 10, 20, 30])
+  })
+
   it('migrates V1 without inventing mastered words or losing vocabulary', () => {
     const v1: StudyStateV1 = {
       schemaVersion: 1,

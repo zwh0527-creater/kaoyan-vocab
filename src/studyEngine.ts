@@ -14,6 +14,10 @@ function uniqueInOrder(ids: number[]) {
   return [...new Set(ids)]
 }
 
+function uniqueInIdOrder(ids: number[]) {
+  return [...new Set(ids)].sort((left, right) => left - right)
+}
+
 function inCorpusOrder(ids: number[], allWordIds: number[]) {
   const included = new Set(ids)
   return allWordIds.filter((id) => included.has(id))
@@ -88,7 +92,7 @@ export function completeGroup(state: StudyStateV2): StudyStateV2 {
   const newlyMastered = group.filter((id) => pending.has(id))
   const needsNextRound = group.filter((id) => !pending.has(id))
   const masteredIds = uniqueInOrder([...state.masteredIds, ...newlyMastered])
-  const nextRoundQueue = uniqueInOrder([...state.nextRoundQueue, ...needsNextRound])
+  const nextRoundQueue = uniqueInIdOrder([...state.nextRoundQueue, ...needsNextRound])
   const completedGroups = state.completedGroups + 1
   const groupCount = dailyGroupCount(state)
 
