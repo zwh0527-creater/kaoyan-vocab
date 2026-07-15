@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import type { StudyStateV1, StudyStateV2 } from './types'
+import type { StudyStateV1, StudyStateV2, StudyStateV3 } from './types'
 import {
   completeGroup,
   createInitialState,
@@ -7,19 +7,67 @@ import {
   dailyGroupCount,
   markGroupSeen,
   migrateV1ToV2,
+  migrateV2ToV3,
+  nextStudyDayBoundary,
   restoreMastered,
   rolloverToDate,
   roundRemaining,
+  studyDateKey,
   togglePendingMastered
 } from './studyEngine'
 
 const ids = Array.from({ length: 5493 }, (_, index) => index)
 
-function finishCurrentGroup(state: StudyStateV2) {
+function finishCurrentGroup(state: StudyStateV3) {
   return completeGroup(markGroupSeen(state, currentGroupIds(state).length - 1))
 }
 
-describe('study engine v2', () => {
+function finishDay(state: StudyStateV3) {
+  while (!state.completedToday) state = finishCurrentGroup(state)
+  return state
+}
+
+function toLegacyV2(state: StudyStateV3): StudyStateV2 {
+  const { studyDayResetHour: _studyDayResetHour, ...legacy } = state
+  return { ...legacy, schemaVersion: 2 }
+}
+
+describe('noon study-day boundary', () => {
+  it('keeps midnight through 11:59 in the previous study day', () => {
+    expect(studyDateKey(new Date(2026, 6, 15, 0, 30))).toBe('2026-07-14')
+    expect(studyDateKey(new Date(2026, 6, 15, 11, 59, 59))).toBe('2026-07-14')
+    expect(studyDateKey(new Date(2026, 6, 15, 12, 0))).toBe('2026-07-15')
+  })
+
+  it('calculates the next live refresh at local noon', () => {
+    expect(nextStudyDayBoundary(new Date(2026, 6, 15, 11, 59))).toEqual(new Date(2026, 6, 15, 12, 0))
+    expect(nextStudyDayBoundary(new Date(2026, 6, 15, 12, 0))).toEqual(new Date(2026, 6, 16, 12, 0))
+  })
+
+  it('keeps a legacy early-morning completion closed until noon, then opens a new batch', () => {
+    const completed = finishDay(createInitialState(ids, 'fingerprint', '2026-07-15'))
+    const beforeNoon = migrateV2ToV3(toLegacyV2(completed), new Date(2026, 6, 15, 8, 0))
+
+    expect(beforeNoon.sessionDate).toBe('2026-07-14')
+    expect(beforeNoon.completedToday).toBe(true)
+
+    const atNoon = rolloverToDate(beforeNoon, studyDateKey(new Date(2026, 6, 15, 12, 0)))
+    expect(atNoon.sessionDate).toBe('2026-07-15')
+    expect(atNoon.completedToday).toBe(false)
+    expect(atNoon.dailyBatch).toEqual(ids.slice(300, 600))
+  })
+
+  it('opens the new noon-based batch immediately when an old completed state upgrades after noon', () => {
+    const completed = finishDay(createInitialState(ids, 'fingerprint', '2026-07-15'))
+    const migrated = migrateV2ToV3(toLegacyV2(completed), new Date(2026, 6, 15, 17, 0))
+
+    expect(migrated.sessionDate).toBe('2026-07-15')
+    expect(migrated.completedToday).toBe(false)
+    expect(migrated.dailyBatch).toEqual(ids.slice(300, 600))
+  })
+})
+
+describe('study engine v3', () => {
   it('creates fifteen groups of twenty for the first day', () => {
     const state = createInitialState(ids, 'fingerprint', '2026-07-12')
     expect(state.dailyBatch).toHaveLength(300)
@@ -99,7 +147,7 @@ describe('study engine v2', () => {
 
   it('restores exactly one mastered word without changing the active batch', () => {
     const initial = createInitialState(ids, 'fingerprint', '2026-07-12')
-    const before: StudyStateV2 = {
+    const before: StudyStateV3 = {
       ...initial,
       masteredIds: [1, 2, 3],
       currentQueue: initial.currentQueue.filter((id) => ![1, 2, 3].includes(id)),

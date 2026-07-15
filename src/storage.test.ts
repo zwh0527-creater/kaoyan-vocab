@@ -5,8 +5,8 @@ import type { BackupV1, StudyStateV1 } from './types'
 
 const ids = Array.from({ length: 60 }, (_, index) => index)
 
-describe('v2 backup validation', () => {
-  it('round-trips a valid V2 backup', () => {
+describe('v3 backup validation', () => {
+  it('round-trips a valid V3 backup', () => {
     const state = createInitialState(ids, 'fingerprint', '2026-07-12')
     const parsed = parseBackup(JSON.stringify(createBackup(state)), 'fingerprint', ids)
     expect(parsed).toEqual(state)
@@ -51,9 +51,15 @@ describe('v2 backup validation', () => {
       state: v1State
     }
 
-    const migrated = parseBackup(JSON.stringify(backup), 'fingerprint', ids)
+    const migrated = parseBackup(
+      JSON.stringify(backup),
+      'fingerprint',
+      ids,
+      new Date(2026, 6, 12, 8, 0)
+    )
 
-    expect(migrated.schemaVersion).toBe(2)
+    expect(migrated.schemaVersion).toBe(3)
+    expect(migrated.studyDayResetHour).toBe(12)
     expect(migrated.masteredIds).toEqual([])
     expect(migrated.nextRoundQueue).toEqual(ids.slice(0, 20))
     expect(new Set([

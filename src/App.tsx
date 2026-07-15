@@ -9,13 +9,14 @@ import {
   createInitialState,
   currentGroupIds,
   dailyGroupCount,
-  localDateKey,
+  nextStudyDayBoundary,
   restoreMastered,
   rolloverToDate,
-  roundRemaining
+  roundRemaining,
+  studyDateKey
 } from './studyEngine'
 import { downloadBackup, loadStudyState, parseBackup, saveStudyState } from './storage'
-import type { StudyStateV2, WordEntry } from './types'
+import type { StudyStateV3, WordEntry } from './types'
 import { updatePwa } from './pwa'
 
 type Screen = 'home' | 'study' | 'group-summary' | 'summary' | 'settings' | 'mastered'
@@ -27,10 +28,11 @@ const wordMap = new Map(words.map((word) => [word.id, word]))
 const allWordIds = words.map((word) => word.id)
 
 function initializeState() {
-  const saved = loadStudyState(corpusMeta.fingerprint, allWordIds)
+  const now = new Date()
+  const saved = loadStudyState(corpusMeta.fingerprint, allWordIds, now)
   return rolloverToDate(
-    saved ?? createInitialState(allWordIds, corpusMeta.fingerprint, localDateKey()),
-    localDateKey()
+    saved ?? createInitialState(allWordIds, corpusMeta.fingerprint, studyDateKey(now)),
+    studyDateKey(now)
   )
 }
 
@@ -42,7 +44,7 @@ function isIosSafari() {
 }
 
 function App() {
-  const [state, setState] = useState<StudyStateV2>(initializeState)
+  const [state, setState] = useState<StudyStateV3>(initializeState)
   const [screen, setScreen] = useState<Screen>('home')
   const [groupSummary, setGroupSummary] = useState<GroupSummary | null>(null)
   const [toasts, setToasts] = useState<Toast[]>([])
@@ -67,12 +69,26 @@ function App() {
   }, [notify, state])
 
   useEffect(() => {
-    const handleResume = () => {
-      if (document.visibilityState === 'visible') setState((current) => rolloverToDate(current, localDateKey()))
+    let boundaryTimer = 0
+    const scheduleBoundary = () => {
+      window.clearTimeout(boundaryTimer)
+      const now = new Date()
+      boundaryTimer = window.setTimeout(() => {
+        setState((current) => rolloverToDate(current, studyDateKey()))
+        scheduleBoundary()
+      }, nextStudyDayBoundary(now).getTime() - now.getTime())
     }
+    const handleResume = () => {
+      if (document.visibilityState === 'visible') {
+        setState((current) => rolloverToDate(current, studyDateKey()))
+        scheduleBoundary()
+      }
+    }
+    scheduleBoundary()
     document.addEventListener('visibilitychange', handleResume)
     window.addEventListener('pageshow', handleResume)
     return () => {
+      window.clearTimeout(boundaryTimer)
       document.removeEventListener('visibilitychange', handleResume)
       window.removeEventListener('pageshow', handleResume)
     }
@@ -113,8 +129,9 @@ function App() {
 
   const importBackup = async (file: File) => {
     try {
-      const restored = parseBackup(await file.text(), corpusMeta.fingerprint, allWordIds)
-      setState(rolloverToDate(restored, localDateKey()))
+      const now = new Date()
+      const restored = parseBackup(await file.text(), corpusMeta.fingerprint, allWordIds, now)
+      setState(rolloverToDate(restored, studyDateKey(now)))
       setScreen('home')
       notify('备份已恢复')
     } catch (error) {
@@ -123,7 +140,7 @@ function App() {
   }
 
   const resetProgress = () => {
-    setState(createInitialState(allWordIds, corpusMeta.fingerprint, localDateKey()))
+    setState(createInitialState(allWordIds, corpusMeta.fingerprint, studyDateKey()))
     setScreen('home')
     notify('已重新开始第 1 轮')
   }
@@ -192,7 +209,7 @@ function App() {
 }
 
 interface HomeProps {
-  state: StudyStateV2
+  state: StudyStateV3
   showInstallGuide: boolean
   onDismissInstallGuide: () => void
   onStudy: () => void
@@ -241,7 +258,7 @@ function HomeScreen({
       <section className="hero-block">
         <p className="round-label">第 {state.round} 轮</p>
         <h1>考研单词</h1>
-        <p className="method-note">每天十五组，每组二十词。只有真正吃透的词，才离开下一轮。</p>
+        <p className="method-note">每天十五组，每组二十词。每日中午 12:00 刷新。</p>
       </section>
 
       <section className="today-panel" aria-label="今日进度">
@@ -298,7 +315,7 @@ function GroupSummaryScreen({
   )
 }
 
-function SummaryScreen({ state, onHome }: { state: StudyStateV2; onHome: () => void }) {
+function SummaryScreen({ state, onHome }: { state: StudyStateV3; onHome: () => void }) {
   const summary = state.lastSummary
   return (
     <main className="summary-page page">
@@ -310,7 +327,7 @@ function SummaryScreen({ state, onHome }: { state: StudyStateV2; onHome: () => v
         <div><dt>本轮还剩</dt><dd>{summary?.roundRemaining ?? 0}</dd></div>
         <div><dt>熟词本</dt><dd>{state.masteredIds.length}</dd></div>
       </dl>
-      {summary?.roundCompleted && !state.allCompleted ? <p className="round-complete">这一轮已经完成，下一轮从明天开始。</p> : null}
+      {summary?.roundCompleted && !state.allCompleted ? <p className="round-complete">这一轮已经完成，下一轮从下次中午 12 点刷新后开始。</p> : null}
       {state.allCompleted ? <p className="round-complete">当前学习池已经全部过完。</p> : null}
       <button className="primary-button" type="button" onClick={onHome}>返回首页</button>
     </main>
@@ -318,7 +335,7 @@ function SummaryScreen({ state, onHome }: { state: StudyStateV2; onHome: () => v
 }
 
 interface SettingsProps {
-  state: StudyStateV2
+  state: StudyStateV3
   onBack: () => void
   onExport: () => void
   onImport: (file: File) => Promise<void>

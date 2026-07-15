@@ -1,13 +1,13 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { Dispatch, SetStateAction } from 'react'
 import { currentGroupIds, dailyGroupCount, markGroupSeen, togglePendingMastered } from '../studyEngine'
-import type { StudyStateV2, WordDetailEntry, WordEntry } from '../types'
+import type { StudyStateV3, WordDetailEntry, WordEntry } from '../types'
 import { WordDetailSheet } from './WordDetailSheet'
 
 interface StudyScreenProps {
-  state: StudyStateV2
+  state: StudyStateV3
   wordMap: Map<number, WordEntry>
-  onStateChange: Dispatch<SetStateAction<StudyStateV2>>
+  onStateChange: Dispatch<SetStateAction<StudyStateV3>>
   onBack: () => void
   onCompleteGroup: () => void
   onNotify: (message: string) => void

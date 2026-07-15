@@ -64,12 +64,25 @@ export interface StudyStateV2 {
   lastSummary: StudySummaryV2 | null
 }
 
+export interface StudyStateV3 extends Omit<StudyStateV2, 'schemaVersion'> {
+  schemaVersion: 3
+  studyDayResetHour: 12
+}
+
 export interface BackupV2 {
   format: 'kaoyan-vocab-backup'
   version: 2
   exportedAt: string
   corpusFingerprint: string
   state: StudyStateV2
+}
+
+export interface BackupV3 {
+  format: 'kaoyan-vocab-backup'
+  version: 3
+  exportedAt: string
+  corpusFingerprint: string
+  state: StudyStateV3
 }
 
 export interface CollocationEntry {

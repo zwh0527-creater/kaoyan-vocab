@@ -1,7 +1,8 @@
-import type { StudyStateV1, StudyStateV2, StudySummaryV2 } from './types'
+import type { StudyStateV1, StudyStateV2, StudyStateV3, StudySummaryV2 } from './types'
 
 export const DAILY_LIMIT = 300
 export const GROUP_SIZE = 20
+export const STUDY_DAY_RESET_HOUR = 12
 
 function takeFromQueue(queue: number[], count: number) {
   return {
@@ -23,21 +24,39 @@ function inCorpusOrder(ids: number[], allWordIds: number[]) {
   return allWordIds.filter((id) => included.has(id))
 }
 
-export function localDateKey(date = new Date()) {
+function formatLocalDate(date: Date) {
   const year = date.getFullYear()
   const month = String(date.getMonth() + 1).padStart(2, '0')
   const day = String(date.getDate()).padStart(2, '0')
   return `${year}-${month}-${day}`
 }
 
+export function studyDateKey(date = new Date()) {
+  const studyDate = new Date(date.getFullYear(), date.getMonth(), date.getDate())
+  if (date.getHours() < STUDY_DAY_RESET_HOUR) studyDate.setDate(studyDate.getDate() - 1)
+  return formatLocalDate(studyDate)
+}
+
+export function nextStudyDayBoundary(date = new Date()) {
+  const boundary = new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate(),
+    STUDY_DAY_RESET_HOUR
+  )
+  if (date.getTime() >= boundary.getTime()) boundary.setDate(boundary.getDate() + 1)
+  return boundary
+}
+
 export function createInitialState(
   allWordIds: number[],
   corpusFingerprint: string,
-  sessionDate = localDateKey()
-): StudyStateV2 {
+  sessionDate = studyDateKey()
+): StudyStateV3 {
   const { taken, remaining } = takeFromQueue(allWordIds, DAILY_LIMIT)
   return {
-    schemaVersion: 2,
+    schemaVersion: 3,
+    studyDayResetHour: STUDY_DAY_RESET_HOUR,
     corpusFingerprint,
     round: 1,
     currentQueue: remaining,
@@ -55,16 +74,16 @@ export function createInitialState(
   }
 }
 
-export function dailyGroupCount(state: StudyStateV2) {
+export function dailyGroupCount(state: StudyStateV3) {
   return Math.ceil(state.dailyBatch.length / GROUP_SIZE)
 }
 
-export function currentGroupIds(state: StudyStateV2) {
+export function currentGroupIds(state: StudyStateV3) {
   const start = state.completedGroups * GROUP_SIZE
   return state.dailyBatch.slice(start, start + GROUP_SIZE)
 }
 
-export function markGroupSeen(state: StudyStateV2, index: number): StudyStateV2 {
+export function markGroupSeen(state: StudyStateV3, index: number): StudyStateV3 {
   const group = currentGroupIds(state)
   if (state.completedToday || index < 0 || index >= group.length) return state
   const groupSeenCount = Math.max(state.groupSeenCount, index + 1)
@@ -72,7 +91,7 @@ export function markGroupSeen(state: StudyStateV2, index: number): StudyStateV2 
   return { ...state, groupSeenCount, groupScrollIndex: index }
 }
 
-export function togglePendingMastered(state: StudyStateV2, wordId: number): StudyStateV2 {
+export function togglePendingMastered(state: StudyStateV3, wordId: number): StudyStateV3 {
   const group = currentGroupIds(state)
   if (state.completedToday || !group.includes(wordId)) return state
   const pending = new Set(state.pendingMasteredIds)
@@ -84,7 +103,7 @@ export function togglePendingMastered(state: StudyStateV2, wordId: number): Stud
   }
 }
 
-export function completeGroup(state: StudyStateV2): StudyStateV2 {
+export function completeGroup(state: StudyStateV3): StudyStateV3 {
   const group = currentGroupIds(state)
   if (state.completedToday || group.length === 0 || state.groupSeenCount < group.length) return state
 
@@ -133,7 +152,7 @@ export function completeGroup(state: StudyStateV2): StudyStateV2 {
   }
 }
 
-function beginNextRoundIfNeeded(state: StudyStateV2): StudyStateV2 {
+function beginNextRoundIfNeeded(state: StudyStateV3): StudyStateV3 {
   if (state.currentQueue.length > 0) return state
   if (state.nextRoundQueue.length === 0) return { ...state, allCompleted: true }
   return {
@@ -145,7 +164,7 @@ function beginNextRoundIfNeeded(state: StudyStateV2): StudyStateV2 {
   }
 }
 
-export function rolloverToDate(state: StudyStateV2, newDate = localDateKey()): StudyStateV2 {
+export function rolloverToDate(state: StudyStateV3, newDate = studyDateKey()): StudyStateV3 {
   if (state.sessionDate === newDate) return state
 
   if (state.completedToday) {
@@ -193,10 +212,10 @@ export function rolloverToDate(state: StudyStateV2, newDate = localDateKey()): S
 }
 
 export function restoreMastered(
-  state: StudyStateV2,
+  state: StudyStateV3,
   wordId: number,
   allWordIds: number[]
-): StudyStateV2 {
+): StudyStateV3 {
   if (!state.masteredIds.includes(wordId)) return state
   return {
     ...state,
@@ -252,7 +271,37 @@ export function migrateV1ToV2(
   }
 }
 
-export function roundRemaining(state: StudyStateV2) {
+export function migrateV2ToV3(
+  state: StudyStateV2,
+  now = new Date()
+): StudyStateV3 {
+  const converted: StudyStateV3 = {
+    ...state,
+    schemaVersion: 3,
+    studyDayResetHour: STUDY_DAY_RESET_HOUR
+  }
+  const targetDate = studyDateKey(now)
+  const calendarDate = formatLocalDate(now)
+
+  // Before noon, a legacy task created after midnight still belongs to the
+  // previous study day. Relabel it without settling the task early.
+  if (now.getHours() < STUDY_DAY_RESET_HOUR && state.sessionDate === calendarDate) {
+    return { ...converted, sessionDate: targetDate }
+  }
+
+  if (now.getHours() < STUDY_DAY_RESET_HOUR && state.sessionDate === targetDate) {
+    return converted
+  }
+
+  // At or after noon, settle the legacy midnight-based task once so the first
+  // noon-based study day can begin immediately.
+  const migrationSource = state.sessionDate === targetDate
+    ? { ...converted, sessionDate: formatLocalDate(new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1)) }
+    : converted
+  return rolloverToDate(migrationSource, targetDate)
+}
+
+export function roundRemaining(state: StudyStateV3) {
   const completedWords = state.completedGroups * GROUP_SIZE
   return state.currentQueue.length + Math.max(0, state.dailyBatch.length - completedWords)
 }
