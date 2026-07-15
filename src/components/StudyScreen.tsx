@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { Dispatch, SetStateAction } from 'react'
 import { currentGroupIds, dailyGroupCount, markGroupSeen, togglePendingMastered } from '../studyEngine'
 import type { StudyStateV3, WordDetailEntry, WordEntry } from '../types'
+import { loadWordDetails } from '../wordDetails'
 import { WordDetailSheet } from './WordDetailSheet'
 
 interface StudyScreenProps {
@@ -11,16 +12,6 @@ interface StudyScreenProps {
   onBack: () => void
   onCompleteGroup: () => void
   onNotify: (message: string) => void
-}
-
-let detailsPromise: Promise<Map<number, WordDetailEntry>> | null = null
-
-function loadDetails() {
-  detailsPromise ??= import('../data/word-details.json').then((module) => {
-    const details = module.default as WordDetailEntry[]
-    return new Map(details.map((detail) => [detail.wordId, detail]))
-  })
-  return detailsPromise
 }
 
 export function StudyScreen({
@@ -36,7 +27,7 @@ export function StudyScreen({
   const [revealedIds, setRevealedIds] = useState<Set<number>>(() => new Set())
   const [detailWordId, setDetailWordId] = useState<number | null>(null)
   const [detailMap, setDetailMap] = useState<Map<number, WordDetailEntry> | null>(null)
-  const [detailsLoading, setDetailsLoading] = useState(false)
+  const [detailsLoading, setDetailsLoading] = useState(true)
   const scrollRef = useRef<HTMLDivElement>(null)
   const ticking = useRef(false)
   const groupKey = `${state.sessionDate}-${state.round}-${state.completedGroups}`
@@ -52,6 +43,21 @@ export function StudyScreen({
     }
     if (latest >= 0) onStateChange((current) => markGroupSeen(current, latest))
   }, [onStateChange])
+
+  useEffect(() => {
+    let active = true
+    void loadWordDetails()
+      .then((details) => {
+        if (active) setDetailMap(details)
+      })
+      .catch(() => onNotify('离线词条数据暂时无法载入'))
+      .finally(() => {
+        if (active) setDetailsLoading(false)
+      })
+    return () => {
+      active = false
+    }
+  }, [onNotify])
 
   useEffect(() => {
     setRevealedIds(new Set())
@@ -96,12 +102,6 @@ export function StudyScreen({
 
   const openDetails = (wordId: number) => {
     setDetailWordId(wordId)
-    if (detailMap || detailsLoading) return
-    setDetailsLoading(true)
-    void loadDetails()
-      .then(setDetailMap)
-      .catch(() => onNotify('词组数据暂时无法载入'))
-      .finally(() => setDetailsLoading(false))
   }
 
   const selectedDetailWord = detailWordId === null ? undefined : wordMap.get(detailWordId)
@@ -151,7 +151,7 @@ export function StudyScreen({
                   <small>{word.phonetic}</small>
                 </span>
                 <span className={`meaning${isMeaningVisible ? ' visible' : ''}`}>
-                  {isMeaningVisible ? word.meaning : '点击查看中文释义'}
+                  {isMeaningVisible ? (detailMap?.get(id)?.coreMeaning ?? word.meaning) : '点击查看中文释义'}
                 </span>
               </button>
               <div className="word-actions">
@@ -188,6 +188,7 @@ export function StudyScreen({
           word={selectedDetailWord}
           detail={detailMap?.get(selectedDetailWord.id)}
           loading={detailsLoading}
+          status={pendingMastered.has(selectedDetailWord.id) ? 'pending' : 'learning'}
           onClose={() => setDetailWordId(null)}
         />
       ) : null}

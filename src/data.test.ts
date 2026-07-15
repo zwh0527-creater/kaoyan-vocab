@@ -31,34 +31,73 @@ describe('vocabulary corpus', () => {
 })
 
 describe('optional word details', () => {
-  it('keeps valid collocations separate from the base corpus', () => {
+  it('keeps sourced meanings, red-book collocations, and exam evidence separate from the base corpus', () => {
     const details = wordDetails as WordDetailEntry[]
     const validIds = new Set(words.map((word) => word.id))
     const seenIds = new Set<number>()
     let previousId = -1
 
     expect(wordDetailsMeta.fingerprint).toMatch(/^[a-f0-9]{64}$/)
+    expect(wordDetailsMeta.version).toBe(2)
     expect(wordDetailsMeta.entryCount).toBe(details.length)
     expect(wordDetailsMeta.corpusFingerprint).toBe(meta.fingerprint)
+    expect(wordDetailsMeta.coreMeaningCount).toBe(details.filter((detail) => detail.coreMeaning).length)
+    expect(wordDetailsMeta.collocationCount).toBe(details.reduce((sum, detail) => sum + detail.collocations.length, 0))
+    expect(wordDetailsMeta.examEntryCount).toBe(details.filter((detail) => detail.exam).length)
+    expect(wordDetailsMeta.examPhraseCount).toBe(details.reduce((sum, detail) => sum + (detail.exam?.phrases.length ?? 0), 0))
+    expect(wordDetailsMeta.examYears).toEqual([2010, 2025])
 
     for (const detail of details) {
       expect(validIds.has(detail.wordId)).toBe(true)
       expect(seenIds.has(detail.wordId)).toBe(false)
       expect(detail.wordId).toBeGreaterThan(previousId)
-      expect(detail.collocations.length).toBeGreaterThan(0)
+      expect(Boolean(detail.coreMeaning || detail.exam || detail.collocations.length)).toBe(true)
       expect(detail.collocations.length).toBeLessThanOrEqual(3)
+
+      if (detail.coreMeaning) {
+        expect(detail.coreMeaning).toMatch(/[\u3400-\u9fff]/)
+        expect(detail.coreMeaning.length).toBeLessThanOrEqual(600)
+      }
 
       const phrases = new Set<string>()
       for (const collocation of detail.collocations) {
         expect(collocation.phrase.trim()).not.toBe('')
         expect(collocation.meaning.trim()).not.toBe('')
         expect(['english-1', 'postgraduate', 'general']).toContain(collocation.relevance)
+        expect(collocation.source).toBe('redbook')
+        expect(collocation.sourcePage).toBeGreaterThanOrEqual(1)
+        expect(collocation.sourcePage).toBeLessThanOrEqual(442)
         expect(phrases.has(collocation.phrase.toLowerCase())).toBe(false)
         phrases.add(collocation.phrase.toLowerCase())
+      }
+
+      if (detail.exam) {
+        expect(detail.exam.count).toBeGreaterThan(0)
+        expect(detail.exam.years.length).toBeGreaterThan(0)
+        expect(detail.exam.years.every((year) => year >= 2010 && year <= 2025)).toBe(true)
+        expect(detail.exam.phrases.length).toBeLessThanOrEqual(2)
+        for (const phrase of detail.exam.phrases) {
+          expect(phrase.phrase).toMatch(/[a-z]/i)
+          expect(phrase.count).toBeGreaterThan(0)
+          expect(phrase.years.length).toBeGreaterThan(0)
+          expect(phrase.years.every((year) => year >= 2010 && year <= 2025)).toBe(true)
+        }
       }
 
       seenIds.add(detail.wordId)
       previousId = detail.wordId
     }
+  })
+
+  it('prioritizes improved meanings and keeps verifiable English I samples', () => {
+    const details = wordDetails as WordDetailEntry[]
+    const due = details.find((detail) => detail.wordId === 0)
+    const obtain = details.find((detail) => detail.wordId === words.find((word) => word.word === 'obtain')?.id)
+
+    expect(due?.coreMeaning).toContain('应支付的')
+    expect(due?.collocations.some((item) => item.phrase === 'due to')).toBe(true)
+    expect(due?.exam?.phrases.some((item) => item.phrase === 'due to' && item.years.includes(2016))).toBe(true)
+    expect(obtain?.coreMeaning).toContain('获得')
+    expect(obtain?.exam?.phrases.some((item) => item.phrase === 'obtain a warrant')).toBe(true)
   })
 })

@@ -69,6 +69,12 @@ input:focus-visible {
   justify-content: space-between;
 }
 
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
 .brand-mark {
   display: grid;
   width: 44px;
@@ -273,6 +279,169 @@ input:focus-visible {
   font-family: Georgia, serif;
   font-size: 16px;
   font-weight: 500;
+}
+
+.search-intro {
+  margin-top: 56px;
+  padding-bottom: 30px;
+  border-bottom: 1px solid var(--ink);
+}
+
+.search-intro h2 {
+  max-width: 32rem;
+  margin: 0;
+  font-family: "Songti SC", "STSong", serif;
+  font-size: clamp(30px, 8vw, 42px);
+  font-weight: 600;
+  line-height: 1.28;
+  letter-spacing: -0.035em;
+}
+
+.search-intro p {
+  max-width: 30rem;
+  margin: 16px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.75;
+}
+
+.search-box {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  margin-top: 26px;
+  border-bottom: 1px solid var(--ink);
+}
+
+.search-box input {
+  width: 100%;
+  min-height: 58px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--ink);
+  font-family: Georgia, "Songti SC", serif;
+  font-size: 22px;
+  outline: none;
+  appearance: none;
+}
+
+.search-box input::placeholder {
+  color: var(--line-strong);
+}
+
+.search-box input::-webkit-search-cancel-button {
+  display: none;
+}
+
+.search-box button {
+  min-width: 52px;
+  min-height: 44px;
+  padding: 0 0 0 12px;
+  border: 0;
+  background: transparent;
+  color: var(--accent);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.search-results {
+  padding-bottom: calc(36px + env(safe-area-inset-bottom));
+}
+
+.search-count,
+.search-message {
+  margin: 18px 0 8px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.search-list {
+  border-top: 1px solid var(--line);
+}
+
+.search-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px 18px;
+  width: 100%;
+  min-height: 128px;
+  padding: 22px 0;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 128px;
+}
+
+.search-word {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+}
+
+.search-word strong {
+  overflow-wrap: anywhere;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 28px;
+  font-weight: 500;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+}
+
+.search-word small {
+  margin-top: 7px;
+  color: var(--muted);
+  font-family: Georgia, serif;
+  font-size: 12px;
+}
+
+.search-status {
+  align-self: start;
+  padding-top: 4px;
+  color: var(--muted);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.search-status.mastered,
+.search-status.pending {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.search-meaning {
+  grid-column: 1 / -1;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.search-empty {
+  margin-top: 64px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+}
+
+.search-empty strong {
+  font-family: "Songti SC", "STSong", serif;
+  font-size: 24px;
+}
+
+.search-empty p {
+  max-width: 26rem;
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.75;
+}
+
+.search-empty.no-result {
+  border-top-color: var(--ink);
 }
 
 .update-link {
@@ -545,6 +714,18 @@ input:focus-visible {
   letter-spacing: 0.1em;
 }
 
+.detail-status {
+  margin-left: 12px;
+  color: var(--muted);
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+.detail-status.mastered,
+.detail-status.pending {
+  color: var(--accent);
+}
+
 .detail-header h2 {
   margin: 0;
   font-family: Georgia, serif;
@@ -584,6 +765,67 @@ input:focus-visible {
 
 .detail-empty {
   color: var(--muted);
+}
+
+.source-meaning {
+  margin-top: 16px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.source-meaning summary {
+  min-height: 44px;
+  padding: 12px 0;
+  cursor: pointer;
+}
+
+.source-meaning p {
+  margin: 4px 0 0;
+  padding-left: 12px;
+  border-left: 2px solid var(--line);
+  line-height: 1.7;
+}
+
+.exam-summary {
+  margin: 0;
+  font-family: "Songti SC", "STSong", serif;
+  font-size: 19px;
+  font-weight: 600;
+}
+
+.exam-years {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.exam-phrase-list {
+  margin: 18px 0 0;
+  padding: 0;
+  border-top: 1px solid var(--line);
+  list-style: none;
+}
+
+.exam-phrase-list li {
+  display: flex;
+  flex-direction: column;
+  padding: 15px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.exam-phrase-list strong {
+  font-family: Georgia, serif;
+  font-size: 19px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.exam-phrase-list span {
+  margin-top: 5px;
+  color: var(--accent);
+  font-size: 12px;
+  line-height: 1.6;
 }
 
 .collocation-list {
@@ -936,6 +1178,14 @@ input:focus-visible {
 
   .mastered-row button {
     justify-self: start;
+  }
+
+  .search-intro {
+    margin-top: 42px;
+  }
+
+  .search-row {
+    min-height: 120px;
   }
 }
 

@@ -1,7 +1,14 @@
 {
-  "version": 1,
+  "version": 2,
   "corpusFingerprint": "2a79ed252105e107ca96314e8fd975e944457c1538133d8064efb98432171182",
-  "entryCount": 1018,
-  "collocationCount": 1760,
-  "fingerprint": "f7ccf421b0dbc32a442b1e411f910c314a7365d561cbee039f52888ba6d92f15"
+  "entryCount": 4806,
+  "coreMeaningCount": 3905,
+  "collocationCount": 1637,
+  "examEntryCount": 3251,
+  "examPhraseCount": 6172,
+  "examYears": [
+    2010,
+    2025
+  ],
+  "fingerprint": "ea5c8d33b0d02a2d79c4e0ce3b7d89df9446d962662d1754645da78f5a704f2f"
 }

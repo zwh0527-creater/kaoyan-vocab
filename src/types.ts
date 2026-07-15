@@ -89,9 +89,25 @@ export interface CollocationEntry {
   phrase: string
   meaning: string
   relevance: 'english-1' | 'postgraduate' | 'general'
+  source?: 'redbook' | 'english-1'
+  sourcePage?: number
+}
+
+export interface ExamPhraseEntry {
+  phrase: string
+  count: number
+  years: number[]
+}
+
+export interface ExamEvidence {
+  count: number
+  years: number[]
+  phrases: ExamPhraseEntry[]
 }
 
 export interface WordDetailEntry {
   wordId: number
+  coreMeaning?: string
   collocations: CollocationEntry[]
+  exam?: ExamEvidence
 }

@@ -13,10 +13,17 @@ struct OCRLine {
     let y: CGFloat
 }
 
-struct CollocationRecord: Encodable {
+struct RedbookRecord: Encodable {
     let headword: String
     let page: Int
-    let lines: [String]
+    let meaningLines: [String]
+    let collocationLines: [String]
+}
+
+enum ContentSection: Equatable {
+    case none
+    case meaning
+    case collocation
 }
 
 func fail(_ message: String) -> Never {
@@ -42,16 +49,21 @@ let requestedEnd = Int(CommandLine.arguments.count > 5 ? CommandLine.arguments[5
 let endPage = min(document.pageCount, max(startPage, requestedEnd))
 let canonicalWords = Dictionary(uniqueKeysWithValues: Set(words.map { $0.word.lowercased() }).map { ($0, $0) })
 let specialWords = canonicalWords.keys.filter { $0.contains(" ") }.sorted { $0.count > $1.count }
-let stopMarkers = ["派生", "同义", "近义", "反义", "真题", "辨析", "词性", "助记", "记忆"]
+let stopMarkers = ["派生", "同义", "近义", "反义", "真题", "辨析", "词性", "助记", "记忆", "典型考题", "试题分析"]
 
 FileManager.default.createFile(atPath: outputURL.path, contents: nil)
 guard let output = try? FileHandle(forWritingTo: outputURL) else { fail("Cannot write: \(outputURL.path)") }
 defer { try? output.close() }
 let encoder = JSONEncoder()
 
-func writeRecord(headword: String?, page: Int, lines: [String]) {
-    guard let headword, !lines.isEmpty else { return }
-    let record = CollocationRecord(headword: headword, page: page, lines: lines)
+func writeRecord(headword: String?, page: Int, meaningLines: [String], collocationLines: [String]) {
+    guard let headword, !meaningLines.isEmpty || !collocationLines.isEmpty else { return }
+    let record = RedbookRecord(
+        headword: headword,
+        page: page,
+        meaningLines: meaningLines,
+        collocationLines: collocationLines
+    )
     guard let data = try? encoder.encode(record) else { return }
     output.write(data)
     output.write(Data("\n".utf8))
@@ -135,8 +147,9 @@ for pageNumber in startPage...endPage {
     autoreleasepool {
         guard let page = document.page(at: pageNumber - 1) else { return }
         var currentHeadword: String?
-        var collecting = false
-        var collected: [String] = []
+        var section: ContentSection = .none
+        var meaningLines: [String] = []
+        var collocationLines: [String] = []
 
         let pageLines = recognizedLines(on: page)
         if ProcessInfo.processInfo.environment["DEBUG_OCR"] == "1" {
@@ -147,31 +160,52 @@ for pageNumber in startPage...endPage {
 
         for line in pageLines {
             if let header = detectedHeader(in: line) {
-                writeRecord(headword: currentHeadword, page: pageNumber, lines: collected)
+                writeRecord(
+                    headword: currentHeadword,
+                    page: pageNumber,
+                    meaningLines: meaningLines,
+                    collocationLines: collocationLines
+                )
                 currentHeadword = header.canonicalHeadword
-                collecting = false
-                collected = []
+                section = .none
+                meaningLines = []
+                collocationLines = []
+                continue
+            }
+
+            if line.text.contains("词义") {
+                section = currentHeadword == nil ? .none : .meaning
+                if section == .meaning { meaningLines.append(line.text) }
                 continue
             }
 
             if line.text.contains("词组") {
-                writeRecord(headword: currentHeadword, page: pageNumber, lines: collected)
-                collecting = currentHeadword != nil
-                collected = collecting ? [line.text] : []
+                section = currentHeadword == nil ? .none : .collocation
+                if section == .collocation { collocationLines.append(line.text) }
                 continue
             }
 
-            if collecting && stopMarkers.contains(where: { line.text.contains($0) }) {
-                writeRecord(headword: currentHeadword, page: pageNumber, lines: collected)
-                collecting = false
-                collected = []
+            if section != .none && stopMarkers.contains(where: { line.text.contains($0) }) {
+                section = .none
                 continue
             }
 
-            if collecting { collected.append(line.text) }
+            switch section {
+            case .meaning:
+                meaningLines.append(line.text)
+            case .collocation:
+                collocationLines.append(line.text)
+            case .none:
+                break
+            }
         }
 
-        writeRecord(headword: currentHeadword, page: pageNumber, lines: collected)
+        writeRecord(
+            headword: currentHeadword,
+            page: pageNumber,
+            meaningLines: meaningLines,
+            collocationLines: collocationLines
+        )
         FileHandle.standardError.write(Data(("OCR page \(pageNumber)/\(endPage)\n").utf8))
     }
 }

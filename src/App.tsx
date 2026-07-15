@@ -3,6 +3,7 @@ import wordsJson from './data/words.json'
 import wordDetailsMeta from './data/word-details-meta.json'
 import corpusMeta from './data/corpus-meta.json'
 import { MasteredBookScreen } from './components/MasteredBookScreen'
+import { SearchScreen } from './components/SearchScreen'
 import { StudyScreen } from './components/StudyScreen'
 import {
   completeGroup,
@@ -19,7 +20,7 @@ import { downloadBackup, loadStudyState, parseBackup, saveStudyState } from './s
 import type { StudyStateV3, WordEntry } from './types'
 import { updatePwa } from './pwa'
 
-type Screen = 'home' | 'study' | 'group-summary' | 'summary' | 'settings' | 'mastered'
+type Screen = 'home' | 'study' | 'group-summary' | 'summary' | 'settings' | 'mastered' | 'search'
 type Toast = { id: number; message: string }
 type GroupSummary = { reviewed: number; mastered: number; groupNumber: number }
 
@@ -158,6 +159,7 @@ function App() {
           showInstallGuide={showInstallGuide}
           onDismissInstallGuide={dismissInstallGuide}
           onStudy={() => setScreen('study')}
+          onSearch={() => setScreen('search')}
           onMastered={() => setScreen('mastered')}
           onSettings={() => setScreen('settings')}
           onUpdate={() => void updatePwa()}
@@ -171,6 +173,15 @@ function App() {
           onStateChange={setState}
           onBack={() => setScreen('home')}
           onCompleteGroup={finishGroup}
+          onNotify={notify}
+        />
+      ) : null}
+      {screen === 'search' ? (
+        <SearchScreen
+          words={words}
+          masteredIds={state.masteredIds}
+          pendingMasteredIds={state.pendingMasteredIds}
+          onBack={() => setScreen('home')}
           onNotify={notify}
         />
       ) : null}
@@ -213,6 +224,7 @@ interface HomeProps {
   showInstallGuide: boolean
   onDismissInstallGuide: () => void
   onStudy: () => void
+  onSearch: () => void
   onMastered: () => void
   onSettings: () => void
   onUpdate: () => void
@@ -224,6 +236,7 @@ function HomeScreen({
   showInstallGuide,
   onDismissInstallGuide,
   onStudy,
+  onSearch,
   onMastered,
   onSettings,
   onUpdate,
@@ -244,7 +257,10 @@ function HomeScreen({
     <main className="home-page page">
       <header className="topbar">
         <div className="brand-mark" aria-hidden="true">词</div>
-        <button className="text-button" type="button" onClick={onSettings}>设置</button>
+        <div className="topbar-actions">
+          <button className="text-button" type="button" onClick={onSearch}>查词</button>
+          <button className="text-button" type="button" onClick={onSettings}>设置</button>
+        </div>
       </header>
 
       {showInstallGuide ? (
@@ -380,7 +396,7 @@ function SettingsScreen({ state, onBack, onExport, onImport, onReset }: Settings
         <h2>词表</h2>
         <div className="source-note">
           <strong>{corpusMeta.wordCount} 条乱序词汇</strong>
-          <p>基础词条整理自《考研大纲词汇乱序版》。另收录 {wordDetailsMeta.collocationCount} 条考研常见搭配；App 不包含原 PDF。</p>
+          <p>基础词条整理自《考研大纲词汇乱序版》；{wordDetailsMeta.coreMeaningCount} 个词补充了红宝书核心释义，{wordDetailsMeta.examEntryCount} 个词带有 2010—2025 英语一真题记录，另收录 {wordDetailsMeta.collocationCount} 条红宝书固定搭配。App 不包含原 PDF。</p>
         </div>
       </section>
 
