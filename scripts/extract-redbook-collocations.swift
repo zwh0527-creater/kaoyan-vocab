@@ -18,12 +18,14 @@ struct RedbookRecord: Encodable {
     let page: Int
     let meaningLines: [String]
     let collocationLines: [String]
+    let relatedLines: [String]
 }
 
 enum ContentSection: Equatable {
     case none
     case meaning
     case collocation
+    case related
 }
 
 func fail(_ message: String) -> Never {
@@ -49,20 +51,22 @@ let requestedEnd = Int(CommandLine.arguments.count > 5 ? CommandLine.arguments[5
 let endPage = min(document.pageCount, max(startPage, requestedEnd))
 let canonicalWords = Dictionary(uniqueKeysWithValues: Set(words.map { $0.word.lowercased() }).map { ($0, $0) })
 let specialWords = canonicalWords.keys.filter { $0.contains(" ") }.sorted { $0.count > $1.count }
-let stopMarkers = ["派生", "同义", "近义", "反义", "真题", "辨析", "词性", "助记", "记忆", "典型考题", "试题分析"]
+let relatedMarkers = ["同义", "同必", "近义", "反义", "派生"]
+let stopMarkers = ["真题", "辨析", "词性", "助记", "记忆", "典型考题", "试题分析"]
 
 FileManager.default.createFile(atPath: outputURL.path, contents: nil)
 guard let output = try? FileHandle(forWritingTo: outputURL) else { fail("Cannot write: \(outputURL.path)") }
 defer { try? output.close() }
 let encoder = JSONEncoder()
 
-func writeRecord(headword: String?, page: Int, meaningLines: [String], collocationLines: [String]) {
-    guard let headword, !meaningLines.isEmpty || !collocationLines.isEmpty else { return }
+func writeRecord(headword: String?, page: Int, meaningLines: [String], collocationLines: [String], relatedLines: [String]) {
+    guard let headword, !meaningLines.isEmpty || !collocationLines.isEmpty || !relatedLines.isEmpty else { return }
     let record = RedbookRecord(
         headword: headword,
         page: page,
         meaningLines: meaningLines,
-        collocationLines: collocationLines
+        collocationLines: collocationLines,
+        relatedLines: relatedLines
     )
     guard let data = try? encoder.encode(record) else { return }
     output.write(data)
@@ -150,6 +154,7 @@ for pageNumber in startPage...endPage {
         var section: ContentSection = .none
         var meaningLines: [String] = []
         var collocationLines: [String] = []
+        var relatedLines: [String] = []
 
         let pageLines = recognizedLines(on: page)
         if ProcessInfo.processInfo.environment["DEBUG_OCR"] == "1" {
@@ -164,12 +169,14 @@ for pageNumber in startPage...endPage {
                     headword: currentHeadword,
                     page: pageNumber,
                     meaningLines: meaningLines,
-                    collocationLines: collocationLines
+                    collocationLines: collocationLines,
+                    relatedLines: relatedLines
                 )
                 currentHeadword = header.canonicalHeadword
                 section = .none
                 meaningLines = []
                 collocationLines = []
+                relatedLines = []
                 continue
             }
 
@@ -185,6 +192,12 @@ for pageNumber in startPage...endPage {
                 continue
             }
 
+            if relatedMarkers.contains(where: { line.text.contains($0) }) {
+                section = currentHeadword == nil ? .none : .related
+                if section == .related { relatedLines.append(line.text) }
+                continue
+            }
+
             if section != .none && stopMarkers.contains(where: { line.text.contains($0) }) {
                 section = .none
                 continue
@@ -195,6 +208,8 @@ for pageNumber in startPage...endPage {
                 meaningLines.append(line.text)
             case .collocation:
                 collocationLines.append(line.text)
+            case .related:
+                relatedLines.append(line.text)
             case .none:
                 break
             }
@@ -204,7 +219,8 @@ for pageNumber in startPage...endPage {
             headword: currentHeadword,
             page: pageNumber,
             meaningLines: meaningLines,
-            collocationLines: collocationLines
+            collocationLines: collocationLines,
+            relatedLines: relatedLines
         )
         FileHandle.standardError.write(Data(("OCR page \(pageNumber)/\(endPage)\n").utf8))
     }

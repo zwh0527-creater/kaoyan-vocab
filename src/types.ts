@@ -97,6 +97,12 @@ export interface ExamPhraseEntry {
   phrase: string
   count: number
   years: number[]
+  meaning: string
+  usage?: string
+  contexts: Array<{
+    text: string
+    year: number
+  }>
 }
 
 export interface ExamEvidence {
@@ -105,9 +111,30 @@ export interface ExamEvidence {
   phrases: ExamPhraseEntry[]
 }
 
+export interface RedbookExampleEntry {
+  sentence: string
+  meaning: string
+  sourcePage: number
+}
+
+export interface RelatedWordEntry {
+  relation: 'synonym' | 'antonym' | 'derivative'
+  word: string
+  meaning: string
+  sourcePage: number
+}
+
+export interface RedbookSourceInfo {
+  sourcePage: number
+  hasCollocationSection: boolean
+}
+
 export interface WordDetailEntry {
   wordId: number
   coreMeaning?: string
   collocations: CollocationEntry[]
+  examples?: RedbookExampleEntry[]
+  relatedWords?: RelatedWordEntry[]
+  redbook?: RedbookSourceInfo
   exam?: ExamEvidence
 }

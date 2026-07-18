@@ -38,11 +38,16 @@ describe('optional word details', () => {
     let previousId = -1
 
     expect(wordDetailsMeta.fingerprint).toMatch(/^[a-f0-9]{64}$/)
-    expect(wordDetailsMeta.version).toBe(2)
+    expect(wordDetailsMeta.version).toBe(3)
     expect(wordDetailsMeta.entryCount).toBe(details.length)
     expect(wordDetailsMeta.corpusFingerprint).toBe(meta.fingerprint)
     expect(wordDetailsMeta.coreMeaningCount).toBe(details.filter((detail) => detail.coreMeaning).length)
     expect(wordDetailsMeta.collocationCount).toBe(details.reduce((sum, detail) => sum + detail.collocations.length, 0))
+    expect(wordDetailsMeta.redbookEntryCount).toBe(details.filter((detail) => detail.redbook).length)
+    expect(wordDetailsMeta.collocationSectionCount).toBe(details.filter((detail) => detail.redbook?.hasCollocationSection).length)
+    expect(wordDetailsMeta.unparsedCollocationSectionCount).toBe(details.filter((detail) => detail.redbook?.hasCollocationSection && detail.collocations.length === 0).length)
+    expect(wordDetailsMeta.exampleCount).toBe(details.reduce((sum, detail) => sum + (detail.examples?.length ?? 0), 0))
+    expect(wordDetailsMeta.relatedWordCount).toBe(details.reduce((sum, detail) => sum + (detail.relatedWords?.length ?? 0), 0))
     expect(wordDetailsMeta.examEntryCount).toBe(details.filter((detail) => detail.exam).length)
     expect(wordDetailsMeta.examPhraseCount).toBe(details.reduce((sum, detail) => sum + (detail.exam?.phrases.length ?? 0), 0))
     expect(wordDetailsMeta.examYears).toEqual([2010, 2025])
@@ -51,12 +56,33 @@ describe('optional word details', () => {
       expect(validIds.has(detail.wordId)).toBe(true)
       expect(seenIds.has(detail.wordId)).toBe(false)
       expect(detail.wordId).toBeGreaterThan(previousId)
-      expect(Boolean(detail.coreMeaning || detail.exam || detail.collocations.length)).toBe(true)
-      expect(detail.collocations.length).toBeLessThanOrEqual(3)
+      expect(Boolean(detail.coreMeaning || detail.exam || detail.redbook || detail.collocations.length || detail.examples?.length || detail.relatedWords?.length)).toBe(true)
+      expect(detail.collocations.length).toBeLessThanOrEqual(5)
 
       if (detail.coreMeaning) {
         expect(detail.coreMeaning).toMatch(/[\u3400-\u9fff]/)
         expect(detail.coreMeaning.length).toBeLessThanOrEqual(600)
+      }
+
+      if (detail.redbook) {
+        expect(detail.redbook.sourcePage).toBeGreaterThanOrEqual(1)
+        expect(detail.redbook.sourcePage).toBeLessThanOrEqual(442)
+        expect(typeof detail.redbook.hasCollocationSection).toBe('boolean')
+      }
+
+      for (const example of detail.examples ?? []) {
+        expect(example.sentence).toMatch(/[a-z]/i)
+        expect(example.meaning).toMatch(/[\u3400-\u9fff]/)
+        expect(example.sourcePage).toBeGreaterThanOrEqual(1)
+        expect(example.sourcePage).toBeLessThanOrEqual(442)
+      }
+
+      for (const related of detail.relatedWords ?? []) {
+        expect(['synonym', 'antonym', 'derivative']).toContain(related.relation)
+        expect(related.word).toMatch(/[a-z]/i)
+        expect(related.meaning).toMatch(/[\u3400-\u9fff]/)
+        expect(related.sourcePage).toBeGreaterThanOrEqual(1)
+        expect(related.sourcePage).toBeLessThanOrEqual(442)
       }
 
       const phrases = new Set<string>()
@@ -81,6 +107,13 @@ describe('optional word details', () => {
           expect(phrase.count).toBeGreaterThan(0)
           expect(phrase.years.length).toBeGreaterThan(0)
           expect(phrase.years.every((year) => year >= 2010 && year <= 2025)).toBe(true)
+          expect(phrase.meaning).toMatch(/[\u3400-\u9fff]/)
+          expect(phrase.contexts.length).toBeLessThanOrEqual(2)
+          for (const context of phrase.contexts) {
+            expect(context.text).toMatch(/[a-z]/i)
+            expect(context.year).toBeGreaterThanOrEqual(2010)
+            expect(context.year).toBeLessThanOrEqual(2025)
+          }
         }
       }
 
@@ -93,11 +126,19 @@ describe('optional word details', () => {
     const details = wordDetails as WordDetailEntry[]
     const due = details.find((detail) => detail.wordId === 0)
     const obtain = details.find((detail) => detail.wordId === words.find((word) => word.word === 'obtain')?.id)
+    const neglect = details.find((detail) => detail.wordId === words.find((word) => word.word === 'neglect')?.id)
+    const initiate = details.find((detail) => detail.wordId === words.find((word) => word.word === 'initiate')?.id)
 
     expect(due?.coreMeaning).toContain('应支付的')
     expect(due?.collocations.some((item) => item.phrase === 'due to')).toBe(true)
     expect(due?.exam?.phrases.some((item) => item.phrase === 'due to' && item.years.includes(2016))).toBe(true)
     expect(obtain?.coreMeaning).toContain('获得')
     expect(obtain?.exam?.phrases.some((item) => item.phrase === 'obtain a warrant')).toBe(true)
+    expect(neglect?.redbook?.hasCollocationSection).toBe(false)
+    expect(neglect?.examples?.some((item) => item.sentence === "neglect one's health")).toBe(true)
+    expect(neglect?.relatedWords?.some((item) => item.relation === 'synonym' && item.word === 'ignore')).toBe(true)
+    expect(neglect?.exam?.phrases.every((item) => item.meaning.includes('忽视'))).toBe(true)
+    expect(initiate?.redbook?.hasCollocationSection).toBe(true)
+    expect(initiate?.collocations.some((item) => item.phrase === 'initiate sb. into')).toBe(true)
   })
 })

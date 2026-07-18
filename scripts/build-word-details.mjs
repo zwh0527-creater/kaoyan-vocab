@@ -31,6 +31,7 @@ for (const word of words) {
   ids.push(word.id)
   idsByWord.set(key, ids)
 }
+const canonicalWordKeys = new Set(idsByWord.keys())
 
 function cleanText(value) {
   return String(value ?? '')
@@ -118,8 +119,112 @@ const examTokens = new Set((examText.toLowerCase().match(/[a-z]+/g) ?? []))
 const phraseLexicon = new Set([
   ...examTokens,
   ...words.flatMap((word) => word.word.toLowerCase().match(/[a-z]+/g) ?? []),
-  'sb', 'sth', 'somebody', 'something', 'oneself', 'one', 'another', 'either', 'neither'
+  'sb', 'sth', 'somebody', 'someone', 'something', 'oneself', 'one', 'another', 'either', 'neither'
 ])
+
+function inflectHeadword(headword, suffix) {
+  if (suffix === 'd' || suffix === 'ed') return headword.endsWith('e') ? `${headword}d` : `${headword}ed`
+  if (suffix === 'ing') return headword.endsWith('e') ? `${headword.slice(0, -1)}ing` : `${headword}ing`
+  if (suffix === 's') return /(?:s|x|z|ch|sh)$/i.test(headword) ? `${headword}es` : `${headword}s`
+  return headword
+}
+
+function expandTilde(value, headword) {
+  return String(value)
+    .replace(/~\s*(ed|ing|d|s)\b/gi, (_, suffix) => inflectHeadword(headword, suffix.toLowerCase()))
+    .replace(/~(?=[A-Za-z])/g, `${headword} `)
+    .replace(/~/g, headword)
+}
+
+function meaningChunks(lines) {
+  const chunks = []
+  let current = []
+  for (const rawLine of lines) {
+    const line = cleanText(rawLine)
+    const startsSense = line.includes('词义') || senseMarker.test(line)
+    if (startsSense && current.length) {
+      chunks.push(current.join(' '))
+      current = []
+    }
+    if (startsSense || current.length) current.push(line)
+  }
+  if (current.length) chunks.push(current.join(' '))
+  return chunks
+}
+
+function parseRedbookExamples(headword, lines, page) {
+  const examples = []
+  for (const chunk of meaningChunks(lines)) {
+    const colonIndex = chunk.search(/[:：]/)
+    if (colonIndex < 0) continue
+    const remainder = chunk.slice(colonIndex + 1).trim()
+    const englishStart = remainder.search(/[A-Za-z~]/)
+    if (englishStart < 0) continue
+    const candidate = remainder.slice(englishStart)
+    const chineseIndex = candidate.search(/[\u3400-\u9fff]/)
+    if (chineseIndex < 2) continue
+
+    const sentence = cleanText(expandTilde(candidate.slice(0, chineseIndex), headword))
+      .replace(/\b(sb|sth)\.(?=[A-Za-z])/gi, '$1. ')
+      .replace(/\breguested\b/gi, 'requested')
+      .replace(/\btoveke\b/gi, 'twelve')
+      .replace(/\s+([,.!?;:])/g, '$1')
+    const meaning = cleanText(candidate.slice(chineseIndex))
+      .replace(/[•⋯…]+/g, '…')
+      .replace(/…?\d{1,3}[。. ]+红宝书.*$/g, '')
+      .replace(/(?:【|\[).+$/g, '')
+      .replace(/(?<=[\u3400-\u9fff])\s+(?=[\u3400-\u9fff])/g, '')
+      .trim()
+    const normalizedHeadword = headword.replace(/[^a-z]/gi, '').toLowerCase()
+    const normalizedSentence = sentence.replace(/[^a-z]/gi, '').toLowerCase()
+    if (sentence.length < 3 || sentence.length > 220 || meaning.length < 2 || meaning.length > 180) continue
+    if (!normalizedSentence.includes(normalizedHeadword.slice(0, Math.min(4, normalizedHeadword.length)))) continue
+    if (/[�□■◆【】]/.test(sentence + meaning) || /[A-Za-z]/.test(meaning)) continue
+
+    const unknownTokens = (sentence.toLowerCase().match(/[a-z]+/g) ?? [])
+      .filter((token) => token.length >= 5 && !phraseLexicon.has(token) && !token.startsWith(normalizedHeadword.slice(0, 4)))
+    if (unknownTokens.length > 0) continue
+    if (examples.some((item) => item.sentence.toLowerCase() === sentence.toLowerCase())) continue
+    examples.push({ sentence, meaning, sourcePage: page })
+  }
+  return examples.slice(0, 3)
+}
+
+const relationLabels = new Map([
+  ['同义', 'synonym'],
+  ['同必', 'synonym'],
+  ['近义', 'synonym'],
+  ['反义', 'antonym'],
+  ['派生', 'derivative']
+])
+
+function parseRelatedWords(headword, lines, page) {
+  const related = []
+  let currentRelation = null
+  for (const rawLine of lines) {
+    const line = cleanText(rawLine)
+    for (const [marker, relation] of relationLabels) {
+      if (line.includes(marker)) {
+        currentRelation = relation
+        break
+      }
+    }
+    if (!currentRelation) continue
+    for (const token of line.toLowerCase().match(/[a-z][a-z'-]*/g) ?? []) {
+      const key = token.replace(/^'+|'+$/g, '')
+      if (key === headword || !idsByWord.has(key)) continue
+      const sourceWord = words[idsByWord.get(key)[0]]
+      if (!sourceWord || related.some((item) => item.relation === currentRelation && item.word === sourceWord.word)) continue
+      related.push({
+        relation: currentRelation,
+        word: sourceWord.word,
+        meaning: sourceWord.meaning,
+        sourcePage: page
+      })
+    }
+  }
+  return related.slice(0, 8)
+}
 
 function parseCandidate(headword, candidate, page) {
   const text = cleanText(candidate)
@@ -128,15 +233,17 @@ function parseCandidate(headword, candidate, page) {
   const phrase = cleanText(text.slice(0, chineseIndex))
     .replace(/（/g, ' (')
     .replace(/）/g, ') ')
+    .replace(/\b(sb|sth)\.(?=[A-Za-z])/gi, '$1. ')
     .replace(/[•⋯…]+$/g, '')
     .replace(/\s+/g, ' ')
   const meaning = cleanText(text.slice(chineseIndex).split(/[:：]/, 1)[0])
+    .replace(/[•⋯…]+/g, '…')
   if (phrase.length < 2 || phrase.length > 80 || meaning.length < 1 || meaning.length > 120) return null
   if (!/[a-z]/i.test(phrase) || /[\u3400-\u9fff]/.test(phrase)) return null
   if (/[�□■◆•\[\]【】]/.test(phrase + meaning)) return null
   if (/[A-Za-z]{4,}/.test(meaning)) return null
   if ((phrase.match(/[.!?]/g) ?? []).length > 3) return null
-  if (phrase.split(/\s+/).length > 8) return null
+  if (phrase.split(/\s+/).length > 12) return null
   if (phrase.endsWith('.') && !/(?:sb|sth)\.$/i.test(phrase)) return null
   const pairs = [['(', ')'], ['（', '）']]
   if (pairs.some(([open, close]) => phrase.split(open).length !== phrase.split(close).length)) return null
@@ -190,9 +297,25 @@ const weakContextWords = new Set([
   'a', 'an', 'the', 'some', 'any', 'this', 'that', 'these', 'those', 'so', 'very', 'more',
   'most', 'less', 'much', 'many', 'all', 'each', 'every', 'another', 'such', 'still', 'even'
 ])
+const examOptionLine = /^\s*(?:\[\s*[A-G](?:\s*[A-Z])?\s*\]?|[A-G][.)])\s*/i
+const examInstructionLine = /^\s*(?:Directions:|Choose the best|Mark your answers|Read the following)/i
+
+function examContextAround(fragment, surface) {
+  const text = cleanText(fragment)
+    .replace(/\^[a-z]?/gi, '')
+    .replace(/\bfbr\b/gi, 'for')
+    .replace(/\bbom\b/g, 'born')
+    .replace(/\s+/g, ' ')
+  const index = text.toLowerCase().indexOf(surface.toLowerCase())
+  if (index < 0) return null
+  const start = Math.max(0, index - 90)
+  const end = Math.min(text.length, index + surface.length + 130)
+  const context = `${start > 0 ? '…' : ''}${text.slice(start, end).trim()}${end < text.length ? '…' : ''}`
+  if (/\b\d{1,2}\s*$/.test(context)) return null
+  return context.length >= Math.max(24, surface.length + 8) ? context : null
+}
 
 function buildExamEvidence(rawText) {
-  const wordKeys = new Set(idsByWord.keys())
   const evidenceByWord = new Map()
   let currentYear = null
 
@@ -202,6 +325,10 @@ function buildExamEvidence(rawText) {
     if (!currentYear) continue
 
     const fragments = page
+      .split('\n')
+      .filter((line) => !examOptionLine.test(line) && !examInstructionLine.test(line))
+      .join(' ')
+      .replace(/-\s+(?=[a-z])/gi, '')
       .replace(/[“”‘’]/g, "'")
       .split(/[.!?;；。！？\n]+/)
 
@@ -216,7 +343,7 @@ function buildExamEvidence(rawText) {
 
       for (let index = 0; index < tokens.length; index += 1) {
         const surface = tokens[index]
-        const canonicalWords = wordCandidatesForToken(surface, wordKeys)
+        const canonicalWords = wordCandidatesForToken(surface, canonicalWordKeys)
         for (const canonical of canonicalWords) {
           const evidence = evidenceByWord.get(canonical) ?? {
             count: 0,
@@ -241,9 +368,11 @@ function buildExamEvidence(rawText) {
             if (window.some((token) => token.length === 1 && token !== 'a' && token !== 'i')) continue
             if (window.every((token) => token.length <= 2 || connectorWords.has(token))) continue
             const phrase = window.join(' ')
-            const existing = evidence.phrases.get(phrase) ?? { count: 0, years: new Set() }
+            const existing = evidence.phrases.get(phrase) ?? { count: 0, years: new Set(), contexts: new Map() }
             existing.count += 1
             existing.years.add(currentYear)
+            const context = examContextAround(cleanedFragment, surface)
+            if (context && !existing.contexts.has(context)) existing.contexts.set(context, currentYear)
             evidence.phrases.set(phrase, existing)
           }
           evidenceByWord.set(canonical, evidence)
@@ -258,11 +387,11 @@ function buildExamEvidence(rawText) {
       .map(([phrase, stats]) => {
         const tokens = phrase.split(' ')
         const containsConnector = tokens.some((token) => connectorWords.has(token))
-        const startsWithTarget = wordCandidatesForToken(tokens[0], wordKeys).includes(word)
-        const endsWithTarget = wordCandidatesForToken(tokens[tokens.length - 1], wordKeys).includes(word)
+        const startsWithTarget = wordCandidatesForToken(tokens[0], canonicalWordKeys).includes(word)
+        const endsWithTarget = wordCandidatesForToken(tokens[tokens.length - 1], canonicalWordKeys).includes(word)
         const weakLeadingContext = endsWithTarget && tokens.slice(0, -1).every((token) => connectorWords.has(token) || weakContextWords.has(token))
         const weakTrailingContext = startsWithTarget && tokens.slice(1).every((token) => weakContextWords.has(token))
-        if (weakLeadingContext || weakTrailingContext) return null
+        if (weakLeadingContext || weakTrailingContext || stats.contexts.size === 0) return null
         const genericPenalty = tokens.some((token) => genericExamWords.has(token)) ? 24 : 0
         const leadingConnectorPenalty = connectorWords.has(tokens[0]) ? 18 : 0
         const lengthScore = tokens.length === 2 ? 12 : tokens.length === 3 ? 8 : tokens.length === 4 ? 4 : 0
@@ -270,6 +399,13 @@ function buildExamEvidence(rawText) {
           phrase,
           count: stats.count,
           years: [...stats.years].sort((left, right) => left - right),
+          contexts: [...stats.contexts.entries()]
+            .map(([context, year]) => ({ context, year }))
+            .sort((left, right) => {
+              const leftContains = left.context.toLowerCase().includes(phrase) ? 0 : 1
+              const rightContains = right.context.toLowerCase().includes(phrase) ? 0 : 1
+              return leftContains - rightContains || left.context.length - right.context.length
+            }),
           score: stats.count * 30 + stats.years.size * 12 + lengthScore + (containsConnector ? 5 : 0) +
             (startsWithTarget ? 20 : 0) + (endsWithTarget ? 4 : 0) - genericPenalty - leadingConnectorPenalty
         }
@@ -280,7 +416,12 @@ function buildExamEvidence(rawText) {
     const selected = []
     for (const phrase of phrases) {
       if (selected.some((item) => item.phrase.includes(phrase.phrase) || phrase.phrase.includes(item.phrase))) continue
-      selected.push({ phrase: phrase.phrase, count: phrase.count, years: phrase.years })
+      selected.push({
+        phrase: phrase.phrase,
+        count: phrase.count,
+        years: phrase.years,
+        contexts: phrase.contexts.slice(0, 2).map((item) => ({ text: item.context, year: item.year }))
+      })
       if (selected.length === 2) break
     }
 
@@ -293,12 +434,70 @@ function buildExamEvidence(rawText) {
   return result
 }
 
+function examSense(coreMeaning, baseMeaning) {
+  const source = coreMeaning || baseMeaning
+  const cleaned = cleanText(source)
+    .replace(/^(?:(?:vt|vi|v|n|adj|adv|prep|pron|conj|num|art)\.?\s*[./、]?\s*)+/i, '')
+    .trim()
+  return cleaned.split(/[；;]/).slice(0, 4).join('；')
+}
+
+function examUsageHint(wordKey, phrase, context) {
+  const tokens = phrase.toLowerCase().split(/\s+/)
+  const targetIndex = tokens.findIndex((token) => wordCandidatesForToken(token, canonicalWordKeys).includes(wordKey))
+  if (targetIndex < 0) return null
+  const surface = tokens[targetIndex]
+  const previous = tokens[targetIndex - 1]
+  const next = tokens[targetIndex + 1]
+  const hints = []
+
+  if (wordKey === 'due' && /\b(?:be|is|are|was|were|been|being)\s+due\s+to\s+do\b/i.test(context ?? '')) {
+    return '结构：be due to + 动词原形，表示“预定、预计……”'
+  }
+
+  if (surface !== wordKey) hints.push(`此处使用 ${wordKey} 的 ${surface} 形式`)
+  if (previous === 'by') hints.push(`结构：by + ${surface}，常见于被动表达`)
+  if (next) {
+    const complements = {
+      of: '名词/代词，表示所属或对象',
+      to: '名词或动词原形',
+      for: '名词/代词，表示对象、原因或目的',
+      by: '动作发出者或方式',
+      with: '名词/代词，表示伴随或对象',
+      in: '名词/动名词，表示范围或状态',
+      on: '名词/动名词，表示对象或方面',
+      from: '名词/代词，表示来源或分离',
+      as: '名词，表示身份或作用'
+    }
+    if (complements[next]) hints.push(`结构：${surface} ${next} + ${complements[next]}`)
+  }
+  return hints.length ? hints.join('；') : null
+}
+
+function enrichExamPhrase(wordKey, word, coreMeaning, item) {
+  const usage = examUsageHint(wordKey, item.phrase, item.contexts[0]?.text)
+  return {
+    ...item,
+    meaning: examSense(coreMeaning, word.meaning),
+    ...(usage ? { usage } : {})
+  }
+}
+
 const meaningsByWord = new Map()
 const candidatesByWord = new Map()
+const examplesByWord = new Map()
+const relatedByWord = new Map()
+const redbookInfoByWord = new Map()
 
 for (const record of records) {
   const key = String(record.headword ?? '').toLowerCase()
   if (!idsByWord.has(key)) continue
+
+  const currentInfo = redbookInfoByWord.get(key)
+  redbookInfoByWord.set(key, {
+    sourcePage: currentInfo?.sourcePage ?? record.page,
+    hasCollocationSection: Boolean(currentInfo?.hasCollocationSection || (record.collocationLines?.length ?? 0) > 0)
+  })
 
   const meaning = parseMeaningLines(record.meaningLines ?? [])
   if (meaning) {
@@ -316,7 +515,21 @@ for (const record of records) {
     if (candidates.some((item) => item.phrase.toLowerCase() === phraseKey)) continue
     candidates.push(parsed)
   }
-  candidatesByWord.set(key, candidates.slice(0, 3))
+  candidatesByWord.set(key, candidates.slice(0, 5))
+
+  const examples = examplesByWord.get(key) ?? []
+  for (const example of parseRedbookExamples(key, record.meaningLines ?? [], record.page)) {
+    if (examples.some((item) => item.sentence.toLowerCase() === example.sentence.toLowerCase())) continue
+    examples.push(example)
+  }
+  examplesByWord.set(key, examples.slice(0, 3))
+
+  const relatedWords = relatedByWord.get(key) ?? []
+  for (const related of parseRelatedWords(key, record.relatedLines ?? [], record.page)) {
+    if (relatedWords.some((item) => item.relation === related.relation && item.word === related.word)) continue
+    relatedWords.push(related)
+  }
+  relatedByWord.set(key, relatedWords.slice(0, 8))
 }
 
 const examEvidenceByWord = buildExamEvidence(examText)
@@ -326,17 +539,23 @@ for (const word of words) {
   const key = word.word.toLowerCase()
   const coreMeaning = meaningsByWord.get(key)
   const collocations = candidatesByWord.get(key) ?? []
+  const examples = examplesByWord.get(key) ?? []
+  const relatedWords = relatedByWord.get(key) ?? []
+  const redbook = redbookInfoByWord.get(key)
   const exam = examEvidenceByWord.get(key)
-  if (!coreMeaning && collocations.length === 0 && !exam) continue
+  if (!coreMeaning && collocations.length === 0 && examples.length === 0 && relatedWords.length === 0 && !redbook && !exam) continue
   details.push({
     wordId: word.id,
     ...(coreMeaning ? { coreMeaning } : {}),
     collocations,
+    ...(examples.length ? { examples } : {}),
+    ...(relatedWords.length ? { relatedWords } : {}),
+    ...(redbook ? { redbook } : {}),
     ...(exam ? {
       exam: {
         count: exam.count,
         years: exam.years,
-        phrases: exam.phrases
+        phrases: exam.phrases.map((item) => enrichExamPhrase(key, word, coreMeaning, item))
       }
     } : {})
   })
@@ -346,20 +565,30 @@ const serialized = JSON.stringify(details)
 const fingerprint = createHash('sha256').update(serialized).digest('hex')
 const coreMeaningCount = details.filter((detail) => detail.coreMeaning).length
 const collocationCount = details.reduce((sum, detail) => sum + detail.collocations.length, 0)
+const redbookEntryCount = details.filter((detail) => detail.redbook).length
+const collocationSectionCount = details.filter((detail) => detail.redbook?.hasCollocationSection).length
+const unparsedCollocationSectionCount = details.filter((detail) => detail.redbook?.hasCollocationSection && detail.collocations.length === 0).length
+const exampleCount = details.reduce((sum, detail) => sum + (detail.examples?.length ?? 0), 0)
+const relatedWordCount = details.reduce((sum, detail) => sum + (detail.relatedWords?.length ?? 0), 0)
 const examEntryCount = details.filter((detail) => detail.exam).length
 const examPhraseCount = details.reduce((sum, detail) => sum + (detail.exam?.phrases.length ?? 0), 0)
 
 await writeFile(outputPath, `${JSON.stringify(details, null, 2)}\n`)
 await writeFile(metaPath, `${JSON.stringify({
-  version: 2,
+  version: 3,
   corpusFingerprint: corpusMeta.fingerprint,
   entryCount: details.length,
   coreMeaningCount,
   collocationCount,
+  redbookEntryCount,
+  collocationSectionCount,
+  unparsedCollocationSectionCount,
+  exampleCount,
+  relatedWordCount,
   examEntryCount,
   examPhraseCount,
   examYears: examText ? [2010, 2025] : null,
   fingerprint
 }, null, 2)}\n`)
 
-console.log(`Wrote ${details.length} details: ${coreMeaningCount} meanings, ${collocationCount} red-book collocations, ${examEntryCount} exam words, ${examPhraseCount} exam phrases`)
+console.log(`Wrote ${details.length} details: ${coreMeaningCount} meanings, ${collocationCount} red-book collocations, ${exampleCount} examples, ${relatedWordCount} related words, ${examEntryCount} exam words, ${examPhraseCount} exam phrases`)

@@ -814,18 +814,61 @@ input:focus-visible {
   border-bottom: 1px solid var(--line);
 }
 
-.exam-phrase-list strong {
+.exam-phrase-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.exam-phrase-heading strong {
   font-family: Georgia, serif;
   font-size: 19px;
   font-weight: 500;
   line-height: 1.4;
 }
 
-.exam-phrase-list span {
-  margin-top: 5px;
+.exam-phrase-heading span {
+  flex: 0 0 auto;
   color: var(--accent);
   font-size: 12px;
   line-height: 1.6;
+}
+
+.exam-meaning,
+.exam-usage {
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.75;
+}
+
+.exam-meaning b,
+.exam-usage b {
+  display: inline-block;
+  min-width: 76px;
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.exam-context {
+  margin: 14px 0 2px;
+  padding: 13px 0 0 14px;
+  border-top: 1px solid var(--line);
+  border-left: 2px solid var(--line-strong);
+}
+
+.exam-context small {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.exam-context p {
+  margin: 7px 0 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 15px;
+  line-height: 1.65;
 }
 
 .collocation-list {
@@ -863,6 +906,79 @@ input:focus-visible {
   margin-top: 6px;
   color: var(--muted);
   font-size: 14px;
+  line-height: 1.65;
+}
+
+.source-page {
+  margin: 12px 0 0;
+  color: var(--line-strong);
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.example-list {
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--line);
+  list-style: none;
+}
+
+.example-list li {
+  display: flex;
+  flex-direction: column;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.example-list strong {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 1.55;
+}
+
+.example-list span {
+  margin-top: 7px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.related-group + .related-group {
+  margin-top: 20px;
+}
+
+.related-group h4 {
+  margin: 0 0 8px;
+  color: var(--accent);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+}
+
+.related-group ul {
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--line);
+  list-style: none;
+}
+
+.related-group li {
+  display: grid;
+  grid-template-columns: minmax(90px, 0.42fr) minmax(0, 1fr);
+  gap: 14px;
+  padding: 13px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.related-group strong {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.related-group span {
+  color: var(--muted);
+  font-size: 13px;
   line-height: 1.65;
 }
 
