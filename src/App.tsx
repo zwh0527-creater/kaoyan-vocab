@@ -396,7 +396,7 @@ function SettingsScreen({ state, onBack, onExport, onImport, onReset }: Settings
         <h2>词表</h2>
         <div className="source-note">
           <strong>{corpusMeta.wordCount} 条乱序词汇</strong>
-          <p>基础词条整理自《考研大纲词汇乱序版》；{wordDetailsMeta.coreMeaningCount} 个词补充了红宝书核心释义，收录 {wordDetailsMeta.collocationCount} 条固定搭配、{wordDetailsMeta.exampleCount} 条红宝书例句与 {wordDetailsMeta.relatedWordCount} 条相关词记录；{wordDetailsMeta.examEntryCount} 个词带有 2010—2025 英语一真题语境。App 不包含原 PDF。</p>
+          <p>基础词条整理自《考研大纲词汇乱序版》，详情页始终先显示大纲原释义；{wordDetailsMeta.coreMeaningCount} 个词另有红宝书补充释义，收录 {wordDetailsMeta.collocationCount} 条固定搭配、{wordDetailsMeta.exampleCount} 条红宝书例句与 {wordDetailsMeta.relatedWordCount} 条相关词记录；{wordDetailsMeta.examEntryCount} 个词带有 2010—2025 英语一真题语境，并提供 {wordDetailsMeta.examTranslationCount} 条对应译文。App 不包含原 PDF。</p>
         </div>
       </section>
 

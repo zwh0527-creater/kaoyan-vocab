@@ -18,11 +18,15 @@ const outputPath = argument('--output')
 const metaPath = argument('--meta')
 const corpusMetaPath = argument('--corpus-meta')
 const examTextPath = optionalArgument('--exam-text')
+const examTranslationsPath = optionalArgument('--exam-translations')
 
 const words = JSON.parse(await readFile(wordsPath, 'utf8'))
 const corpusMeta = JSON.parse(await readFile(corpusMetaPath, 'utf8'))
 const rawLines = (await readFile(ocrPath, 'utf8')).split(/\r?\n/).filter(Boolean)
 const records = rawLines.map((line) => JSON.parse(line))
+const examTranslations = examTranslationsPath
+  ? JSON.parse(await readFile(examTranslationsPath, 'utf8'))
+  : {}
 const idsByWord = new Map()
 
 for (const word of words) {
@@ -305,11 +309,32 @@ function examContextAround(fragment, surface) {
     .replace(/\^[a-z]?/gi, '')
     .replace(/\bfbr\b/gi, 'for')
     .replace(/\bbom\b/g, 'born')
+    .replace(/\bT he\b/g, 'The')
+    .replace(/\bT his\b/g, 'This')
+    .replace(/\bT hat\b/g, 'That')
+    .replace(/\bT hese\b/g, 'These')
+    .replace(/\bW ith\b/g, 'With')
+    .replace(/\bW hen\b/g, 'When')
+    .replace(/\bW here\b/g, 'Where')
+    .replace(/\bW hile\b/g, 'While')
+    .replace(/\bF or\b/g, 'For')
+    .replace(/\bF rom\b/g, 'From')
+    .replace(/\bY et\b/g, 'Yet')
+    .replace(/\bA llen\b/g, 'Allen')
+    .replace(/\bA ccording\b/g, 'According')
+    .replace(/\bP aragraph\b/g, 'Paragraph')
+    .replace(/\bM c(?=[A-Z])/g, 'Mc')
+    .replace(/\bIA SB\b/g, 'IASB')
+    .replace(/\bU niversity\b/g, 'University')
+    .replace(/\bN oam\b/g, 'Noam')
+    .replace(/\btoartifacts\b/gi, 'to artifacts')
+    .replace(/\s+([,.:])/g, '$1')
     .replace(/\s+/g, ' ')
   const index = text.toLowerCase().indexOf(surface.toLowerCase())
   if (index < 0) return null
-  const start = Math.max(0, index - 90)
-  const end = Math.min(text.length, index + surface.length + 130)
+  if (text.length <= 440) return text.length >= Math.max(24, surface.length + 8) ? text : null
+  const start = Math.max(0, index - 165)
+  const end = Math.min(text.length, index + surface.length + 255)
   const context = `${start > 0 ? '…' : ''}${text.slice(start, end).trim()}${end < text.length ? '…' : ''}`
   if (/\b\d{1,2}\s*$/.test(context)) return null
   return context.length >= Math.max(24, surface.length + 8) ? context : null
@@ -474,13 +499,30 @@ function examUsageHint(wordKey, phrase, context) {
   return hints.length ? hints.join('；') : null
 }
 
+function applyExamTranslations(item) {
+  const contexts = item.contexts.flatMap((context) => {
+    const translated = examTranslations[context.text]
+    if (!translated) return examTranslationsPath ? [] : [context]
+    return [{
+      ...context,
+      translation: translated.translation,
+      translationSource: translated.source,
+      ...(translated.question ? { translationQuestion: Number(translated.question) } : {})
+    }]
+  })
+  return {
+    ...item,
+    contexts
+  }
+}
+
 function enrichExamPhrase(wordKey, word, coreMeaning, item) {
   const usage = examUsageHint(wordKey, item.phrase, item.contexts[0]?.text)
-  return {
+  return applyExamTranslations({
     ...item,
     meaning: examSense(coreMeaning, word.meaning),
     ...(usage ? { usage } : {})
-  }
+  })
 }
 
 const meaningsByWord = new Map()
@@ -555,7 +597,9 @@ for (const word of words) {
       exam: {
         count: exam.count,
         years: exam.years,
-        phrases: exam.phrases.map((item) => enrichExamPhrase(key, word, coreMeaning, item))
+        phrases: exam.phrases
+          .map((item) => enrichExamPhrase(key, word, coreMeaning, item))
+          .filter((item) => item.contexts.length > 0)
       }
     } : {})
   })
@@ -572,10 +616,14 @@ const exampleCount = details.reduce((sum, detail) => sum + (detail.examples?.len
 const relatedWordCount = details.reduce((sum, detail) => sum + (detail.relatedWords?.length ?? 0), 0)
 const examEntryCount = details.filter((detail) => detail.exam).length
 const examPhraseCount = details.reduce((sum, detail) => sum + (detail.exam?.phrases.length ?? 0), 0)
+const examContextCount = details.reduce((sum, detail) => sum + (detail.exam?.phrases ?? [])
+  .reduce((phraseSum, phrase) => phraseSum + phrase.contexts.length, 0), 0)
+const examTranslationCount = details.reduce((sum, detail) => sum + (detail.exam?.phrases ?? [])
+  .reduce((phraseSum, phrase) => phraseSum + phrase.contexts.filter((context) => context.translation).length, 0), 0)
 
 await writeFile(outputPath, `${JSON.stringify(details, null, 2)}\n`)
 await writeFile(metaPath, `${JSON.stringify({
-  version: 3,
+  version: 4,
   corpusFingerprint: corpusMeta.fingerprint,
   entryCount: details.length,
   coreMeaningCount,
@@ -587,8 +635,10 @@ await writeFile(metaPath, `${JSON.stringify({
   relatedWordCount,
   examEntryCount,
   examPhraseCount,
+  examContextCount,
+  examTranslationCount,
   examYears: examText ? [2010, 2025] : null,
   fingerprint
 }, null, 2)}\n`)
 
-console.log(`Wrote ${details.length} details: ${coreMeaningCount} meanings, ${collocationCount} red-book collocations, ${exampleCount} examples, ${relatedWordCount} related words, ${examEntryCount} exam words, ${examPhraseCount} exam phrases`)
+console.log(`Wrote ${details.length} details: ${coreMeaningCount} meanings, ${collocationCount} red-book collocations, ${exampleCount} examples, ${relatedWordCount} related words, ${examEntryCount} exam words, ${examPhraseCount} exam phrases, ${examTranslationCount}/${examContextCount} translated contexts`)

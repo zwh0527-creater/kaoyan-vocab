@@ -157,6 +157,7 @@ for pageNumber in startPage...endPage {
         var relatedLines: [String] = []
 
         let pageLines = recognizedLines(on: page)
+        let hasVocabularyPreview = pageLines.contains { $0.text.contains("本单元词汇预览") }
         if ProcessInfo.processInfo.environment["DEBUG_OCR"] == "1" {
             for line in pageLines {
                 FileHandle.standardError.write(Data((String(format: "%.3f %.3f %@\n", line.x, line.y, line.text)).utf8))
@@ -164,6 +165,14 @@ for pageNumber in startPage...endPage {
         }
 
         for line in pageLines {
+            // Unit-opening pages print a dense vocabulary preview above the real
+            // entries. Preview words sit on the same left rails as headwords and
+            // used to be mistaken for headers (for example, "magnify" captured
+            // the following "object" entry). The body begins below this band.
+            if hasVocabularyPreview && line.y >= 0.56 && line.y <= 0.72 {
+                continue
+            }
+
             if let header = detectedHeader(in: line) {
                 writeRecord(
                     headword: currentHeadword,

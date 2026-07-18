@@ -53,14 +53,16 @@ export function WordDetailSheet({ word, detail, loading, status, onClose }: Word
           </div>
           <button ref={closeRef} className="detail-close" type="button" onClick={onClose}>关闭</button>
         </header>
-        <div className="detail-section">
-          <h3>{detail?.coreMeaning ? '核心释义' : '大纲释义'}</h3>
-          <p className="detail-meaning">{detail?.coreMeaning ?? word.meaning}</p>
+        <div className="detail-section meaning-section">
+          <h3>考研大纲释义</h3>
+          <p className="detail-meaning">{word.meaning}</p>
+          <p className="source-page">来源：考研大纲词汇 PDF 第 {word.sourcePage} 页</p>
           {detail?.coreMeaning && detail.coreMeaning !== word.meaning ? (
-            <details className="source-meaning">
-              <summary>查看大纲原释义</summary>
-              <p>{word.meaning}</p>
-            </details>
+            <div className="source-meaning">
+              <h4>红宝书释义</h4>
+              <p>{detail.coreMeaning}</p>
+              {detail.redbook?.sourcePage ? <small>来源：红宝书 PDF 第 {detail.redbook.sourcePage} 页</small> : null}
+            </div>
           ) : null}
         </div>
 
@@ -69,6 +71,7 @@ export function WordDetailSheet({ word, detail, loading, status, onClose }: Word
             <h3>英语一真题</h3>
             <p className="exam-summary">2010—2025 真题正文中检出 {detail.exam.count} 处</p>
             <p className="exam-years">涉及年份：{detail.exam.years.join('、')}</p>
+            <p className="exam-note">“官方译文”来自本机答案资料；“辅助翻译”由本地模型生成，用于快速理解句意，遇到生硬处以英文原句为准。</p>
             {detail.exam.phrases.length ? (
               <ol className="exam-phrase-list">
                 {detail.exam.phrases.map((item) => (
@@ -77,12 +80,21 @@ export function WordDetailSheet({ word, detail, loading, status, onClose }: Word
                       <strong>{item.phrase}</strong>
                       <span>{item.years.join('、')} 年{item.count > 1 ? ` · ${item.count} 处` : ''}</span>
                     </div>
-                    <p className="exam-meaning"><b>常见义参考</b>{item.meaning}</p>
                     {item.usage ? <p className="exam-usage"><b>用法</b>{item.usage}</p> : null}
                     {item.contexts.map((context) => (
                       <blockquote className="exam-context" key={`${context.year}-${context.text}`}>
                         <small>{context.year} 年真题语境</small>
-                        <p>{context.text}</p>
+                        <p className="exam-context-original">{context.text}</p>
+                        {context.translation ? (
+                          <p className="exam-context-translation">
+                            <b>{context.translationSource === 'official-answer'
+                              ? `官方译文 · 第 ${context.translationQuestion} 题划线部分`
+                              : '辅助翻译'}</b>
+                            {context.translation}
+                          </p>
+                        ) : (
+                          <p className="exam-context-translation pending"><b>词义提示</b>{item.meaning}</p>
+                        )}
                       </blockquote>
                     ))}
                   </li>

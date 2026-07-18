@@ -102,6 +102,9 @@ export interface ExamPhraseEntry {
   contexts: Array<{
     text: string
     year: number
+    translation?: string
+    translationSource?: 'official-answer' | 'local-machine'
+    translationQuestion?: number
   }>
 }
 

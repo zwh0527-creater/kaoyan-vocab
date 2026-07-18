@@ -768,22 +768,31 @@ input:focus-visible {
 }
 
 .source-meaning {
-  margin-top: 16px;
-  color: var(--muted);
-  font-size: 13px;
+  margin-top: 20px;
+  padding: 16px 0 0 14px;
+  border-top: 1px solid var(--line);
+  border-left: 2px solid var(--line);
 }
 
-.source-meaning summary {
-  min-height: 44px;
-  padding: 12px 0;
-  cursor: pointer;
+.source-meaning h4 {
+  margin: 0 0 8px;
+  color: var(--accent);
+  font-size: 12px;
+  letter-spacing: 0.08em;
 }
 
 .source-meaning p {
-  margin: 4px 0 0;
-  padding-left: 12px;
-  border-left: 2px solid var(--line);
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
   line-height: 1.7;
+}
+
+.source-meaning small {
+  display: block;
+  margin-top: 8px;
+  color: var(--line-strong);
+  font-size: 11px;
 }
 
 .exam-summary {
@@ -795,6 +804,15 @@ input:focus-visible {
 
 .exam-years {
   margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.exam-note {
+  margin: 12px 0 0;
+  padding-left: 11px;
+  border-left: 2px solid var(--line);
   color: var(--muted);
   font-size: 12px;
   line-height: 1.7;
@@ -864,11 +882,32 @@ input:focus-visible {
   font-size: 11px;
 }
 
-.exam-context p {
+.exam-context-original {
   margin: 7px 0 0;
   font-family: Georgia, "Times New Roman", serif;
   font-size: 15px;
   line-height: 1.65;
+}
+
+.exam-context .exam-context-translation {
+  margin: 12px 0 0;
+  padding-top: 11px;
+  border-top: 1px dashed var(--line);
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.exam-context-translation b {
+  display: inline-block;
+  min-width: 68px;
+  color: var(--accent);
+  font-size: 12px;
+}
+
+.exam-context-translation.pending {
+  color: var(--muted);
 }
 
 .collocation-list {

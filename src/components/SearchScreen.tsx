@@ -82,7 +82,7 @@ export function SearchScreen({
         {!query ? (
           <div className="search-empty">
             <strong>{words.length} 个词都可以查</strong>
-            <p>搜中文时会同时匹配红宝书核心释义和大纲释义。</p>
+            <p>搜中文时会同时匹配大纲释义和红宝书补充释义；结果页优先显示大纲原文。</p>
           </div>
         ) : searchResult.matches.length ? (
           <>
@@ -92,7 +92,7 @@ export function SearchScreen({
             <div className="search-list">
               {searchResult.matches.map((word) => {
                 const status = statusFor(word.id)
-                const meaning = detailMap?.get(word.id)?.coreMeaning ?? word.meaning
+                const meaning = word.meaning
                 return (
                   <button className="search-row" type="button" key={word.id} onClick={() => setSelectedWordId(word.id)}>
                     <span className="search-word">

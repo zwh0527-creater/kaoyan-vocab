@@ -38,7 +38,7 @@ describe('optional word details', () => {
     let previousId = -1
 
     expect(wordDetailsMeta.fingerprint).toMatch(/^[a-f0-9]{64}$/)
-    expect(wordDetailsMeta.version).toBe(3)
+    expect(wordDetailsMeta.version).toBe(4)
     expect(wordDetailsMeta.entryCount).toBe(details.length)
     expect(wordDetailsMeta.corpusFingerprint).toBe(meta.fingerprint)
     expect(wordDetailsMeta.coreMeaningCount).toBe(details.filter((detail) => detail.coreMeaning).length)
@@ -50,6 +50,9 @@ describe('optional word details', () => {
     expect(wordDetailsMeta.relatedWordCount).toBe(details.reduce((sum, detail) => sum + (detail.relatedWords?.length ?? 0), 0))
     expect(wordDetailsMeta.examEntryCount).toBe(details.filter((detail) => detail.exam).length)
     expect(wordDetailsMeta.examPhraseCount).toBe(details.reduce((sum, detail) => sum + (detail.exam?.phrases.length ?? 0), 0))
+    expect(wordDetailsMeta.examContextCount).toBe(details.reduce((sum, detail) => sum + (detail.exam?.phrases ?? [])
+      .reduce((phraseSum, phrase) => phraseSum + phrase.contexts.length, 0), 0))
+    expect(wordDetailsMeta.examTranslationCount).toBe(wordDetailsMeta.examContextCount)
     expect(wordDetailsMeta.examYears).toEqual([2010, 2025])
 
     for (const detail of details) {
@@ -113,6 +116,8 @@ describe('optional word details', () => {
             expect(context.text).toMatch(/[a-z]/i)
             expect(context.year).toBeGreaterThanOrEqual(2010)
             expect(context.year).toBeLessThanOrEqual(2025)
+            expect(context.translation).toMatch(/[\u3400-\u9fff]/)
+            expect(['official-answer', 'local-machine']).toContain(context.translationSource)
           }
         }
       }
@@ -128,17 +133,22 @@ describe('optional word details', () => {
     const obtain = details.find((detail) => detail.wordId === words.find((word) => word.word === 'obtain')?.id)
     const neglect = details.find((detail) => detail.wordId === words.find((word) => word.word === 'neglect')?.id)
     const initiate = details.find((detail) => detail.wordId === words.find((word) => word.word === 'initiate')?.id)
+    const magnify = details.find((detail) => detail.wordId === words.find((word) => word.word === 'magnify')?.id)
 
     expect(due?.coreMeaning).toContain('应支付的')
     expect(due?.collocations.some((item) => item.phrase === 'due to')).toBe(true)
     expect(due?.exam?.phrases.some((item) => item.phrase === 'due to' && item.years.includes(2016))).toBe(true)
     expect(obtain?.coreMeaning).toContain('获得')
-    expect(obtain?.exam?.phrases.some((item) => item.phrase === 'obtain a warrant')).toBe(true)
+    expect(obtain?.exam?.phrases.some((item) => item.phrase === 'obtained by' && item.years.includes(2024))).toBe(true)
     expect(neglect?.redbook?.hasCollocationSection).toBe(false)
     expect(neglect?.examples?.some((item) => item.sentence === "neglect one's health")).toBe(true)
     expect(neglect?.relatedWords?.some((item) => item.relation === 'synonym' && item.word === 'ignore')).toBe(true)
     expect(neglect?.exam?.phrases.every((item) => item.meaning.includes('忽视'))).toBe(true)
     expect(initiate?.redbook?.hasCollocationSection).toBe(true)
     expect(initiate?.collocations.some((item) => item.phrase === 'initiate sb. into')).toBe(true)
+    expect(magnify?.coreMeaning).toContain('放大')
+    expect(magnify?.coreMeaning).not.toContain('物体')
+    expect(magnify?.redbook?.sourcePage).toBe(13)
+    expect(magnify?.examples?.some((item) => item.sentence.includes('magnifier'))).toBe(true)
   })
 })
