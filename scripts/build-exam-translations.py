@@ -13,12 +13,24 @@ import json
 import re
 from pathlib import Path
 
+CURATED_AUXILIARY_TRANSLATIONS = {
+    "For millennia, we've known what we've known due to artifacts that have survived, often despite their original creators' neglect": (
+        "数千年来，我们对过去的认识来自留存至今的文物；而这些文物往往是在其最初创造者疏于照管的情况下保存下来的。"
+    ),
+}
+
+
 def arguments() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument("--details", required=True, type=Path)
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument("--answer-text", type=Path)
-    parser.add_argument("--backend", choices=("argos", "marian"), default="argos")
+    parser.add_argument("--backend", choices=("argos", "marian", "t5"), default="argos")
+    parser.add_argument(
+        "--replace-machine",
+        action="store_true",
+        help="Regenerate auxiliary translations while preserving official answers.",
+    )
     return parser.parse_args()
 
 
@@ -40,7 +52,7 @@ def save(path: Path, cache: dict[str, dict[str, str]]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_suffix(path.suffix + ".tmp")
     temporary.write_text(
-        json.dumps(cache, ensure_ascii=False, indent=2) + "\n",
+        json.dumps(cache, ensure_ascii=False, separators=(",", ":")) + "\n",
         encoding="utf-8",
     )
     temporary.replace(path)
@@ -101,6 +113,12 @@ def main() -> None:
         if args.output.exists()
         else {}
     )
+    if args.replace_machine:
+        cache = {
+            text: value
+            for text, value in cache.items()
+            if value.get("source") == "official-answer"
+        }
     contexts = sorted(
         {
             context["text"]
@@ -113,7 +131,7 @@ def main() -> None:
 
     pending = [text for text in contexts if text not in cache]
     print(f"contexts={len(contexts)} pending={len(pending)}", flush=True)
-    if args.backend == "argos":
+    if pending and args.backend == "argos":
         from argostranslate import translate
 
         for index, text in enumerate(pending, start=1):
@@ -126,11 +144,16 @@ def main() -> None:
             if index % 50 == 0:
                 save(args.output, cache)
                 print(f"translated={index}/{len(pending)}", flush=True)
-    else:
+    elif pending:
         import torch
         from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
 
-        model_name = "Helsinki-NLP/opus-mt-en-zh"
+        if args.backend == "marian":
+            model_name = "Helsinki-NLP/opus-mt-en-zh"
+            source_prefix = ""
+        else:
+            model_name = "utrobinmv/t5_translate_en_ru_zh_small_1024"
+            source_prefix = "translate to zh: "
         tokenizer = AutoTokenizer.from_pretrained(model_name)
         model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
         device = "mps" if torch.backends.mps.is_available() else "cpu"
@@ -139,15 +162,21 @@ def main() -> None:
         for start in range(0, len(pending), batch_size):
             texts = pending[start : start + batch_size]
             encoded = tokenizer(
-                texts,
+                [f"{source_prefix}{text}" for text in texts],
                 return_tensors="pt",
                 padding=True,
                 truncation=True,
-                max_length=512,
+                max_length=1024 if args.backend == "t5" else 512,
             ).to(device)
-            generated = model.generate(**encoded)
+            generated = model.generate(
+                **encoded,
+                max_new_tokens=512,
+                num_beams=1,
+            )
             translations = tokenizer.batch_decode(generated, skip_special_tokens=True)
-            for text, translated in zip(texts, translations, strict=True):
+            if len(texts) != len(translations):
+                raise RuntimeError("Translation batch size mismatch")
+            for text, translated in zip(texts, translations):
                 cleaned = clean_translation(translated)
                 if any("\u3400" <= character <= "\u9fff" for character in cleaned):
                     cache[text] = {
@@ -166,6 +195,13 @@ def main() -> None:
             cache,
             args.answer_text.read_text(encoding="utf-8"),
         )
+
+    for text, translation in CURATED_AUXILIARY_TRANSLATIONS.items():
+        if text in contexts and cache.get(text, {}).get("source") != "official-answer":
+            cache[text] = {
+                "translation": translation,
+                "source": "local-machine",
+            }
 
     cache = {text: cache[text] for text in contexts if text in cache}
     save(args.output, cache)
