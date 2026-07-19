@@ -11,11 +11,13 @@ struct OCRLine {
     let text: String
     let x: CGFloat
     let y: CGFloat
+    let height: CGFloat
 }
 
 struct RedbookRecord: Encodable {
     let headword: String
     let page: Int
+    let headerHeight: Double
     let meaningLines: [String]
     let collocationLines: [String]
     let relatedLines: [String]
@@ -59,11 +61,12 @@ guard let output = try? FileHandle(forWritingTo: outputURL) else { fail("Cannot 
 defer { try? output.close() }
 let encoder = JSONEncoder()
 
-func writeRecord(headword: String?, page: Int, meaningLines: [String], collocationLines: [String], relatedLines: [String]) {
+func writeRecord(headword: String?, headerHeight: CGFloat?, page: Int, meaningLines: [String], collocationLines: [String], relatedLines: [String]) {
     guard let headword, !meaningLines.isEmpty || !collocationLines.isEmpty || !relatedLines.isEmpty else { return }
     let record = RedbookRecord(
         headword: headword,
         page: page,
+        headerHeight: Double(headerHeight ?? 0),
         meaningLines: meaningLines,
         collocationLines: collocationLines,
         relatedLines: relatedLines
@@ -136,7 +139,12 @@ func recognizedLines(on page: PDFPage) -> [OCRLine] {
         guard let candidate = observation.topCandidates(1).first else { return nil }
         let text = normalize(candidate.string)
         guard !text.isEmpty else { return nil }
-        return OCRLine(text: text, x: observation.boundingBox.midX, y: observation.boundingBox.midY)
+        return OCRLine(
+            text: text,
+            x: observation.boundingBox.midX,
+            y: observation.boundingBox.midY,
+            height: observation.boundingBox.height
+        )
     }
     let left = lines.filter { $0.x < 0.5 }.sorted { lhs, rhs in
         abs(lhs.y - rhs.y) > 0.008 ? lhs.y > rhs.y : lhs.x < rhs.x
@@ -151,37 +159,66 @@ for pageNumber in startPage...endPage {
     autoreleasepool {
         guard let page = document.page(at: pageNumber - 1) else { return }
         var currentHeadword: String?
+        var currentHeaderHeight: CGFloat?
         var section: ContentSection = .none
         var meaningLines: [String] = []
         var collocationLines: [String] = []
         var relatedLines: [String] = []
 
         let pageLines = recognizedLines(on: page)
-        let hasVocabularyPreview = pageLines.contains { $0.text.contains("本单元词汇预览") }
+        let previewHeaderY = pageLines.first { $0.text.contains("本单元词汇预览") }?.y
+        let previewCutoffY: CGFloat? = previewHeaderY.flatMap { headerY in
+            let candidateYs = pageLines
+                .filter({ $0.y < headerY && detectedHeader(in: $0) != nil })
+                .map(\.y)
+                .sorted(by: >)
+            var candidateRows: [CGFloat] = []
+            for y in candidateYs {
+                if let previous = candidateRows.last, abs(previous - y) <= 0.006 {
+                    continue
+                }
+                candidateRows.append(y)
+            }
+
+            for index in 0..<(max(0, candidateRows.count - 1)) {
+                let upperY = candidateRows[index]
+                let lowerY = candidateRows[index + 1]
+                if upperY - lowerY > 0.02 {
+                    return (upperY + lowerY) / 2
+                }
+            }
+            return nil
+        }
         if ProcessInfo.processInfo.environment["DEBUG_OCR"] == "1" {
             for line in pageLines {
-                FileHandle.standardError.write(Data((String(format: "%.3f %.3f %@\n", line.x, line.y, line.text)).utf8))
+                FileHandle.standardError.write(Data((String(format: "%.3f %.3f %.3f %@\n", line.x, line.y, line.height, line.text)).utf8))
             }
         }
 
         for line in pageLines {
-            // Unit-opening pages print a dense vocabulary preview above the real
-            // entries. Preview words sit on the same left rails as headwords and
-            // used to be mistaken for headers (for example, "magnify" captured
-            // the following "object" entry). The body begins below this band.
-            if hasVocabularyPreview && line.y >= 0.56 && line.y <= 0.72 {
+            // Unit-opening pages use different preview heights. Detect the gap
+            // between the last preview headword and the first real body marker
+            // instead of relying on one fixed y-band. This prevents preview
+            // words such as "magnify" and "traffic" from capturing the next
+            // real entry while preserving the first body headword.
+            if let headerY = previewHeaderY,
+               let cutoffY = previewCutoffY,
+               line.y > cutoffY,
+               line.y <= headerY {
                 continue
             }
 
             if let header = detectedHeader(in: line) {
                 writeRecord(
                     headword: currentHeadword,
+                    headerHeight: currentHeaderHeight,
                     page: pageNumber,
                     meaningLines: meaningLines,
                     collocationLines: collocationLines,
                     relatedLines: relatedLines
                 )
                 currentHeadword = header.canonicalHeadword
+                currentHeaderHeight = line.height
                 section = .none
                 meaningLines = []
                 collocationLines = []
@@ -226,6 +263,7 @@ for pageNumber in startPage...endPage {
 
         writeRecord(
             headword: currentHeadword,
+            headerHeight: currentHeaderHeight,
             page: pageNumber,
             meaningLines: meaningLines,
             collocationLines: collocationLines,

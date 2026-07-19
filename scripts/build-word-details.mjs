@@ -24,6 +24,20 @@ const words = JSON.parse(await readFile(wordsPath, 'utf8'))
 const corpusMeta = JSON.parse(await readFile(corpusMetaPath, 'utf8'))
 const rawLines = (await readFile(ocrPath, 'utf8')).split(/\r?\n/).filter(Boolean)
 const records = rawLines.map((line) => JSON.parse(line))
+const recordsByHeadword = new Map()
+for (const record of records) {
+  const key = String(record.headword ?? '').toLowerCase()
+  const grouped = recordsByHeadword.get(key) ?? []
+  grouped.push(record)
+  recordsByHeadword.set(key, grouped)
+}
+const selectedRecords = records.filter((record) => {
+  const key = String(record.headword ?? '').toLowerCase()
+  const grouped = recordsByHeadword.get(key) ?? []
+  if (grouped.length <= 1) return true
+  const bestHeaderHeight = Math.max(...grouped.map((item) => Number(item.headerHeight ?? 0)))
+  return Number(record.headerHeight ?? 0) === bestHeaderHeight
+})
 const examTranslations = examTranslationsPath
   ? JSON.parse(await readFile(examTranslationsPath, 'utf8'))
   : {}
@@ -531,7 +545,7 @@ const examplesByWord = new Map()
 const relatedByWord = new Map()
 const redbookInfoByWord = new Map()
 
-for (const record of records) {
+for (const record of selectedRecords) {
   const key = String(record.headword ?? '').toLowerCase()
   if (!idsByWord.has(key)) continue
 

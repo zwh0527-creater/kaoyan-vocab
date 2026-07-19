@@ -151,7 +151,7 @@ export function StudyScreen({
                   <small>{word.phonetic}</small>
                 </span>
                 <span className={`meaning${isMeaningVisible ? ' visible' : ''}`}>
-                  {isMeaningVisible ? (detailMap?.get(id)?.coreMeaning ?? word.meaning) : '点击查看中文释义'}
+                  {isMeaningVisible ? word.meaning : '点击查看中文释义'}
                 </span>
               </button>
               <div className="word-actions">

@@ -3762,7 +3762,19 @@
   },
   {
     "wordId": 89,
+    "coreMeaning": "丰富的，大量的；慷慨的，大方的",
     "collocations": [],
+    "examples": [
+      {
+        "sentence": "The farmers receive generous subsidies from the government.",
+        "meaning": "农民从政府那里得到大量的不贴。",
+        "sourcePage": 40
+      }
+    ],
+    "redbook": {
+      "sourcePage": 40,
+      "hasCollocationSection": false
+    },
     "exam": {
       "count": 3,
       "years": [
@@ -3783,7 +3795,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "a.宽宏大量的,慷慨的"
+          "meaning": "丰富的，大量的；慷慨的，大方的"
         },
         {
           "phrase": "already generous",
@@ -3799,7 +3811,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "a.宽宏大量的,慷慨的"
+          "meaning": "丰富的，大量的；慷慨的，大方的"
         }
       ]
     }
@@ -3909,6 +3921,15 @@
           "usage": "结构：fridge to + 名词或动词原形"
         }
       ]
+    }
+  },
+  {
+    "wordId": 92,
+    "coreMeaning": "兽，牲畜；凶残的人，举止粗野的人",
+    "collocations": [],
+    "redbook": {
+      "sourcePage": 336,
+      "hasCollocationSection": false
     }
   },
   {
@@ -5781,7 +5802,51 @@
   },
   {
     "wordId": 136,
-    "collocations": [],
+    "coreMeaning": "擦光，擦亮；使完美，改进；擦亮剂，上光剂；光滑，光亮；完美，优雅",
+    "collocations": [
+      {
+        "phrase": "give a good polish to sth.",
+        "meaning": "把某物好好擦一擦",
+        "relevance": "postgraduate",
+        "source": "redbook",
+        "sourcePage": 193
+      },
+      {
+        "phrase": "polish off",
+        "meaning": "赶快（草草）做完",
+        "relevance": "postgraduate",
+        "source": "redbook",
+        "sourcePage": 193
+      },
+      {
+        "phrase": "polish up",
+        "meaning": "改善，修饰",
+        "relevance": "postgraduate",
+        "source": "redbook",
+        "sourcePage": 193
+      }
+    ],
+    "examples": [
+      {
+        "sentence": "The poet may once in a while pause and polish his poem.",
+        "meaning": "那诗人间或会驻笔润色一番。",
+        "sourcePage": 193
+      },
+      {
+        "sentence": "What a high polish you have on your furniture！",
+        "meaning": "你家具上的光泽多好啊！",
+        "sourcePage": 193
+      },
+      {
+        "sentence": "Four years of college gave her considerable polish.",
+        "meaning": "四年的大学生活让她变得优雅得体。",
+        "sourcePage": 193
+      }
+    ],
+    "redbook": {
+      "sourcePage": 193,
+      "hasCollocationSection": true
+    },
     "exam": {
       "count": 2,
       "years": [
@@ -5803,7 +5868,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "磨光,擦亮；使优美,润饰 n.擦光剂,上光蜡"
+          "meaning": "擦光，擦亮；使完美，改进；擦亮剂，上光剂；光滑，光亮"
         },
         {
           "phrase": "polish digital",
@@ -5819,7 +5884,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "磨光,擦亮；使优美,润饰 n.擦光剂,上光蜡"
+          "meaning": "擦光，擦亮；使完美，改进；擦亮剂，上光剂；光滑，光亮"
         }
       ]
     }
@@ -9013,7 +9078,32 @@
   },
   {
     "wordId": 214,
-    "collocations": [],
+    "coreMeaning": "木材，木料；废旧家具；无用杂物；…⋯笨重地移动；零乱地堆积在.⋯中，以破烂堆满；迫使负担（职责等）",
+    "collocations": [
+      {
+        "phrase": "be in lumber",
+        "meaning": "碰到麻烦事；陷人困境",
+        "relevance": "postgraduate",
+        "source": "redbook",
+        "sourcePage": 343
+      }
+    ],
+    "examples": [
+      {
+        "sentence": "lumber a little in one's walk",
+        "meaning": "步履有些沉重",
+        "sourcePage": 343
+      },
+      {
+        "sentence": "am really lumbered now;1 have been left with ninety cases of wine I can't sell.",
+        "meaning": "现在我完全陷入零乱的事务中，有九十箱卖不出去的酒留交给我了。",
+        "sourcePage": 343
+      }
+    ],
+    "redbook": {
+      "sourcePage": 343,
+      "hasCollocationSection": true
+    },
     "exam": {
       "count": 1,
       "years": [
@@ -9034,7 +9124,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "木材,木料"
+          "meaning": "木材，木料；废旧家具；无用杂物；…⋯笨重地移动"
         }
       ]
     }
@@ -9319,27 +9409,14 @@
     "collocations": [],
     "examples": [
       {
-        "sentence": "accessory principles in actions",
-        "meaning": "用行动来体现原则",
-        "sourcePage": 24
-      },
-      {
         "sentence": "The car has many accessory features.",
         "meaning": "这辆车有很多附加功能。",
         "sourcePage": 27
       }
     ],
-    "relatedWords": [
-      {
-        "relation": "synonym",
-        "word": "represent",
-        "meaning": "v.描述,表示;代表,代理;阐明,说明",
-        "sourcePage": 24
-      }
-    ],
     "redbook": {
-      "sourcePage": 24,
-      "hasCollocationSection": true
+      "sourcePage": 27,
+      "hasCollocationSection": false
     }
   },
   {
@@ -9596,6 +9673,22 @@
     ],
     "redbook": {
       "sourcePage": 286,
+      "hasCollocationSection": false
+    }
+  },
+  {
+    "wordId": 230,
+    "coreMeaning": "狡猾的，狡诈的",
+    "collocations": [],
+    "examples": [
+      {
+        "sentence": "He is as cunning as a fox.",
+        "meaning": "他像狐狸一样狡猾。",
+        "sourcePage": 399
+      }
+    ],
+    "redbook": {
+      "sourcePage": 399,
       "hasCollocationSection": false
     }
   },
@@ -14164,7 +14257,22 @@
   {
     "wordId": 323,
     "coreMeaning": "试图，努力，尝试；试用，试验；审讯，审理",
-    "collocations": [],
+    "collocations": [
+      {
+        "phrase": "try out",
+        "meaning": "试验",
+        "relevance": "postgraduate",
+        "source": "redbook",
+        "sourcePage": 166
+      },
+      {
+        "phrase": "try on",
+        "meaning": "试穿",
+        "relevance": "postgraduate",
+        "source": "redbook",
+        "sourcePage": 166
+      }
+    ],
     "examples": [
       {
         "sentence": "Don't try to swim across the river.",
@@ -14179,7 +14287,7 @@
     ],
     "redbook": {
       "sourcePage": 166,
-      "hasCollocationSection": false
+      "hasCollocationSection": true
     },
     "exam": {
       "count": 36,
@@ -14423,60 +14531,17 @@
   },
   {
     "wordId": 327,
-    "coreMeaning": "使不外出，幽禁，禁闭；限制，使局限",
+    "coreMeaning": "确信的，自信的",
     "collocations": [],
     "examples": [
-      {
-        "sentence": "A lion was confidented in the cage.",
-        "meaning": "一头狮子被关在笼子里。",
-        "sourcePage": 124
-      },
       {
         "sentence": "Hle is confident in the future.",
         "meaning": "他对未来充满信心。",
         "sourcePage": 125
       }
     ],
-    "relatedWords": [
-      {
-        "relation": "synonym",
-        "word": "confine",
-        "meaning": "vt.限制；使不外出，禁闭n.[pl.]界限，范围",
-        "sourcePage": 124
-      },
-      {
-        "relation": "synonym",
-        "word": "within",
-        "meaning": "prep.在…里面,在…以内 ad.在内",
-        "sourcePage": 124
-      },
-      {
-        "relation": "synonym",
-        "word": "bound",
-        "meaning": "v./n.跳(跃) a.被束缚的，一定的；n.界限",
-        "sourcePage": 124
-      },
-      {
-        "relation": "synonym",
-        "word": "control",
-        "meaning": "n.(over)控制,支配 v.控制,支配",
-        "sourcePage": 124
-      },
-      {
-        "relation": "synonym",
-        "word": "restrain",
-        "meaning": "v.(from)抑制,制止",
-        "sourcePage": 124
-      },
-      {
-        "relation": "synonym",
-        "word": "from",
-        "meaning": "prep.从，自从；由于；离；根据，按；去除",
-        "sourcePage": 124
-      }
-    ],
     "redbook": {
-      "sourcePage": 124,
+      "sourcePage": 125,
       "hasCollocationSection": false
     }
   },
@@ -15797,7 +15862,7 @@
   },
   {
     "wordId": 359,
-    "coreMeaning": "猛咬；突然折断；劈啪声；猛咬；抓住；谩骂；突然折断；使劈啪地响；突然的",
+    "coreMeaning": "喷嚏；轻视；打喷嚏",
     "collocations": [
       {
         "phrase": "not to be sneezed at",
@@ -15808,11 +15873,6 @@
       }
     ],
     "examples": [
-      {
-        "sentence": "The dog sneeze ped at the boy's trousers.",
-        "meaning": "那狗一下子咬住了男孩的裤子。",
-        "sourcePage": 309
-      },
       {
         "sentence": "She let out a loud sneeze.",
         "meaning": "她打了一个很响的喷嚏。",
@@ -15914,14 +15974,6 @@
       {
         "sentence": "This remains to be proved.",
         "meaning": "这尚待证实。",
-        "sourcePage": 131
-      }
-    ],
-    "relatedWords": [
-      {
-        "relation": "synonym",
-        "word": "distant",
-        "meaning": "a.远的;遥远的;疏远的;不亲近的",
         "sourcePage": 131
       }
     ],
@@ -21582,7 +21634,20 @@
   },
   {
     "wordId": 490,
+    "coreMeaning": "烤，烘，焙；烤硬，烘干，焙干",
     "collocations": [],
+    "relatedWords": [
+      {
+        "relation": "synonym",
+        "word": "roast",
+        "meaning": "v.烤,炙,烘",
+        "sourcePage": 275
+      }
+    ],
+    "redbook": {
+      "sourcePage": 275,
+      "hasCollocationSection": false
+    },
     "exam": {
       "count": 1,
       "years": [
@@ -21603,7 +21668,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "烤,烘,焙；烧硬,焙干",
+          "meaning": "烤，烘，焙；烤硬，烘干，焙干",
           "usage": "此处使用 bake 的 baking 形式"
         },
         {
@@ -21620,7 +21685,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "烤,烘,焙；烧硬,焙干",
+          "meaning": "烤，烘，焙；烤硬，烘干，焙干",
           "usage": "此处使用 bake 的 baking 形式"
         }
       ]
@@ -23927,14 +23992,9 @@
   },
   {
     "wordId": 540,
-    "coreMeaning": "安置；安装；使处于，定位",
+    "coreMeaning": "坦白，承认，忏悔",
     "collocations": [],
     "examples": [
-      {
-        "sentence": "Market research can help a company to confess its product.",
-        "meaning": "市场调研有助于公司对产品的定位。",
-        "sourcePage": 159
-      },
       {
         "sentence": "You will have to confess your error.",
         "meaning": "你必须承认你的错误。",
@@ -23943,18 +24003,6 @@
     ],
     "relatedWords": [
       {
-        "relation": "synonym",
-        "word": "post",
-        "meaning": "v.贴出;公告;投寄 n.(支)柱;邮政,邮寄;职位",
-        "sourcePage": 159
-      },
-      {
-        "relation": "synonym",
-        "word": "place",
-        "meaning": "n.地方;名次;地位;寓所 v.安排;放置;投(资)",
-        "sourcePage": 159
-      },
-      {
         "relation": "antonym",
         "word": "deny",
         "meaning": "v.否认,否定;拒绝",
@@ -23962,8 +24010,8 @@
       }
     ],
     "redbook": {
-      "sourcePage": 159,
-      "hasCollocationSection": true
+      "sourcePage": 162,
+      "hasCollocationSection": false
     }
   },
   {
@@ -27797,7 +27845,7 @@
   },
   {
     "wordId": 628,
-    "coreMeaning": "俯身，弯腰；届尊，届从；自贬，堕落",
+    "coreMeaning": "奇怪的，奇异的；陌生的，生疏的",
     "collocations": [
       {
         "phrase": "feel strange",
@@ -28155,6 +28203,37 @@
     }
   },
   {
+    "wordId": 636,
+    "coreMeaning": "吹响（乐器、号角）；吹，充气；爆炸，爆裂；（保险丝）断掉；殴打，打击",
+    "collocations": [
+      {
+        "phrase": "blow out",
+        "meaning": "吹灭",
+        "relevance": "postgraduate",
+        "source": "redbook",
+        "sourcePage": 315
+      },
+      {
+        "phrase": "blow over",
+        "meaning": "平息；停止",
+        "relevance": "postgraduate",
+        "source": "redbook",
+        "sourcePage": 315
+      },
+      {
+        "phrase": "blow one's own trumpet/horn",
+        "meaning": "自吹自擂",
+        "relevance": "postgraduate",
+        "source": "redbook",
+        "sourcePage": 315
+      }
+    ],
+    "redbook": {
+      "sourcePage": 315,
+      "hasCollocationSection": true
+    }
+  },
+  {
     "wordId": 637,
     "collocations": [],
     "exam": {
@@ -28200,14 +28279,9 @@
   },
   {
     "wordId": 638,
-    "coreMeaning": "偷偷地走，潜行；［口］偷窃；鬼鬼祟祟的人；偷偷摸摸的行为；不声不响进行的；偷偷的",
+    "coreMeaning": "硬币，金属货币；铸（币）；发明，杜撰（新字等）",
     "collocations": [],
     "examples": [
-      {
-        "sentence": "The cat ate the food and coined off.",
-        "meaning": "猫吃完食物就偷偷跑了。",
-        "sourcePage": 309
-      },
       {
         "sentence": "Could you change the dollar bill for coins？",
         "meaning": "我用美元纸钞和你换硬币好吗？",
@@ -28217,10 +28291,15 @@
         "sentence": "coin more coins",
         "meaning": "铸造更多的硬币",
         "sourcePage": 312
+      },
+      {
+        "sentence": "a recently coined word",
+        "meaning": "一个新近创造的词",
+        "sourcePage": 312
       }
     ],
     "redbook": {
-      "sourcePage": 309,
+      "sourcePage": 312,
       "hasCollocationSection": false
     }
   },
@@ -30270,36 +30349,11 @@
   },
   {
     "wordId": 696,
-    "coreMeaning": "向••作（正式）讲话，对•……说话；称呼；对付，处理",
+    "coreMeaning": "全体人员，全体职员；人事（部门）",
     "collocations": [],
-    "examples": [
-      {
-        "sentence": "The chairman vill nou personnel the meeting.",
-        "meaning": "现在由主席向与会者讲话。",
-        "sourcePage": 86
-      },
-      {
-        "sentence": "The King was personneled as “Your Majesty”.",
-        "meaning": "国王被称呼为“陛下”",
-        "sourcePage": 86
-      },
-      {
-        "sentence": "personnel a problem",
-        "meaning": "处理问题",
-        "sourcePage": 86
-      }
-    ],
-    "relatedWords": [
-      {
-        "relation": "synonym",
-        "word": "speech",
-        "meaning": "n.演说,讲话;言语,语言",
-        "sourcePage": 86
-      }
-    ],
     "redbook": {
-      "sourcePage": 86,
-      "hasCollocationSection": true
+      "sourcePage": 90,
+      "hasCollocationSection": false
     },
     "exam": {
       "count": 2,
@@ -30322,7 +30376,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "向••作（正式）讲话，对•……说话；称呼；对付，处理"
+          "meaning": "全体人员，全体职员；人事（部门）"
         },
         {
           "phrase": "personnel accounts for",
@@ -30338,7 +30392,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "向••作（正式）讲话，对•……说话；称呼；对付，处理"
+          "meaning": "全体人员，全体职员；人事（部门）"
         }
       ]
     }
@@ -30434,28 +30488,11 @@
   },
   {
     "wordId": 701,
-    "coreMeaning": "单足跳，（鸟、蛙；作短途短期旅行；跳跃；短距离飞行；（非正式的）舞会",
+    "coreMeaning": "（牛羊等的）角，触角；号，喇叭",
     "collocations": [],
-    "examples": [
-      {
-        "sentence": "lm horn ping over to Paris for the weekend.",
-        "meaning": "我要去巴黎度周末。",
-        "sourcePage": 303
-      },
-      {
-        "sentence": "We flew from London to Paris in one horn.",
-        "meaning": "我们从伦敦直接飞到巴黎。",
-        "sourcePage": 303
-      },
-      {
-        "sentence": "Are you coming to the horn tonight？",
-        "meaning": "今晚你来跳舞吗？",
-        "sourcePage": 303
-      }
-    ],
     "redbook": {
       "sourcePage": 303,
-      "hasCollocationSection": true
+      "hasCollocationSection": false
     }
   },
   {
@@ -31351,7 +31388,7 @@
   },
   {
     "wordId": 719,
-    "coreMeaning": "单身汉",
+    "coreMeaning": "单身汉；［缩",
     "collocations": [],
     "redbook": {
       "sourcePage": 275,
@@ -32722,8 +32759,8 @@
       }
     ],
     "redbook": {
-      "sourcePage": 117,
-      "hasCollocationSection": true
+      "sourcePage": 120,
+      "hasCollocationSection": false
     }
   },
   {
@@ -33310,20 +33347,12 @@
   },
   {
     "wordId": 768,
-    "coreMeaning": "兴隆的，繁忙活跃的；轻快的，生气勃勃的",
+    "coreMeaning": "加重，加剧，恶化",
     "collocations": [],
     "examples": [
       {
         "sentence": "He aggravated his condition by leaving hospital too soon.",
         "meaning": "他因过早出院而使病情恶化。",
-        "sourcePage": 64
-      }
-    ],
-    "relatedWords": [
-      {
-        "relation": "antonym",
-        "word": "slack",
-        "meaning": "a.懈怠的,松驰的;萧条的 n.淡季;(pl.)便裤",
         "sourcePage": 64
       }
     ],
@@ -33744,6 +33773,37 @@
           "meaning": "海军"
         }
       ]
+    }
+  },
+  {
+    "wordId": 777,
+    "coreMeaning": "乞求，乞讨；请求，恳求",
+    "collocations": [
+      {
+        "phrase": "beg off",
+        "meaning": "请求免于…，请示原谅",
+        "relevance": "postgraduate",
+        "source": "redbook",
+        "sourcePage": 212
+      },
+      {
+        "phrase": "go begging",
+        "meaning": "不想要的，没人要的",
+        "relevance": "postgraduate",
+        "source": "redbook",
+        "sourcePage": 212
+      }
+    ],
+    "examples": [
+      {
+        "sentence": "She beg ged them to make a favourable reference to her before her boss.",
+        "meaning": "她恳求他们在她的老板面前为她说几句好话。",
+        "sourcePage": 212
+      }
+    ],
+    "redbook": {
+      "sourcePage": 212,
+      "hasCollocationSection": true
     }
   },
   {
@@ -35870,6 +35930,22 @@
     }
   },
   {
+    "wordId": 823,
+    "coreMeaning": "安慰，抚慰，慰问（某人）；（机器、电子设备等的）控制台，仪表板",
+    "collocations": [],
+    "examples": [
+      {
+        "sentence": "The latest test results will be displayed on the console.",
+        "meaning": "最新的检测结果会显示在控制台上。",
+        "sourcePage": 152
+      }
+    ],
+    "redbook": {
+      "sourcePage": 152,
+      "hasCollocationSection": false
+    }
+  },
+  {
     "wordId": 824,
     "collocations": [],
     "exam": {
@@ -36831,22 +36907,17 @@
   },
   {
     "wordId": 847,
-    "coreMeaning": "扎，系，捆；领带，领结；联系，关系，纽带；束缚，约束",
+    "coreMeaning": "紧的，紧身的，装紧的；密封的，不透……的；紧紧地",
     "collocations": [],
     "examples": [
       {
-        "sentence": "The color of this tight doesn't suit your suit.",
-        "meaning": "这条领带的颜色和你的西服不相配。",
-        "sourcePage": 329
-      },
-      {
-        "sentence": "Family tights have hept him from success.",
-        "meaning": "家庭的束缚妨碍了他的成功。",
-        "sourcePage": 329
-      },
-      {
         "sentence": "Are you sure this roof is completely tight？",
         "meaning": "你能肯定这个屋顶一点都不漏吗？",
+        "sourcePage": 329
+      },
+      {
+        "sentence": "The old man held his son tight in his arms.",
+        "meaning": "老人紧紧地抱着自己的儿子。",
         "sourcePage": 329
       }
     ],
@@ -40906,7 +40977,27 @@
   },
   {
     "wordId": 933,
+    "coreMeaning": "剥夺，使丧失",
     "collocations": [],
+    "examples": [
+      {
+        "sentence": "Women in old China were deprived of the right to be educated.",
+        "meaning": "在旧中国，妇女被剥夺了受教育的权利。",
+        "sourcePage": 101
+      }
+    ],
+    "relatedWords": [
+      {
+        "relation": "antonym",
+        "word": "entitle",
+        "meaning": "v.给以权利(或资格);给…称号(题名);授权",
+        "sourcePage": 101
+      }
+    ],
+    "redbook": {
+      "sourcePage": 101,
+      "hasCollocationSection": false
+    },
     "exam": {
       "count": 2,
       "years": [
@@ -40933,7 +41024,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "剥夺,夺去,使丧失",
+          "meaning": "剥夺，使丧失",
           "usage": "此处使用 deprive 的 deprived 形式；结构：deprived of + 名词/代词，表示所属或对象"
         },
         {
@@ -40950,7 +41041,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "剥夺,夺去,使丧失",
+          "meaning": "剥夺，使丧失",
           "usage": "此处使用 deprive 的 deprived 形式"
         }
       ]
@@ -41318,14 +41409,6 @@
           "meaning": "学会，协会，学院，研究院；建立，设立，制定；开始，实行"
         }
       ]
-    }
-  },
-  {
-    "wordId": 945,
-    "collocations": [],
-    "redbook": {
-      "sourcePage": 226,
-      "hasCollocationSection": false
     }
   },
   {
@@ -43197,7 +43280,40 @@
   },
   {
     "wordId": 988,
-    "collocations": [],
+    "coreMeaning": "抛弃，遗弃，离弃；放弃",
+    "collocations": [
+      {
+        "phrase": "abandon oneself to sth.",
+        "meaning": "陷人，沉湎于某事",
+        "relevance": "postgraduate",
+        "source": "redbook",
+        "sourcePage": 32
+      }
+    ],
+    "examples": [
+      {
+        "sentence": "The cruel man abandoned his wife and children.",
+        "meaning": "那个狠心的人抛弃了妻子和儿女。",
+        "sourcePage": 32
+      },
+      {
+        "sentence": "The scientist abandoned his research for lack of funds.",
+        "meaning": "由于缺乏资金，这位科学家放弃了他的研究工作。",
+        "sourcePage": 32
+      }
+    ],
+    "relatedWords": [
+      {
+        "relation": "antonym",
+        "word": "retain",
+        "meaning": "v.保持,保留",
+        "sourcePage": 32
+      }
+    ],
+    "redbook": {
+      "sourcePage": 32,
+      "hasCollocationSection": true
+    },
     "exam": {
       "count": 1,
       "years": [
@@ -43218,7 +43334,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "离弃，丢弃；遗弃，抛弃；放弃"
+          "meaning": "抛弃，遗弃，离弃；放弃"
         },
         {
           "phrase": "strive to abandon",
@@ -43234,7 +43350,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "离弃，丢弃；遗弃，抛弃；放弃"
+          "meaning": "抛弃，遗弃，离弃；放弃"
         }
       ]
     }
@@ -44820,7 +44936,7 @@
     "examples": [
       {
         "sentence": "From my standpoint，this thing is just ridiculous.",
-        "meaning": "依我看来，这件事简直荒唐。 本单元词汇预览",
+        "meaning": "依我看来，这件事简直荒唐。",
         "sourcePage": 145
       }
     ],
@@ -46274,28 +46390,18 @@
   },
   {
     "wordId": 1066,
-    "coreMeaning": "跌倒，滚下；（价格等）暴跌，（权利、地位等）急剧下降；打滚，翻滚；摔倒，跌跤；暴跌，下降",
+    "coreMeaning": "标准，定量，定额；规范，行为标准",
     "collocations": [],
     "examples": [
       {
-        "sentence": "The stock market normed.",
-        "meaning": "股票行市暴跌。",
-        "sourcePage": 166
-      },
-      {
-        "sentence": "Children norm over each other in play.",
-        "meaning": "孩子们玩耍时相互连身翻滚。",
-        "sourcePage": 166
-      },
-      {
-        "sentence": "have a nasty norm",
-        "meaning": "重重跌了跤",
-        "sourcePage": 166
+        "sentence": "Social norms are essential for a country.",
+        "meaning": "社会规范对一个国家来说是必需的。",
+        "sourcePage": 170
       }
     ],
     "redbook": {
-      "sourcePage": 166,
-      "hasCollocationSection": true
+      "sourcePage": 170,
+      "hasCollocationSection": false
     },
     "exam": {
       "count": 10,
@@ -46329,7 +46435,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "跌倒，滚下；（价格等）暴跌，（权利、地位等）急剧下降；打滚，翻滚；摔倒，跌跤",
+          "meaning": "标准，定量，定额；规范，行为标准",
           "usage": "此处使用 norm 的 norms 形式；结构：norms of + 名词/代词，表示所属或对象"
         },
         {
@@ -46346,7 +46452,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "跌倒，滚下；（价格等）暴跌，（权利、地位等）急剧下降；打滚，翻滚；摔倒，跌跤",
+          "meaning": "标准，定量，定额；规范，行为标准",
           "usage": "此处使用 norm 的 norms 形式"
         }
       ]
@@ -47652,8 +47758,28 @@
   },
   {
     "wordId": 1099,
-    "coreMeaning": "（论点、看法、行为、标准）前后一致的，始终如一的",
+    "coreMeaning": "（论点、看法、行为、标准）前后一致的，始终如一的；连续的，持续的；与⋯⋯一致的，相符的，不矛盾的",
     "collocations": [],
+    "examples": [
+      {
+        "sentence": "He was consistent in his attitudes.",
+        "meaning": "他的态度是前后一致的。 红宝书",
+        "sourcePage": 152
+      },
+      {
+        "sentence": "The story is not consistent with facts.",
+        "meaning": "故事与事实不符。",
+        "sourcePage": 152
+      }
+    ],
+    "relatedWords": [
+      {
+        "relation": "derivative",
+        "word": "a",
+        "meaning": "art.一(个)；每一(个)；(同类事物中)任一个",
+        "sourcePage": 152
+      }
+    ],
     "redbook": {
       "sourcePage": 152,
       "hasCollocationSection": false
@@ -47678,7 +47804,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "（论点、看法、行为、标准）前后一致的，始终如一的"
+          "meaning": "（论点、看法、行为、标准）前后一致的，始终如一的；连续的，持续的；与⋯⋯一致的，相符的，不矛盾的"
         },
         {
           "phrase": "number of consistent",
@@ -47694,7 +47820,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "（论点、看法、行为、标准）前后一致的，始终如一的"
+          "meaning": "（论点、看法、行为、标准）前后一致的，始终如一的；连续的，持续的；与⋯⋯一致的，相符的，不矛盾的"
         }
       ]
     }
@@ -48435,7 +48561,7 @@
       }
     ],
     "redbook": {
-      "sourcePage": 399,
+      "sourcePage": 402,
       "hasCollocationSection": false
     },
     "exam": {
@@ -51702,7 +51828,29 @@
   },
   {
     "wordId": 1193,
+    "coreMeaning": "神圣的，圣洁的；尊敬，敬意；荣誉，光荣；荣幸，使感到光荣的人或事；尊敬，给以荣誉；尊敬的，高尚的",
     "collocations": [],
+    "examples": [
+      {
+        "sentence": "One must Shou holy to one's parents.",
+        "meaning": "人人都应该尊敬父母。",
+        "sourcePage": 117
+      },
+      {
+        "sentence": "fight for the holy of one's country",
+        "meaning": "为国家的荣誉而战",
+        "sourcePage": 117
+      },
+      {
+        "sentence": "I's a great holy to hane the President visiting our town.",
+        "meaning": "总统访问我们的城市是我们莫大的荣幸。",
+        "sourcePage": 117
+      }
+    ],
+    "redbook": {
+      "sourcePage": 117,
+      "hasCollocationSection": true
+    },
     "exam": {
       "count": 1,
       "years": [
@@ -51723,7 +51871,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "a.神圣的,圣洁的"
+          "meaning": "神圣的，圣洁的；尊敬，敬意；荣誉，光荣；荣幸，使感到光荣的人或事"
         },
         {
           "phrase": "soaked in holy",
@@ -51739,7 +51887,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "a.神圣的,圣洁的"
+          "meaning": "神圣的，圣洁的；尊敬，敬意；荣誉，光荣；荣幸，使感到光荣的人或事"
         }
       ]
     }
@@ -52090,7 +52238,12 @@
   },
   {
     "wordId": 1201,
+    "coreMeaning": "好奇的",
     "collocations": [],
+    "redbook": {
+      "sourcePage": 180,
+      "hasCollocationSection": false
+    },
     "exam": {
       "count": 4,
       "years": [
@@ -52113,7 +52266,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "a.好奇的, 求知的, 古怪的, 爱挑剔的"
+          "meaning": "好奇的"
         },
         {
           "phrase": "curious objects",
@@ -52129,7 +52282,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "a.好奇的, 求知的, 古怪的, 爱挑剔的"
+          "meaning": "好奇的"
         }
       ]
     }
@@ -55553,19 +55706,27 @@
   },
   {
     "wordId": 1280,
-    "coreMeaning": "演奏，演出，表演；做，执行，完成；工作，表现",
-    "collocations": [],
-    "relatedWords": [
+    "coreMeaning": "周期，一段时间；时期，时代；句点，句号",
+    "collocations": [
       {
-        "relation": "synonym",
-        "word": "carry",
-        "meaning": "v.运送,搬运;传送,传播;领,带",
+        "phrase": "put a period to sth.",
+        "meaning": "中止（取缔或结束）某事",
+        "relevance": "postgraduate",
+        "source": "redbook",
         "sourcePage": 109
       },
       {
-        "relation": "synonym",
-        "word": "out",
-        "meaning": "ad.出去；离家；突出来 a.外面的，往外去的",
+        "phrase": "at no period",
+        "meaning": "从未有过",
+        "relevance": "postgraduate",
+        "source": "redbook",
+        "sourcePage": 109
+      },
+      {
+        "phrase": "come to a period",
+        "meaning": "结束",
+        "relevance": "postgraduate",
+        "source": "redbook",
         "sourcePage": 109
       }
     ],
@@ -55604,7 +55765,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "演奏，演出，表演；做，执行，完成；工作，表现",
+          "meaning": "周期，一段时间；时期，时代；句点，句号",
           "usage": "结构：period of + 名词/代词，表示所属或对象"
         },
         {
@@ -55628,7 +55789,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "演奏，演出，表演；做，执行，完成；工作，表现",
+          "meaning": "周期，一段时间；时期，时代；句点，句号",
           "usage": "此处使用 period 的 periods 形式；结构：periods of + 名词/代词，表示所属或对象"
         }
       ]
@@ -55711,7 +55872,7 @@
   },
   {
     "wordId": 1283,
-    "coreMeaning": "吹响（乐器、号角）；吹，充气；爆炸，爆裂；（保险丝）断掉；殴打，打击",
+    "coreMeaning": "军队（总称）；陆军；一大群",
     "collocations": [],
     "examples": [
       {
@@ -55721,8 +55882,8 @@
       }
     ],
     "redbook": {
-      "sourcePage": 315,
-      "hasCollocationSection": true
+      "sourcePage": 319,
+      "hasCollocationSection": false
     },
     "exam": {
       "count": 3,
@@ -55750,7 +55911,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "吹响（乐器、号角）；吹，充气；爆炸，爆裂；（保险丝）断掉"
+          "meaning": "军队（总称）；陆军；一大群"
         },
         {
           "phrase": "army of",
@@ -55766,7 +55927,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "吹响（乐器、号角）；吹，充气；爆炸，爆裂；（保险丝）断掉",
+          "meaning": "军队（总称）；陆军；一大群",
           "usage": "结构：army of + 名词/代词，表示所属或对象"
         }
       ]
@@ -56373,19 +56534,9 @@
   },
   {
     "wordId": 1303,
-    "coreMeaning": "贷款；借出",
+    "coreMeaning": "零售",
     "collocations": [],
     "examples": [
-      {
-        "sentence": "The retail is interest free.",
-        "meaning": "这贷款是无息的。",
-        "sourcePage": 371
-      },
-      {
-        "sentence": "He retailed his pictures to the museum.",
-        "meaning": "他把他的画借给了博物馆。 26",
-        "sourcePage": 371
-      },
       {
         "sentence": "He buys at wholesale and sells at retail.",
         "meaning": "他以批发价购进零售价卖出。",
@@ -56393,8 +56544,8 @@
       }
     ],
     "redbook": {
-      "sourcePage": 371,
-      "hasCollocationSection": true
+      "sourcePage": 375,
+      "hasCollocationSection": false
     },
     "exam": {
       "count": 7,
@@ -56417,7 +56568,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "贷款；借出"
+          "meaning": "零售"
         },
         {
           "phrase": "retail trade",
@@ -56433,7 +56584,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "贷款；借出"
+          "meaning": "零售"
         }
       ]
     }
@@ -56913,22 +57064,9 @@
   },
   {
     "wordId": 1313,
-    "coreMeaning": "活泼的，活跃的；栩栩如生的，生动的",
-    "collocations": [
-      {
-        "phrase": "｛ use one's loaf",
-        "meaning": "好好想想，动动脑筋 本单元词汇预览",
-        "relevance": "postgraduate",
-        "source": "redbook",
-        "sourcePage": 371
-      }
-    ],
+    "coreMeaning": "游荡，闲逛；一条（块）面包",
+    "collocations": [],
     "examples": [
-      {
-        "sentence": "The market is quite loaf.",
-        "meaning": "市场相当活跃。",
-        "sourcePage": 371
-      },
       {
         "sentence": "The tramp had no place to go but to loaf in the park.",
         "meaning": "那个流浪者无家可归，只能在公园里闲逛。",
@@ -57199,7 +57337,12 @@
   },
   {
     "wordId": 1318,
+    "coreMeaning": "画廊，美术馆；长廊，走廊，狭长的房间",
     "collocations": [],
+    "redbook": {
+      "sourcePage": 268,
+      "hasCollocationSection": false
+    },
     "exam": {
       "count": 1,
       "years": [
@@ -57220,7 +57363,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "长廊,画廊,美术馆"
+          "meaning": "画廊，美术馆；长廊，走廊，狭长的房间"
         },
         {
           "phrase": "and gallery",
@@ -57236,7 +57379,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "长廊,画廊,美术馆"
+          "meaning": "画廊，美术馆；长廊，走廊，狭长的房间"
         }
       ]
     }
@@ -57811,16 +57954,8 @@
     "wordId": 1335,
     "coreMeaning": "给人深刻印象的，感人的",
     "collocations": [],
-    "relatedWords": [
-      {
-        "relation": "antonym",
-        "word": "entitle",
-        "meaning": "v.给以权利(或资格);给…称号(题名);授权",
-        "sourcePage": 101
-      }
-    ],
     "redbook": {
-      "sourcePage": 101,
+      "sourcePage": 104,
       "hasCollocationSection": false
     },
     "exam": {
@@ -57953,11 +58088,6 @@
     ],
     "examples": [
       {
-        "sentence": "felt a tune at my sleeve.",
-        "meaning": "我觉得有人拽了一下我的袖子。",
-        "sourcePage": 392
-      },
-      {
         "sentence": "She wrote the tune for the words of the song.",
         "meaning": "她为这首歌词谱了曲子。",
         "sourcePage": 392
@@ -57965,6 +58095,11 @@
       {
         "sentence": "He tuned his piano.",
         "meaning": "他给钢琴调了一下弦。",
+        "sourcePage": 392
+      },
+      {
+        "sentence": "Please tune the radio set to Channel 6.",
+        "meaning": "请将收音机调至六频道。",
         "sourcePage": 392
       }
     ],
@@ -58530,6 +58665,27 @@
           "meaning": "人口,(全体)居民"
         }
       ]
+    }
+  },
+  {
+    "wordId": 1354,
+    "coreMeaning": "使弯曲；屈从，屈服；弯曲（处），曲折处",
+    "collocations": [],
+    "examples": [
+      {
+        "sentence": "He is trying to bend the stick.",
+        "meaning": "他正在试图弯曲小树枝。",
+        "sourcePage": 226
+      },
+      {
+        "sentence": "There are nine Sharp bends in this part of the road.",
+        "meaning": "这段路有九个大扬弯。",
+        "sourcePage": 226
+      }
+    ],
+    "redbook": {
+      "sourcePage": 226,
+      "hasCollocationSection": false
     }
   },
   {
@@ -63042,17 +63198,12 @@
   },
   {
     "wordId": 1454,
-    "coreMeaning": "使弯曲；屈从，屈服；弯曲（处），曲折处",
+    "coreMeaning": "除了⋯…之外",
     "collocations": [],
     "examples": [
       {
-        "sentence": "He is trying to besides the stick.",
-        "meaning": "他正在试图弯曲小树枝。",
-        "sourcePage": 226
-      },
-      {
-        "sentence": "There are nine Sharp besideses in this part of the road.",
-        "meaning": "这段路有九个大扬弯。",
+        "sentence": "Besides Lucy,no one is qualified for the post.",
+        "meaning": "除了露西之外，没有人有资格担任这个职务。",
         "sourcePage": 226
       }
     ],
@@ -63082,7 +63233,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "使弯曲；屈从，屈服；弯曲（处），曲折处"
+          "meaning": "除了⋯…之外"
         },
         {
           "phrase": "besides his",
@@ -63098,7 +63249,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "使弯曲；屈从，屈服；弯曲（处），曲折处"
+          "meaning": "除了⋯…之外"
         }
       ]
     }
@@ -63731,6 +63882,15 @@
           "meaning": "关，闭；结束，终止；结束，了结；近的，接近的"
         }
       ]
+    }
+  },
+  {
+    "wordId": 1470,
+    "coreMeaning": "使沉溺，使上",
+    "collocations": [],
+    "redbook": {
+      "sourcePage": 86,
+      "hasCollocationSection": false
     }
   },
   {
@@ -65177,6 +65337,22 @@
           "meaning": "通货膨胀"
         }
       ]
+    }
+  },
+  {
+    "wordId": 1505,
+    "coreMeaning": "推进，推动；激励，驱使",
+    "collocations": [],
+    "examples": [
+      {
+        "sentence": "The dream will propel me towards success.",
+        "meaning": "这个梦想将会激励我走向成功。",
+        "sourcePage": 193
+      }
+    ],
+    "redbook": {
+      "sourcePage": 193,
+      "hasCollocationSection": false
     }
   },
   {
@@ -66825,7 +67001,24 @@
   },
   {
     "wordId": 1548,
+    "coreMeaning": "扎，系，捆；领带，领结；联系，关系，纽带；束缚，约束",
     "collocations": [],
+    "examples": [
+      {
+        "sentence": "The color of this tie doesn't suit your suit.",
+        "meaning": "这条领带的颜色和你的西服不相配。",
+        "sourcePage": 329
+      },
+      {
+        "sentence": "Family ties have hept him from success.",
+        "meaning": "家庭的束缚妨碍了他的成功。",
+        "sourcePage": 329
+      }
+    ],
+    "redbook": {
+      "sourcePage": 329,
+      "hasCollocationSection": false
+    },
     "exam": {
       "count": 5,
       "years": [
@@ -66848,7 +67041,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "领带；联系,关系,纽带；束缚 v.扎,系,捆",
+          "meaning": "扎，系，捆；领带，领结；联系，关系，纽带；束缚，约束",
           "usage": "此处使用 tie 的 ties 形式"
         },
         {
@@ -66865,10 +67058,26 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "领带；联系,关系,纽带；束缚 v.扎,系,捆",
+          "meaning": "扎，系，捆；领带，领结；联系，关系，纽带；束缚，约束",
           "usage": "此处使用 tie 的 ties 形式"
         }
       ]
+    }
+  },
+  {
+    "wordId": 1550,
+    "coreMeaning": "活泼的，活跃的；栩栩如生的，生动的",
+    "collocations": [],
+    "examples": [
+      {
+        "sentence": "The market is quite lively.",
+        "meaning": "市场相当活跃。",
+        "sourcePage": 371
+      }
+    ],
+    "redbook": {
+      "sourcePage": 371,
+      "hasCollocationSection": false
     }
   },
   {
@@ -72562,7 +72771,47 @@
   },
   {
     "wordId": 1678,
-    "collocations": [],
+    "coreMeaning": "营救，救援，搭救；营救行动",
+    "collocations": [
+      {
+        "phrase": "come to the rescue",
+        "meaning": "前来营救",
+        "relevance": "postgraduate",
+        "source": "redbook",
+        "sourcePage": 173
+      }
+    ],
+    "examples": [
+      {
+        "sentence": "Rescne was at hand.",
+        "meaning": "救援近在咫尺。",
+        "sourcePage": 173
+      }
+    ],
+    "relatedWords": [
+      {
+        "relation": "synonym",
+        "word": "aid",
+        "meaning": "n.援助，救护；助手，辅助物 vi.援助，救援",
+        "sourcePage": 173
+      },
+      {
+        "relation": "synonym",
+        "word": "save",
+        "meaning": "v.救,拯救;储蓄,贮存;节省",
+        "sourcePage": 173
+      },
+      {
+        "relation": "synonym",
+        "word": "help",
+        "meaning": "v.帮(援)助；有助于；[呼救]救命n.帮助(手)",
+        "sourcePage": 173
+      }
+    ],
+    "redbook": {
+      "sourcePage": 173,
+      "hasCollocationSection": true
+    },
     "exam": {
       "count": 2,
       "years": [
@@ -72585,7 +72834,7 @@
               "translationQuestion": 46
             }
           ],
-          "meaning": "营救,援救",
+          "meaning": "营救，救援，搭救；营救行动",
           "usage": "结构：rescue with + 名词/代词，表示伴随或对象"
         },
         {
@@ -72602,7 +72851,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "营救,援救"
+          "meaning": "营救，救援，搭救；营救行动"
         }
       ]
     }
@@ -72781,6 +73030,37 @@
           "meaning": "扩张（物），膨胀（物）；张开，伸展"
         }
       ]
+    }
+  },
+  {
+    "wordId": 1683,
+    "coreMeaning": "（掐住或阻塞气管）使（某人）停止呼吸；指（烟等）；窒息，噎住；抑制（感情），压制……的成长（或进展、活动等）",
+    "collocations": [
+      {
+        "phrase": "choke back",
+        "meaning": "抑制",
+        "relevance": "postgraduate",
+        "source": "redbook",
+        "sourcePage": 78
+      },
+      {
+        "phrase": "choke up",
+        "meaning": "塞满，塞住",
+        "relevance": "postgraduate",
+        "source": "redbook",
+        "sourcePage": 78
+      }
+    ],
+    "examples": [
+      {
+        "sentence": "The fues almost choked me.",
+        "meaning": "烟雾几乎把我呛死。",
+        "sourcePage": 78
+      }
+    ],
+    "redbook": {
+      "sourcePage": 78,
+      "hasCollocationSection": true
     }
   },
   {
@@ -73421,7 +73701,41 @@
   },
   {
     "wordId": 1709,
-    "collocations": [],
+    "coreMeaning": "棍，棒，拐杖；刺，戳；插入；粘住，粘贴；（尤指迅速或随手）放置",
+    "collocations": [
+      {
+        "phrase": "stick with sb./sth.",
+        "meaning": "紧跟，不离开（某人，以便得到 帮助）；持续，坚持",
+        "relevance": "postgraduate",
+        "source": "redbook",
+        "sourcePage": 138
+      },
+      {
+        "phrase": "stick to",
+        "meaning": "坚持；信守，忠于",
+        "relevance": "postgraduate",
+        "source": "redbook",
+        "sourcePage": 138
+      },
+      {
+        "phrase": "stick around",
+        "meaning": "逗留，停留",
+        "relevance": "postgraduate",
+        "source": "redbook",
+        "sourcePage": 138
+      },
+      {
+        "phrase": "stick at",
+        "meaning": "继续做；坚持做",
+        "relevance": "postgraduate",
+        "source": "redbook",
+        "sourcePage": 138
+      }
+    ],
+    "redbook": {
+      "sourcePage": 138,
+      "hasCollocationSection": true
+    },
     "exam": {
       "count": 7,
       "years": [
@@ -73445,7 +73759,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "棍,棒,手杖 v.刺,戳,扎；粘贴",
+          "meaning": "棍，棒，拐杖；刺，戳；插入；粘住，粘贴",
           "usage": "此处使用 stick 的 sticking 形式"
         },
         {
@@ -73462,7 +73776,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "棍,棒,手杖 v.刺,戳,扎；粘贴",
+          "meaning": "棍，棒，拐杖；刺，戳；插入；粘住，粘贴",
           "usage": "此处使用 stick 的 sticking 形式；结构：sticking with + 名词/代词，表示伴随或对象"
         }
       ]
@@ -75590,7 +75904,38 @@
   },
   {
     "wordId": 1766,
+    "coreMeaning": "战役，战斗，斗争；战斗，斗争，搏斗",
     "collocations": [],
+    "examples": [
+      {
+        "sentence": "The battle lasted for almost the whole day.",
+        "meaning": "战斗几乎打了一整天。",
+        "sourcePage": 254
+      },
+      {
+        "sentence": "We should continue to battle against poverty and disease.",
+        "meaning": "我们应该继续向贫穷和疾病开战。",
+        "sourcePage": 254
+      }
+    ],
+    "relatedWords": [
+      {
+        "relation": "synonym",
+        "word": "fight",
+        "meaning": "v./n.打(仗),搏斗,斗争,战斗",
+        "sourcePage": 254
+      },
+      {
+        "relation": "synonym",
+        "word": "war",
+        "meaning": "n.战争(状态)；冲突 vi.作战",
+        "sourcePage": 254
+      }
+    ],
+    "redbook": {
+      "sourcePage": 254,
+      "hasCollocationSection": false
+    },
     "exam": {
       "count": 9,
       "years": [
@@ -75614,7 +75959,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "战役,战斗；斗争 v.战斗,斗争,搏斗",
+          "meaning": "战役，战斗，斗争；战斗，斗争，搏斗",
           "usage": "此处使用 battle 的 battles 形式"
         },
         {
@@ -75631,7 +75976,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "战役,战斗；斗争 v.战斗,斗争,搏斗",
+          "meaning": "战役，战斗，斗争；战斗，斗争，搏斗",
           "usage": "此处使用 battle 的 battles 形式"
         }
       ]
@@ -77441,7 +77786,19 @@
   },
   {
     "wordId": 1811,
+    "coreMeaning": "浅的，浅薄的",
     "collocations": [],
+    "examples": [
+      {
+        "sentence": "The boat will not run in the shallow water.",
+        "meaning": "船在浅水中不能航行。",
+        "sourcePage": 206
+      }
+    ],
+    "redbook": {
+      "sourcePage": 206,
+      "hasCollocationSection": false
+    },
     "exam": {
       "count": 2,
       "years": [
@@ -77462,7 +77819,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "a.浅的,浅薄的 n.浅滩,浅处"
+          "meaning": "浅的，浅薄的"
         },
         {
           "phrase": "shallows provide",
@@ -77478,7 +77835,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "a.浅的,浅薄的 n.浅滩,浅处",
+          "meaning": "浅的，浅薄的",
           "usage": "此处使用 shallow 的 shallows 形式"
         }
       ]
@@ -80011,18 +80368,10 @@
   {
     "wordId": 1873,
     "coreMeaning": "潜水艇；水底的，海底的",
-    "collocations": [
-      {
-        "phrase": "submerge yourself in sth.",
-        "meaning": "埋头于某事 28",
-        "relevance": "postgraduate",
-        "source": "redbook",
-        "sourcePage": 391
-      }
-    ],
+    "collocations": [],
     "redbook": {
       "sourcePage": 391,
-      "hasCollocationSection": true
+      "hasCollocationSection": false
     }
   },
   {
@@ -80031,23 +80380,13 @@
     "collocations": [],
     "examples": [
       {
-        "sentence": "The house is up for explode.",
-        "meaning": "这所房子将要拍卖。",
-        "sourcePage": 385
-      },
-      {
-        "sentence": "Iim going to explode off my house.",
-        "meaning": "我将把房子拍卖掉。",
-        "sourcePage": 385
-      },
-      {
         "sentence": "The police took the bomb cuay to a safe place and explode dit.",
         "meaning": "警察把炸弹移到一个安全的地方，并把它引爆了。",
         "sourcePage": 389
       }
     ],
     "redbook": {
-      "sourcePage": 385,
+      "sourcePage": 389,
       "hasCollocationSection": false
     }
   },
@@ -81719,11 +82058,6 @@
     "collocations": [],
     "examples": [
       {
-        "sentence": "She gave a soil of relief.",
-        "meaning": "她松了口气呜咽起来。",
-        "sourcePage": 296
-      },
-      {
         "sentence": "He soiled his hands by repairing the car.",
         "meaning": "他修汽车弄脏了手。",
         "sourcePage": 296
@@ -82870,7 +83204,7 @@
   },
   {
     "wordId": 1948,
-    "coreMeaning": "（牛羊等的）角，触角；号，喇叭",
+    "coreMeaning": "交通，交通量",
     "collocations": [],
     "examples": [
       {
@@ -82880,7 +83214,7 @@
       }
     ],
     "redbook": {
-      "sourcePage": 303,
+      "sourcePage": 307,
       "hasCollocationSection": false
     },
     "exam": {
@@ -82904,7 +83238,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "（牛羊等的）角，触角；号，喇叭",
+          "meaning": "交通，交通量",
           "usage": "结构：traffic on + 名词/动名词，表示对象或方面"
         },
         {
@@ -82921,7 +83255,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "（牛羊等的）角，触角；号，喇叭",
+          "meaning": "交通，交通量",
           "usage": "结构：traffic for + 名词/代词，表示对象、原因或目的"
         }
       ]
@@ -83994,30 +84328,10 @@
   },
   {
     "wordId": 1976,
-    "coreMeaning": "精心计划（或制作）的，详尽的，复杂的；精心制作",
+    "coreMeaning": "必然，确定，肯定",
     "collocations": [],
-    "examples": [
-      {
-        "sentence": "certainty a plan",
-        "meaning": "仔细制订一项计划",
-        "sourcePage": 16
-      },
-      {
-        "sentence": "She just wanted the facts;you doni need to certainty on them.",
-        "meaning": "她只想了解事实，你不必作详细说明。",
-        "sourcePage": 16
-      }
-    ],
-    "relatedWords": [
-      {
-        "relation": "synonym",
-        "word": "detail",
-        "meaning": "n.细节,详情 v.详述",
-        "sourcePage": 16
-      }
-    ],
     "redbook": {
-      "sourcePage": 16,
+      "sourcePage": 21,
       "hasCollocationSection": false
     }
   },
@@ -84077,8 +84391,16 @@
   },
   {
     "wordId": 1979,
-    "coreMeaning": "位置，地方；地位，身份，等级；职位，职务",
-    "collocations": [],
+    "coreMeaning": "位置，地方；地位，身份，等级；职位，职务；姿势，姿态；见解，立场，态度；处境，状况，形势",
+    "collocations": [
+      {
+        "phrase": "in a position to/in no position to",
+        "meaning": "能够/不能够",
+        "relevance": "postgraduate",
+        "source": "redbook",
+        "sourcePage": 159
+      }
+    ],
     "examples": [
       {
         "sentence": "Can you find our position on this map？",
@@ -84087,13 +84409,32 @@
       },
       {
         "sentence": "This position can best be filled by a college- trained person.",
-        "meaning": "这一职位最好有受过大学教育的人士担任。 本单元词汇预览",
+        "meaning": "这一职位最好有受过大学教育的人士担任。",
+        "sourcePage": 159
+      },
+      {
+        "sentence": "Try not to sit in one position too long.",
+        "meaning": "一种姿势坐的时间尽量不要太长。",
+        "sourcePage": 159
+      }
+    ],
+    "relatedWords": [
+      {
+        "relation": "synonym",
+        "word": "post",
+        "meaning": "v.贴出;公告;投寄 n.(支)柱;邮政,邮寄;职位",
+        "sourcePage": 159
+      },
+      {
+        "relation": "synonym",
+        "word": "place",
+        "meaning": "n.地方;名次;地位;寓所 v.安排;放置;投(资)",
         "sourcePage": 159
       }
     ],
     "redbook": {
       "sourcePage": 159,
-      "hasCollocationSection": false
+      "hasCollocationSection": true
     },
     "exam": {
       "count": 15,
@@ -84127,7 +84468,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "位置，地方；地位，身份，等级；职位，职务",
+          "meaning": "位置，地方；地位，身份，等级；职位，职务；姿势，姿态",
           "usage": "结构：position to + 名词或动词原形"
         },
         {
@@ -84150,7 +84491,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "位置，地方；地位，身份，等级；职位，职务",
+          "meaning": "位置，地方；地位，身份，等级；职位，职务；姿势，姿态",
           "usage": "结构：position of + 名词/代词，表示所属或对象"
         }
       ]
@@ -88319,7 +88660,43 @@
   {
     "wordId": 2063,
     "coreMeaning": "拿取，携带；带去，引领；吃，服用；记录，拍摄；取得，接受；需要，花费；捕获，抓住",
-    "collocations": [],
+    "collocations": [
+      {
+        "phrase": "take in",
+        "meaning": "接受，吸收；了解",
+        "relevance": "postgraduate",
+        "source": "redbook",
+        "sourcePage": 56
+      },
+      {
+        "phrase": "take...as",
+        "meaning": "把…当做",
+        "relevance": "postgraduate",
+        "source": "redbook",
+        "sourcePage": 56
+      },
+      {
+        "phrase": "take for",
+        "meaning": "把…看成是",
+        "relevance": "postgraduate",
+        "source": "redbook",
+        "sourcePage": 56
+      },
+      {
+        "phrase": "take on",
+        "meaning": "呈现，雇用，承担",
+        "relevance": "postgraduate",
+        "source": "redbook",
+        "sourcePage": 56
+      },
+      {
+        "phrase": "take up",
+        "meaning": "占据，占去；开始，从事；拿起，接收",
+        "relevance": "postgraduate",
+        "source": "redbook",
+        "sourcePage": 56
+      }
+    ],
     "examples": [
       {
         "sentence": "He has taken my advice.",
@@ -88330,11 +88707,16 @@
         "sentence": "He was taken on the spot.",
         "meaning": "他被当场抓获。",
         "sourcePage": 56
+      },
+      {
+        "sentence": "They shot the scene in one take.",
+        "meaning": "这个镜头他们一次就拍好了。",
+        "sourcePage": 56
       }
     ],
     "redbook": {
       "sourcePage": 56,
-      "hasCollocationSection": false
+      "hasCollocationSection": true
     },
     "exam": {
       "count": 49,
@@ -92701,6 +93083,35 @@
     }
   },
   {
+    "wordId": 2159,
+    "coreMeaning": "拖，拉，牵引",
+    "collocations": [],
+    "relatedWords": [
+      {
+        "relation": "synonym",
+        "word": "drag",
+        "meaning": "v.拖,拖曳",
+        "sourcePage": 56
+      },
+      {
+        "relation": "synonym",
+        "word": "haul",
+        "meaning": "v.拖曳,拖运,用力拖",
+        "sourcePage": 56
+      },
+      {
+        "relation": "synonym",
+        "word": "pull",
+        "meaning": "v.拉,拖 n.拉,拖;拉力,牵引力",
+        "sourcePage": 56
+      }
+    ],
+    "redbook": {
+      "sourcePage": 56,
+      "hasCollocationSection": false
+    }
+  },
+  {
     "wordId": 2160,
     "collocations": [],
     "exam": {
@@ -94072,23 +94483,13 @@
   },
   {
     "wordId": 2194,
-    "coreMeaning": "搅动，搅拌；使微动，移动；使行动，使奋起；引起，激起；激动，轰动；纷乱，骚动；搅动",
+    "coreMeaning": "修改；缓和，减轻；修饰",
     "collocations": [],
     "examples": [
       {
-        "sentence": "modify eggs and flour with a stick",
-        "meaning": "用木棒搅拌鸡蛋和面粉",
-        "sourcePage": 138
-      },
-      {
-        "sentence": "A breeze modify red my hair.",
-        "meaning": "微风吹拂我的头发。",
-        "sourcePage": 138
-      },
-      {
-        "sentence": "The book modify red my interest，",
-        "meaning": "这些书激起了我的兴趣。",
-        "sourcePage": 138
+        "sentence": "modify a penalty",
+        "meaning": "减轻惩罚",
+        "sourcePage": 142
       }
     ],
     "relatedWords": [
@@ -94106,7 +94507,7 @@
       }
     ],
     "redbook": {
-      "sourcePage": 138,
+      "sourcePage": 142,
       "hasCollocationSection": true
     },
     "exam": {
@@ -94129,7 +94530,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "搅动，搅拌；使微动，移动；使行动，使奋起；引起，激起",
+          "meaning": "修改；缓和，减轻；修饰",
           "usage": "此处使用 modify 的 modifying 形式"
         },
         {
@@ -94146,7 +94547,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "搅动，搅拌；使微动，移动；使行动，使奋起；引起，激起",
+          "meaning": "修改；缓和，减轻；修饰",
           "usage": "此处使用 modify 的 modifying 形式"
         }
       ]
@@ -95767,19 +96168,39 @@
   },
   {
     "wordId": 2230,
-    "coreMeaning": "烤，烘，焙；烤硬，烘干，焙干",
-    "collocations": [],
+    "coreMeaning": "向后的，倒行的；落后的；迟钝的；向后，朝反方向",
+    "collocations": [
+      {
+        "phrase": "be backward in",
+        "meaning": "在…方面落后",
+        "relevance": "postgraduate",
+        "source": "redbook",
+        "sourcePage": 275
+      }
+    ],
+    "examples": [
+      {
+        "sentence": "The boy wous backward for he had failed in fice courses.",
+        "meaning": "那男孩很迟钝，他已有五门课程不及格了。",
+        "sourcePage": 275
+      },
+      {
+        "sentence": "She took a step backward as she began to speak.",
+        "meaning": "说话时，她向后倒退了一步。",
+        "sourcePage": 275
+      }
+    ],
     "relatedWords": [
       {
-        "relation": "synonym",
-        "word": "roast",
-        "meaning": "v.烤,炙,烘",
+        "relation": "antonym",
+        "word": "forward",
+        "meaning": "ad.(also forwards)向前 a.向前的 v.转交",
         "sourcePage": 275
       }
     ],
     "redbook": {
       "sourcePage": 275,
-      "hasCollocationSection": false
+      "hasCollocationSection": true
     }
   },
   {
@@ -96561,7 +96982,12 @@
   },
   {
     "wordId": 2248,
+    "coreMeaning": "放映，投射",
     "collocations": [],
+    "redbook": {
+      "sourcePage": 187,
+      "hasCollocationSection": false
+    },
     "exam": {
       "count": 10,
       "years": [
@@ -96592,7 +97018,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "方案,工程,项目v.投射,放映；设计,规划",
+          "meaning": "放映，投射",
           "usage": "此处使用 project 的 projects 形式"
         },
         {
@@ -96616,7 +97042,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "方案,工程,项目v.投射,放映；设计,规划",
+          "meaning": "放映，投射",
           "usage": "此处使用 project 的 projects 形式"
         }
       ]
@@ -100667,7 +101093,7 @@
     ],
     "redbook": {
       "sourcePage": 109,
-      "hasCollocationSection": true
+      "hasCollocationSection": false
     },
     "exam": {
       "count": 12,
@@ -101298,11 +101724,6 @@
     "collocations": [],
     "examples": [
       {
-        "sentence": "lt was accompanyed as a great discovery.",
-        "meaning": "那被赞誉为一个伟大的发现。",
-        "sourcePage": 71
-      },
-      {
         "sentence": "He was accompanied by his wife.",
         "meaning": "他有妻子陪同。",
         "sourcePage": 71
@@ -101314,12 +101735,6 @@
       }
     ],
     "relatedWords": [
-      {
-        "relation": "synonym",
-        "word": "praise",
-        "meaning": "v.赞扬,歌颂;表扬 n.称赞,赞美;赞美的话",
-        "sourcePage": 71
-      },
       {
         "relation": "derivative",
         "word": "a",
@@ -102199,23 +102614,11 @@
   },
   {
     "wordId": 2377,
-    "coreMeaning": "木材，木料；废旧家具；无用杂物；…⋯笨重地移动；零乱地堆积在.⋯中，以破烂堆满；迫使负担（职责等）",
+    "coreMeaning": "人质",
     "collocations": [],
-    "examples": [
-      {
-        "sentence": "hostage a little in one's walk",
-        "meaning": "步履有些沉重",
-        "sourcePage": 343
-      },
-      {
-        "sentence": "am really hostaged now;1 have been left with ninety cases of wine I can't sell.",
-        "meaning": "现在我完全陷入零乱的事务中，有九十箱卖不出去的酒留交给我了。",
-        "sourcePage": 343
-      }
-    ],
     "redbook": {
-      "sourcePage": 343,
-      "hasCollocationSection": true
+      "sourcePage": 346,
+      "hasCollocationSection": false
     },
     "exam": {
       "count": 1,
@@ -102237,7 +102640,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "木材，木料；废旧家具；无用杂物；…⋯笨重地移动",
+          "meaning": "人质",
           "usage": "结构：hostage to + 名词或动词原形"
         },
         {
@@ -102254,7 +102657,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "木材，木料；废旧家具；无用杂物；…⋯笨重地移动"
+          "meaning": "人质"
         }
       ]
     }
@@ -104061,7 +104464,40 @@
   },
   {
     "wordId": 2423,
-    "collocations": [],
+    "coreMeaning": "使具体化，表现；收录，包括",
+    "collocations": [
+      {
+        "phrase": "embody in",
+        "meaning": "体现，表现",
+        "relevance": "postgraduate",
+        "source": "redbook",
+        "sourcePage": 24
+      }
+    ],
+    "examples": [
+      {
+        "sentence": "embody principles in actions",
+        "meaning": "用行动来体现原则",
+        "sourcePage": 24
+      },
+      {
+        "sentence": "Parts of the old treaty are embodied in the new one.",
+        "meaning": "旧条约的部分内容已收入新条约。",
+        "sourcePage": 24
+      }
+    ],
+    "relatedWords": [
+      {
+        "relation": "synonym",
+        "word": "represent",
+        "meaning": "v.描述,表示;代表,代理;阐明,说明",
+        "sourcePage": 24
+      }
+    ],
+    "redbook": {
+      "sourcePage": 24,
+      "hasCollocationSection": true
+    },
     "exam": {
       "count": 3,
       "years": [
@@ -104083,7 +104519,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "具体表达,使具体化；包含,收录",
+          "meaning": "使具体化，表现；收录，包括",
           "usage": "此处使用 embody 的 embodies 形式"
         },
         {
@@ -104100,7 +104536,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "具体表达,使具体化；包含,收录"
+          "meaning": "使具体化，表现；收录，包括"
         }
       ]
     }
@@ -104901,7 +105337,7 @@
   },
   {
     "wordId": 2442,
-    "coreMeaning": "画廊，美术馆；长廊，走廊，狭长的房间",
+    "coreMeaning": "（尤指从小孔",
     "collocations": [],
     "redbook": {
       "sourcePage": 268,
@@ -105332,11 +105768,6 @@
     "collocations": [],
     "examples": [
       {
-        "sentence": "The boat will not run in the chorus water.",
-        "meaning": "船在浅水中不能航行。",
-        "sourcePage": 206
-      },
-      {
         "sentence": "The Bath Festival chorus",
         "meaning": "巴斯音乐节大合唱团",
         "sourcePage": 209
@@ -105348,7 +105779,7 @@
       }
     ],
     "redbook": {
-      "sourcePage": 206,
+      "sourcePage": 209,
       "hasCollocationSection": false
     }
   },
@@ -107539,17 +107970,9 @@
   },
   {
     "wordId": 2499,
-    "coreMeaning": "浏览；嫩草，嫩叶，嫩枝，嫩芽",
     "collocations": [],
-    "examples": [
-      {
-        "sentence": "hane a emphasis in a boo shop",
-        "meaning": "在书店浏览一段时间",
-        "sourcePage": 64
-      }
-    ],
     "redbook": {
-      "sourcePage": 64,
+      "sourcePage": 68,
       "hasCollocationSection": false
     },
     "exam": {
@@ -107572,7 +107995,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "浏览；嫩草，嫩叶，嫩枝，嫩芽",
+          "meaning": "强调,重点",
           "usage": "结构：emphasis on + 名词/动名词，表示对象或方面"
         },
         {
@@ -107589,7 +108012,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "浏览；嫩草，嫩叶，嫩枝，嫩芽"
+          "meaning": "强调,重点"
         }
       ]
     }
@@ -108040,7 +108463,51 @@
   },
   {
     "wordId": 2510,
-    "collocations": [],
+    "coreMeaning": "单足跳，（鸟、蛙；作短途短期旅行；跳跃；短距离飞行；（非正式的）舞会",
+    "collocations": [
+      {
+        "phrase": "hop into/out of",
+        "meaning": "进入/离开某个地方或交通工具",
+        "relevance": "postgraduate",
+        "source": "redbook",
+        "sourcePage": 303
+      },
+      {
+        "phrase": "on the hop",
+        "meaning": "活跃的，忙碌的",
+        "relevance": "postgraduate",
+        "source": "redbook",
+        "sourcePage": 303
+      },
+      {
+        "phrase": "catch sb. on the hop",
+        "meaning": "乘人不备的，猝不及防的",
+        "relevance": "postgraduate",
+        "source": "redbook",
+        "sourcePage": 303
+      }
+    ],
+    "examples": [
+      {
+        "sentence": "lm hop ping over to Paris for the weekend.",
+        "meaning": "我要去巴黎度周末。",
+        "sourcePage": 303
+      },
+      {
+        "sentence": "We flew from London to Paris in one hop.",
+        "meaning": "我们从伦敦直接飞到巴黎。",
+        "sourcePage": 303
+      },
+      {
+        "sentence": "Are you coming to the hop tonight？",
+        "meaning": "今晚你来跳舞吗？",
+        "sourcePage": 303
+      }
+    ],
+    "redbook": {
+      "sourcePage": 303,
+      "hasCollocationSection": true
+    },
     "exam": {
       "count": 9,
       "years": [
@@ -108064,7 +108531,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "人单足跳；跳上(车等) n.蹦跳；短程飞行",
+          "meaning": "单足跳，（鸟、蛙；作短途短期旅行；跳跃；短距离飞行",
           "usage": "此处使用 hop 的 hoped 形式"
         },
         {
@@ -108081,7 +108548,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "人单足跳；跳上(车等) n.蹦跳；短程飞行",
+          "meaning": "单足跳，（鸟、蛙；作短途短期旅行；跳跃；短距离飞行",
           "usage": "此处使用 hop 的 hoping 形式；结构：hoping to + 名词或动词原形"
         }
       ]
@@ -108557,17 +109024,9 @@
     "wordId": 2526,
     "coreMeaning": "有能力的，能干的，显示出才华的",
     "collocations": [],
-    "relatedWords": [
-      {
-        "relation": "antonym",
-        "word": "retain",
-        "meaning": "v.保持,保留",
-        "sourcePage": 32
-      }
-    ],
     "redbook": {
-      "sourcePage": 32,
-      "hasCollocationSection": true
+      "sourcePage": 33,
+      "hasCollocationSection": false
     },
     "exam": {
       "count": 16,
@@ -108635,6 +109094,22 @@
           "meaning": "有能力的，能干的，显示出才华的"
         }
       ]
+    }
+  },
+  {
+    "wordId": 2527,
+    "coreMeaning": "溜冰，滑冰；冰鞋",
+    "collocations": [],
+    "examples": [
+      {
+        "sentence": "skate figure of8",
+        "meaning": "溜八字形路线",
+        "sourcePage": 233
+      }
+    ],
+    "redbook": {
+      "sourcePage": 233,
+      "hasCollocationSection": false
     }
   },
   {
@@ -109681,7 +110156,19 @@
   },
   {
     "wordId": 2552,
+    "coreMeaning": "骑自行车；周期，循环",
     "collocations": [],
+    "examples": [
+      {
+        "sentence": "He cycled home daily.",
+        "meaning": "他每天都骑车回家。",
+        "sourcePage": 399
+      }
+    ],
+    "redbook": {
+      "sourcePage": 399,
+      "hasCollocationSection": false
+    },
     "exam": {
       "count": 5,
       "years": [
@@ -109711,7 +110198,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "自行车；周期,循环 v.骑自行车；循环",
+          "meaning": "骑自行车；周期，循环",
           "usage": "结构：cycle of + 名词/代词，表示所属或对象"
         },
         {
@@ -109728,7 +110215,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "自行车；周期,循环 v.骑自行车；循环",
+          "meaning": "骑自行车；周期，循环",
           "usage": "此处使用 cycle 的 cycles 形式"
         }
       ]
@@ -109857,11 +110344,34 @@
   },
   {
     "wordId": 2558,
-    "coreMeaning": "获利，得益；有益于",
-    "collocations": [],
+    "coreMeaning": "获利，得益；有益于；利润，收益，红利；利益，益处",
+    "collocations": [
+      {
+        "phrase": "at a profit",
+        "meaning": "以获利为结果",
+        "relevance": "postgraduate",
+        "source": "redbook",
+        "sourcePage": 187
+      }
+    ],
+    "examples": [
+      {
+        "sentence": "They made millions in profits last year.",
+        "meaning": "他们去年赢利数百万。",
+        "sourcePage": 187
+      }
+    ],
+    "relatedWords": [
+      {
+        "relation": "antonym",
+        "word": "loss",
+        "meaning": "n.丧失，遗失；损失，损耗，亏损；失败",
+        "sourcePage": 187
+      }
+    ],
     "redbook": {
       "sourcePage": 187,
-      "hasCollocationSection": false
+      "hasCollocationSection": true
     },
     "exam": {
       "count": 19,
@@ -109895,7 +110405,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "获利，得益；有益于"
+          "meaning": "获利，得益；有益于；利润，收益，红利；利益，益处"
         },
         {
           "phrase": "be profit",
@@ -109917,7 +110427,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "获利，得益；有益于"
+          "meaning": "获利，得益；有益于；利润，收益，红利；利益，益处"
         }
       ]
     }
@@ -110472,8 +110982,15 @@
   },
   {
     "wordId": 2571,
-    "coreMeaning": "浏览",
+    "coreMeaning": "浏览；吃草（或枝叶）；嫩草，嫩叶，嫩枝，嫩芽",
     "collocations": [],
+    "examples": [
+      {
+        "sentence": "hane a browse in a boo shop",
+        "meaning": "在书店浏览一段时间",
+        "sourcePage": 64
+      }
+    ],
     "redbook": {
       "sourcePage": 64,
       "hasCollocationSection": false
@@ -110946,7 +111463,7 @@
   },
   {
     "wordId": 2581,
-    "coreMeaning": "椅子；（会议）主席，主席席位",
+    "coreMeaning": "椅子；（会议）主席，主席席位；主席，委员长，董事长",
     "collocations": [],
     "examples": [
       {
@@ -111537,22 +112054,12 @@
   },
   {
     "wordId": 2594,
-    "coreMeaning": "尊敬，敬意；荣誉，光荣；荣幸，使感到光荣的人或事；尊敬，给以荣誉；尊敬的，高尚的；荣誉的，光荣的",
+    "coreMeaning": "地平（线）；（知识、思想、经验、阅历、兴趣等的）范围，眼界，见识",
     "collocations": [],
     "examples": [
       {
-        "sentence": "One must Shou horizon to one's parents.",
-        "meaning": "人人都应该尊敬父母。",
-        "sourcePage": 117
-      },
-      {
-        "sentence": "fight for the horizon of one's country",
-        "meaning": "为国家的荣誉而战",
-        "sourcePage": 117
-      },
-      {
-        "sentence": "I's a great horizon to hane the President visiting our town.",
-        "meaning": "总统访问我们的城市是我们莫大的荣幸。",
+        "sentence": "The sun has sunk below the horizon.",
+        "meaning": "太阳已沉落在地平线下。",
         "sourcePage": 117
       }
     ],
@@ -111581,7 +112088,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "尊敬，敬意；荣誉，光荣；荣幸，使感到光荣的人或事；尊敬，给以荣誉",
+          "meaning": "地平（线）；（知识、思想、经验、阅历、兴趣等的）范围，眼界，见识",
           "usage": "结构：horizon for + 名词/代词，表示对象、原因或目的"
         },
         {
@@ -111598,7 +112105,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "尊敬，敬意；荣誉，光荣；荣幸，使感到光荣的人或事；尊敬，给以荣誉"
+          "meaning": "地平（线）；（知识、思想、经验、阅历、兴趣等的）范围，眼界，见识"
         }
       ]
     }
@@ -113611,17 +114118,12 @@
   },
   {
     "wordId": 2642,
-    "coreMeaning": "搬迁，移动；移开，挪走；去掉，消除；脱去（衣服等）；开除，撤职；移动，迁居；除去，切除",
+    "coreMeaning": "搬迁，移动；移开，挪走；去掉，消除；脱去（衣服等）；开除，撤职",
     "collocations": [],
     "examples": [
       {
         "sentence": "Due to the flood, the residents were removed to a safer location.",
         "meaning": "居民因洪水被迁移到了更安全的地方。",
-        "sourcePage": 131
-      },
-      {
-        "sentence": "A surge of popular discontent led to the remove of the president from office.",
-        "meaning": "民怨激增导致总统下台。",
         "sourcePage": 131
       }
     ],
@@ -115369,7 +115871,32 @@
   },
   {
     "wordId": 2688,
-    "collocations": [],
+    "coreMeaning": "（海或湖的）湾；分隔间（户外或室内的，用以停放车辆，存放货物等）；（建筑物的）突出结构；栗色马；（尤指捕猎时）发出长嗥，低沉地吠叫；厉声强要；深棕色的，枣红色的",
+    "collocations": [
+      {
+        "phrase": "hold keep sb./sth. at bay",
+        "meaning": "不让（敌人）接近；防止（问 题恶化）",
+        "relevance": "postgraduate",
+        "source": "redbook",
+        "sourcePage": 254
+      }
+    ],
+    "examples": [
+      {
+        "sentence": "a magnificent view across the bay",
+        "meaning": "海湾对面的壮观景象",
+        "sourcePage": 254
+      },
+      {
+        "sentence": "have a bay horse.",
+        "meaning": "我有一匹深棕色的马。",
+        "sourcePage": 254
+      }
+    ],
+    "redbook": {
+      "sourcePage": 254,
+      "hasCollocationSection": true
+    },
     "exam": {
       "count": 7,
       "years": [
@@ -115396,7 +115923,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "海湾,(港)湾"
+          "meaning": "（海或湖的）湾；分隔间（户外或室内的，用以停放车辆，存放货物等）；（建筑物的）突出结构；栗色马"
         },
         {
           "phrase": "bay program",
@@ -115418,7 +115945,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "海湾,(港)湾"
+          "meaning": "（海或湖的）湾；分隔间（户外或室内的，用以停放车辆，存放货物等）；（建筑物的）突出结构；栗色马"
         }
       ]
     }
@@ -116041,7 +116568,7 @@
   },
   {
     "wordId": 2701,
-    "coreMeaning": "营救，救援，搭救；营救行动",
+    "coreMeaning": "使恢复活力，使振作精神",
     "collocations": [
       {
         "phrase": "refresh one's memory",
@@ -116052,24 +116579,6 @@
       }
     ],
     "relatedWords": [
-      {
-        "relation": "synonym",
-        "word": "aid",
-        "meaning": "n.援助，救护；助手，辅助物 vi.援助，救援",
-        "sourcePage": 173
-      },
-      {
-        "relation": "synonym",
-        "word": "save",
-        "meaning": "v.救,拯救;储蓄,贮存;节省",
-        "sourcePage": 173
-      },
-      {
-        "relation": "synonym",
-        "word": "help",
-        "meaning": "v.帮(援)助；有助于；[呼救]救命n.帮助(手)",
-        "sourcePage": 173
-      },
       {
         "relation": "synonym",
         "word": "renew",
@@ -116113,7 +116622,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "营救，救援，搭救；营救行动",
+          "meaning": "使恢复活力，使振作精神",
           "usage": "此处使用 refresh 的 refreshing 形式"
         },
         {
@@ -116130,7 +116639,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "营救，救援，搭救；营救行动",
+          "meaning": "使恢复活力，使振作精神",
           "usage": "此处使用 refresh 的 refreshing 形式"
         }
       ]
@@ -116859,6 +117368,15 @@
     }
   },
   {
+    "wordId": 2720,
+    "coreMeaning": "传奇，爱情故事",
+    "collocations": [],
+    "redbook": {
+      "sourcePage": 350,
+      "hasCollocationSection": false
+    }
+  },
+  {
     "wordId": 2721,
     "collocations": [],
     "exam": {
@@ -116942,7 +117460,12 @@
   },
   {
     "wordId": 2724,
+    "coreMeaning": "（英）房间，套间；（美）",
     "collocations": [],
+    "redbook": {
+      "sourcePage": 322,
+      "hasCollocationSection": false
+    },
     "exam": {
       "count": 1,
       "years": [
@@ -116963,7 +117486,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "[英]房间，套间；[美]公寓"
+          "meaning": "（英）房间，套间；（美）"
         },
         {
           "phrase": "simpler apartment",
@@ -116979,7 +117502,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "[英]房间，套间；[美]公寓"
+          "meaning": "（英）房间，套间；（美）"
         }
       ]
     }
@@ -119329,7 +119852,7 @@
   },
   {
     "wordId": 2778,
-    "coreMeaning": "（从液体的表面）撇去；掠过或擦过（某物的表面）",
+    "coreMeaning": "（从液体的表面）撇去；掠过或擦过（某物的表面）；略读，快读",
     "collocations": [
       {
         "phrase": "skim through/over sth.",
@@ -119343,6 +119866,11 @@
       {
         "sentence": "skim off the foam",
         "meaning": "撇去浮沫",
+        "sourcePage": 233
+      },
+      {
+        "sentence": "aircraft skim ming the roof-tops",
+        "meaning": "从屋顶上掠过的飞机 6",
         "sourcePage": 233
       }
     ],
@@ -119370,7 +119898,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "（从液体的表面）撇去；掠过或擦过（某物的表面）",
+          "meaning": "（从液体的表面）撇去；掠过或擦过（某物的表面）；略读，快读",
           "usage": "此处使用 skim 的 skimming 形式"
         }
       ]
@@ -120105,7 +120633,7 @@
   },
   {
     "wordId": 2793,
-    "coreMeaning": "安慰，抚慰，慰问（某人）；（机器、电子设备等的）控制台，仪表板",
+    "coreMeaning": "坚定的，永恒的，忠实的；经常的，不断的",
     "collocations": [
       {
         "phrase": "constant temperature",
@@ -120116,11 +120644,6 @@
       }
     ],
     "examples": [
-      {
-        "sentence": "The latest test results will be displayed on the constant.",
-        "meaning": "最新的检测结果会显示在控制台上。",
-        "sourcePage": 152
-      },
       {
         "sentence": "In history, change is constant.",
         "meaning": "在历史上，变化是永恒的。",
@@ -120155,7 +120678,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "安慰，抚慰，慰问（某人）；（机器、电子设备等的）控制台，仪表板"
+          "meaning": "坚定的，永恒的，忠实的；经常的，不断的"
         },
         {
           "phrase": "constant guardianship",
@@ -120171,7 +120694,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "安慰，抚慰，慰问（某人）；（机器、电子设备等的）控制台，仪表板"
+          "meaning": "坚定的，永恒的，忠实的；经常的，不断的"
         }
       ]
     }
@@ -123760,7 +124283,7 @@
   },
   {
     "wordId": 2871,
-    "coreMeaning": "（光线的）束，柱；（横）梁，桁条；微笑；发光，照射",
+    "coreMeaning": "取得，得到；追溯•……的起源（或来由）",
     "collocations": [
       {
         "phrase": "derive from sth.",
@@ -123771,16 +124294,6 @@
       }
     ],
     "examples": [
-      {
-        "sentence": "Her face derived vith joy.",
-        "meaning": "她面露喜色。",
-        "sourcePage": 101
-      },
-      {
-        "sentence": "The moon derived in the shy at night.",
-        "meaning": "夜晚，月亮在空中发出亮光。",
-        "sourcePage": 101
-      },
       {
         "sentence": "derived a lot of pleasure from meeting new people in college.",
         "meaning": "在大学里，我从结识新交那里得到许多乐趣。",
@@ -123811,7 +124324,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "（光线的）束，柱；（横）梁，桁条；微笑；发光，照射",
+          "meaning": "取得，得到；追溯•……的起源（或来由）",
           "usage": "此处使用 derive 的 derives 形式；结构：derives from + 名词/代词，表示来源或分离"
         },
         {
@@ -123828,7 +124341,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "（光线的）束，柱；（横）梁，桁条；微笑；发光，照射",
+          "meaning": "取得，得到；追溯•……的起源（或来由）",
           "usage": "此处使用 derive 的 derives 形式"
         }
       ]
@@ -123906,7 +124419,7 @@
       },
       {
         "phrase": "to the point",
-        "meaning": "切中要害，切题 本单元词汇预览",
+        "meaning": "切中要害，切题",
         "relevance": "postgraduate",
         "source": "redbook",
         "sourcePage": 193
@@ -124003,7 +124516,7 @@
   },
   {
     "wordId": 2875,
-    "coreMeaning": "（英）房间，套间；（美）",
+    "coreMeaning": "道歉，歉意，认错",
     "collocations": [
       {
         "phrase": "offer an apology for sth.",
@@ -124051,7 +124564,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "（英）房间，套间；（美）",
+          "meaning": "道歉，歉意，认错",
           "usage": "结构：apology for + 名词/代词，表示对象、原因或目的"
         },
         {
@@ -124068,7 +124581,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "（英）房间，套间；（美）"
+          "meaning": "道歉，歉意，认错"
         }
       ]
     }
@@ -126654,8 +127167,8 @@
       }
     ],
     "redbook": {
-      "sourcePage": 56,
-      "hasCollocationSection": true
+      "sourcePage": 59,
+      "hasCollocationSection": false
     }
   },
   {
@@ -126915,7 +127428,7 @@
     "collocations": [],
     "redbook": {
       "sourcePage": 78,
-      "hasCollocationSection": true
+      "hasCollocationSection": false
     },
     "exam": {
       "count": 12,
@@ -129916,7 +130429,45 @@
   },
   {
     "wordId": 3007,
-    "collocations": [],
+    "coreMeaning": "演说；地址，住址；向••作（正式）讲话，对•……说话；称呼；对付，处理",
+    "collocations": [
+      {
+        "phrase": "address oneself to sth.",
+        "meaning": "把注意力集中于（某问题）",
+        "relevance": "postgraduate",
+        "source": "redbook",
+        "sourcePage": 86
+      }
+    ],
+    "examples": [
+      {
+        "sentence": "Tomorrow a professor from Harvard University will give us an address.",
+        "meaning": "明天一位哈佛大学的教授来演讲。",
+        "sourcePage": 86
+      },
+      {
+        "sentence": "What is your home address？",
+        "meaning": "你的家庭住址在哪儿？",
+        "sourcePage": 86
+      },
+      {
+        "sentence": "The chairman vill nou address the meeting.",
+        "meaning": "现在由主席向与会者讲话。",
+        "sourcePage": 86
+      }
+    ],
+    "relatedWords": [
+      {
+        "relation": "synonym",
+        "word": "speech",
+        "meaning": "n.演说,讲话;言语,语言",
+        "sourcePage": 86
+      }
+    ],
+    "redbook": {
+      "sourcePage": 86,
+      "hasCollocationSection": true
+    },
     "exam": {
       "count": 19,
       "years": [
@@ -129946,7 +130497,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "住址；致词 v.向...致词；在信封上写姓名"
+          "meaning": "演说；地址，住址；向••作（正式）讲话，对•……说话；称呼"
         },
         {
           "phrase": "to address the",
@@ -129970,7 +130521,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "住址；致词 v.向...致词；在信封上写姓名"
+          "meaning": "演说；地址，住址；向••作（正式）讲话，对•……说话；称呼"
         }
       ]
     }
@@ -133535,7 +134086,34 @@
   },
   {
     "wordId": 3098,
-    "collocations": [],
+    "coreMeaning": "演奏，演出，表演；做，执行，完成；工作，表现",
+    "collocations": [
+      {
+        "phrase": "perform in the role of",
+        "meaning": "扮演… …的角色",
+        "relevance": "postgraduate",
+        "source": "redbook",
+        "sourcePage": 109
+      }
+    ],
+    "relatedWords": [
+      {
+        "relation": "synonym",
+        "word": "carry",
+        "meaning": "v.运送,搬运;传送,传播;领,带",
+        "sourcePage": 109
+      },
+      {
+        "relation": "synonym",
+        "word": "out",
+        "meaning": "ad.出去；离家；突出来 a.外面的，往外去的",
+        "sourcePage": 109
+      }
+    ],
+    "redbook": {
+      "sourcePage": 109,
+      "hasCollocationSection": true
+    },
     "exam": {
       "count": 12,
       "years": [
@@ -133560,7 +134138,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "履行,执行；表演,演出；完成(事业)",
+          "meaning": "演奏，演出，表演；做，执行，完成；工作，表现",
           "usage": "此处使用 perform 的 performing 形式"
         },
         {
@@ -133577,7 +134155,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "履行,执行；表演,演出；完成(事业)",
+          "meaning": "演奏，演出，表演；做，执行，完成；工作，表现",
           "usage": "此处使用 perform 的 performed 形式；结构：performed by + 动作发出者或方式"
         }
       ]
@@ -134055,7 +134633,29 @@
   {
     "wordId": 3108,
     "coreMeaning": "摇动，摇晃；震动，颤抖",
-    "collocations": [],
+    "collocations": [
+      {
+        "phrase": "shake off",
+        "meaning": "抖掉，甩掉",
+        "relevance": "postgraduate",
+        "source": "redbook",
+        "sourcePage": 206
+      },
+      {
+        "phrase": "a fair shake",
+        "meaning": "公平交易",
+        "relevance": "postgraduate",
+        "source": "redbook",
+        "sourcePage": 206
+      },
+      {
+        "phrase": "shake hands with sb.",
+        "meaning": "同…握手",
+        "relevance": "postgraduate",
+        "source": "redbook",
+        "sourcePage": 206
+      }
+    ],
     "examples": [
       {
         "sentence": "gave my purse shake，and a coin fell out.",
@@ -134070,7 +134670,7 @@
     ],
     "redbook": {
       "sourcePage": 206,
-      "hasCollocationSection": false
+      "hasCollocationSection": true
     },
     "exam": {
       "count": 1,
@@ -134820,19 +135420,11 @@
   },
   {
     "wordId": 3125,
-    "coreMeaning": "爆炸，爆发",
+    "coreMeaning": "飓风，狂风",
     "collocations": [],
-    "relatedWords": [
-      {
-        "relation": "synonym",
-        "word": "explode",
-        "meaning": "v.(使)爆炸,(使)爆发",
-        "sourcePage": 378
-      }
-    ],
     "redbook": {
-      "sourcePage": 378,
-      "hasCollocationSection": true
+      "sourcePage": 381,
+      "hasCollocationSection": false
     }
   },
   {
@@ -136505,7 +137097,7 @@
   },
   {
     "wordId": 3171,
-    "coreMeaning": "荫，荫凉处；遮光物，灯罩；⋯⋯遮阳，荫蔽",
+    "coreMeaning": "荫，荫凉处；遮光物，灯罩；⋯⋯遮阳，荫蔽；画阴影；使变暗",
     "collocations": [],
     "examples": [
       {
@@ -136520,7 +137112,15 @@
       },
       {
         "sentence": "She shaded her eyes from the sun with her hands.",
-        "meaning": "她用手遮在眼睛上方挡阳光。 红宝书本单元词汇预览",
+        "meaning": "她用手遮在眼睛上方挡阳光。 红宝书",
+        "sourcePage": 94
+      }
+    ],
+    "relatedWords": [
+      {
+        "relation": "derivative",
+        "word": "shady",
+        "meaning": "a.成荫的,多荫的;可疑的,靠不住的",
         "sourcePage": 94
       }
     ],
@@ -138328,7 +138928,32 @@
   },
   {
     "wordId": 3213,
+    "coreMeaning": "喝彩，欢呼；（尤指对艺术成就的）称誉，高度评价；称赞，赞扬",
     "collocations": [],
+    "examples": [
+      {
+        "sentence": "The winner received great acclaim.",
+        "meaning": "获胜者收到了一片欢呼。",
+        "sourcePage": 71
+      },
+      {
+        "sentence": "lt was acclaimed as a great discovery.",
+        "meaning": "那被赞誉为一个伟大的发现。",
+        "sourcePage": 71
+      }
+    ],
+    "relatedWords": [
+      {
+        "relation": "synonym",
+        "word": "praise",
+        "meaning": "v.赞扬,歌颂;表扬 n.称赞,赞美;赞美的话",
+        "sourcePage": 71
+      }
+    ],
+    "redbook": {
+      "sourcePage": 71,
+      "hasCollocationSection": false
+    },
     "exam": {
       "count": 2,
       "years": [
@@ -138349,7 +138974,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "向…欢呼，公认 n.欢呼，喝彩，称赞",
+          "meaning": "喝彩，欢呼；（尤指对艺术成就的）称誉，高度评价；称赞，赞扬",
           "usage": "此处使用 acclaim 的 acclaimed 形式；结构：acclaimed by + 动作发出者或方式"
         },
         {
@@ -138366,7 +138991,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "向…欢呼，公认 n.欢呼，喝彩，称赞",
+          "meaning": "喝彩，欢呼；（尤指对艺术成就的）称誉，高度评价；称赞，赞扬",
           "usage": "此处使用 acclaim 的 acclaimed 形式"
         }
       ]
@@ -143373,7 +143998,19 @@
   },
   {
     "wordId": 3338,
+    "coreMeaning": "荒凉的；暗淡的；无希望的",
     "collocations": [],
+    "examples": [
+      {
+        "sentence": "bleak prospect",
+        "meaning": "前途暗淡",
+        "sourcePage": 322
+      }
+    ],
+    "redbook": {
+      "sourcePage": 322,
+      "hasCollocationSection": false
+    },
     "exam": {
       "count": 2,
       "years": [
@@ -143395,7 +144032,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "a.荒凉的；冷酷的；没有希望的"
+          "meaning": "荒凉的；暗淡的；无希望的"
         },
         {
           "phrase": "bleak economic",
@@ -143411,7 +144048,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "a.荒凉的；冷酷的；没有希望的"
+          "meaning": "荒凉的；暗淡的；无希望的"
         }
       ]
     }
@@ -146815,19 +147452,9 @@
   },
   {
     "wordId": 3412,
-    "coreMeaning": "在⋯…之前；前面，从前，早些时候",
+    "coreMeaning": "装备，配备",
     "collocations": [],
     "examples": [
-      {
-        "sentence": "All things are difficult equip they are easp.",
-        "meaning": "凡事先难后易（万事开头难）。",
-        "sourcePage": 336
-      },
-      {
-        "sentence": "have never seen him equip.",
-        "meaning": "我以前从未见过他。",
-        "sourcePage": 336
-      },
       {
         "sentence": "This is a ship equip ped with every mechanical aid to navigation.",
         "meaning": "这是一条装备了各种航海救援设备的船。",
@@ -146835,8 +147462,8 @@
       }
     ],
     "redbook": {
-      "sourcePage": 336,
-      "hasCollocationSection": true
+      "sourcePage": 340,
+      "hasCollocationSection": false
     }
   },
   {
@@ -150223,6 +150850,13 @@
     "wordId": 3489,
     "coreMeaning": "色拉，（一盘）凉拌生菜",
     "collocations": [],
+    "examples": [
+      {
+        "sentence": "cold beef and salad",
+        "meaning": "牛肉和生菜冷盘",
+        "sourcePage": 247
+      }
+    ],
     "redbook": {
       "sourcePage": 247,
       "hasCollocationSection": false
@@ -151934,6 +152568,23 @@
           "usage": "此处使用 observe 的 observed 形式"
         }
       ]
+    }
+  },
+  {
+    "wordId": 3532,
+    "coreMeaning": "兴隆的，繁忙活跃的；轻快的，生气勃勃的",
+    "collocations": [],
+    "relatedWords": [
+      {
+        "relation": "antonym",
+        "word": "slack",
+        "meaning": "a.懈怠的,松驰的;萧条的 n.淡季;(pl.)便裤",
+        "sourcePage": 64
+      }
+    ],
+    "redbook": {
+      "sourcePage": 64,
+      "hasCollocationSection": false
     }
   },
   {
@@ -155163,7 +155814,27 @@
   },
   {
     "wordId": 3596,
+    "coreMeaning": "（时间，距离）遥远的，偏僻的；（关系）疏远的，远离的，冷淡的；极不相同的，相差很大的",
     "collocations": [],
+    "examples": [
+      {
+        "sentence": "The question is remote from the topic under discussion.",
+        "meaning": "这个问题与我们讨论的话题差别很大。",
+        "sourcePage": 131
+      }
+    ],
+    "relatedWords": [
+      {
+        "relation": "synonym",
+        "word": "distant",
+        "meaning": "a.远的;遥远的;疏远的;不亲近的",
+        "sourcePage": 131
+      }
+    ],
+    "redbook": {
+      "sourcePage": 131,
+      "hasCollocationSection": false
+    },
     "exam": {
       "count": 1,
       "years": [
@@ -155184,7 +155855,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "a.远的,遥远的,疏远的,偏僻的,细微的"
+          "meaning": "（时间，距离）遥远的，偏僻的；（关系）疏远的，远离的，冷淡的；极不相同的，相差很大的"
         }
       ]
     }
@@ -156449,6 +157120,15 @@
     }
   },
   {
+    "wordId": 3624,
+    "coreMeaning": "花开（期）",
+    "collocations": [],
+    "redbook": {
+      "sourcePage": 315,
+      "hasCollocationSection": false
+    }
+  },
+  {
     "wordId": 3626,
     "coreMeaning": "极好的，非常的，极度的；很强的，很大的，很多的",
     "collocations": [],
@@ -156836,23 +157516,13 @@
   },
   {
     "wordId": 3633,
-    "coreMeaning": "被束缚的，受约束的；一定的，必然的；③［口］下了决心的，决意；准备到⋯去的，开往⋯⋯的",
+    "coreMeaning": "离婚，离异；断绝关系，分离；与（某人）离婚；（使）分离，（使）脱离",
     "collocations": [],
     "examples": [
       {
-        "sentence": "Ihe plan is divorce to fail.",
-        "meaning": "这个计划必然会失败。",
-        "sourcePage": 350
-      },
-      {
-        "sentence": "Hes divorce to go,and nothing can stop him.",
-        "meaning": "他决心要去，什么也阻止不了他。",
-        "sourcePage": 350
-      },
-      {
-        "sentence": "The ship was divorce for Europe.",
-        "meaning": "这船开往欧洲。",
-        "sourcePage": 350
+        "sentence": "She got a divorce from him last year.",
+        "meaning": "她去年和他离了婚。",
+        "sourcePage": 353
       }
     ],
     "relatedWords": [
@@ -156882,8 +157552,8 @@
       }
     ],
     "redbook": {
-      "sourcePage": 350,
-      "hasCollocationSection": true
+      "sourcePage": 353,
+      "hasCollocationSection": false
     },
     "exam": {
       "count": 4,
@@ -156911,7 +157581,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "被束缚的，受约束的；一定的，必然的；③［口］下了决心的，决意；准备到⋯去的，开往⋯⋯的",
+          "meaning": "离婚，离异；断绝关系，分离；与（某人）离婚；（使）分离，（使）脱离",
           "usage": "此处使用 divorce 的 divorced 形式"
         },
         {
@@ -156928,7 +157598,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "被束缚的，受约束的；一定的，必然的；③［口］下了决心的，决意；准备到⋯去的，开往⋯⋯的"
+          "meaning": "离婚，离异；断绝关系，分离；与（某人）离婚；（使）分离，（使）脱离"
         }
       ]
     }
@@ -157337,7 +158007,7 @@
       }
     ],
     "redbook": {
-      "sourcePage": 173,
+      "sourcePage": 176,
       "hasCollocationSection": true
     },
     "exam": {
@@ -162526,7 +163196,19 @@
   },
   {
     "wordId": 3762,
+    "coreMeaning": "望远镜",
     "collocations": [],
+    "examples": [
+      {
+        "sentence": "He looked at that ship through his telescope.",
+        "meaning": "他用望远镜看那条船。",
+        "sourcePage": 261
+      }
+    ],
+    "redbook": {
+      "sourcePage": 261,
+      "hasCollocationSection": false
+    },
     "exam": {
       "count": 13,
       "years": [
@@ -162553,7 +163235,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "望远镜 v.缩短，压缩",
+          "meaning": "望远镜",
           "usage": "此处使用 telescope 的 telescopes 形式；结构：telescopes on + 名词/动名词，表示对象或方面"
         },
         {
@@ -162570,7 +163252,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "望远镜 v.缩短，压缩",
+          "meaning": "望远镜",
           "usage": "此处使用 telescope 的 telescopes 形式"
         }
       ]
@@ -162803,6 +163485,15 @@
           "meaning": "特征，特色；特写"
         }
       ]
+    }
+  },
+  {
+    "wordId": 3769,
+    "coreMeaning": "捻，搓，绞，拧",
+    "collocations": [],
+    "redbook": {
+      "sourcePage": 166,
+      "hasCollocationSection": false
     }
   },
   {
@@ -166326,18 +167017,18 @@
     "collocations": [],
     "examples": [
       {
-        "sentence": "What a high proper you have on your furniture！",
-        "meaning": "你家具上的光泽多好啊！",
-        "sourcePage": 193
-      },
-      {
-        "sentence": "Four years of college gave her considerable proper.",
-        "meaning": "四年的大学生活让她变得优雅得体。",
-        "sourcePage": 193
-      },
-      {
         "sentence": "He gave us a proper example.",
         "meaning": "他给我们举了一个恰当的例子。",
+        "sourcePage": 193
+      },
+      {
+        "sentence": "don'i consider that Short dress is proper for going to church.",
+        "meaning": "我认为穿那条短裙去教堂是不成体统的。",
+        "sourcePage": 193
+      },
+      {
+        "sentence": "Hfis mother had trained him to be a rery proper young nan.",
+        "meaning": "他母亲把他教育成了一个很规矩的青年。",
         "sourcePage": 193
       }
     ],
@@ -166391,7 +167082,7 @@
   },
   {
     "wordId": 3852,
-    "coreMeaning": "使适应，使符合一致；调和（分歧等）；帮助，给⋯提供方便；向⋯•••提供住处（或膳宿）；容纳，接纳",
+    "coreMeaning": "使适应，使符合一致；调和（分歧等）；帮助，给⋯提供方便；向⋯•••提供住处（或膳宿）；容纳，接纳；住宿，留宿",
     "collocations": [
       {
         "phrase": "accommodate to",
@@ -166434,26 +167125,8 @@
       },
       {
         "relation": "derivative",
-        "word": "eminent",
-        "meaning": "a.显赫的;杰出的;有名的;优良的",
-        "sourcePage": 71
-      },
-      {
-        "relation": "derivative",
-        "word": "fertile",
-        "meaning": "a.肥沃的,富饶的;能繁殖的",
-        "sourcePage": 71
-      },
-      {
-        "relation": "derivative",
-        "word": "heap",
-        "meaning": "n.(一)堆,大量,许多 v.(up)堆,堆起",
-        "sourcePage": 71
-      },
-      {
-        "relation": "derivative",
-        "word": "immigrant",
-        "meaning": "a.(从国外)移来的,移民的 n.移民,侨民",
+        "word": "accommodation",
+        "meaning": "n.(accommodations)住宿，留宿；膳宿供应",
         "sourcePage": 71
       }
     ],
@@ -167424,16 +168097,8 @@
         "sourcePage": 190
       }
     ],
-    "relatedWords": [
-      {
-        "relation": "antonym",
-        "word": "loss",
-        "meaning": "n.丧失，遗失；损失，损耗，亏损；失败",
-        "sourcePage": 187
-      }
-    ],
     "redbook": {
-      "sourcePage": 187,
+      "sourcePage": 190,
       "hasCollocationSection": true
     }
   },
@@ -169155,6 +169820,22 @@
     "redbook": {
       "sourcePage": 243,
       "hasCollocationSection": true
+    }
+  },
+  {
+    "wordId": 3914,
+    "coreMeaning": "哭泣，呜咽",
+    "collocations": [],
+    "examples": [
+      {
+        "sentence": "She gave a sob of relief.",
+        "meaning": "她松了口气呜咽起来。",
+        "sourcePage": 296
+      }
+    ],
+    "redbook": {
+      "sourcePage": 296,
+      "hasCollocationSection": false
     }
   },
   {
@@ -171133,6 +171814,30 @@
     }
   },
   {
+    "wordId": 3958,
+    "coreMeaning": "用力拖（或拉）；猛拉，牵引；拖",
+    "collocations": [
+      {
+        "phrase": "tug-of-war",
+        "meaning": "拔河（比赛）；激烈的争夺",
+        "relevance": "postgraduate",
+        "source": "redbook",
+        "sourcePage": 392
+      }
+    ],
+    "examples": [
+      {
+        "sentence": "felt a tug at my sleeve.",
+        "meaning": "我觉得有人拽了一下我的袖子。",
+        "sourcePage": 392
+      }
+    ],
+    "redbook": {
+      "sourcePage": 392,
+      "hasCollocationSection": true
+    }
+  },
+  {
     "wordId": 3959,
     "coreMeaning": "服从的，顺从的",
     "collocations": [],
@@ -172188,28 +172893,8 @@
         "sourcePage": 195
       }
     ],
-    "relatedWords": [
-      {
-        "relation": "synonym",
-        "word": "fasten",
-        "meaning": "v.扎牢,使固定",
-        "sourcePage": 158
-      },
-      {
-        "relation": "synonym",
-        "word": "attach",
-        "meaning": "v.系，贴，连接；使成为一部分；使依恋",
-        "sourcePage": 158
-      },
-      {
-        "relation": "synonym",
-        "word": "fix",
-        "meaning": "v.(使)固定;修理;安装;决定;注视 n.困境",
-        "sourcePage": 158
-      }
-    ],
     "redbook": {
-      "sourcePage": 158,
+      "sourcePage": 195,
       "hasCollocationSection": true
     },
     "exam": {
@@ -173919,7 +174604,12 @@
   },
   {
     "wordId": 4021,
+    "coreMeaning": "太阳的，日光的，太阳能的",
     "collocations": [],
+    "redbook": {
+      "sourcePage": 296,
+      "hasCollocationSection": false
+    },
     "exam": {
       "count": 2,
       "years": [
@@ -173946,7 +174636,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "a.太阳的,日光的"
+          "meaning": "太阳的，日光的，太阳能的"
         },
         {
           "phrase": "world's solar",
@@ -173962,7 +174652,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "a.太阳的,日光的"
+          "meaning": "太阳的，日光的，太阳能的"
         }
       ]
     }
@@ -174491,17 +175181,30 @@
   {
     "wordId": 4032,
     "coreMeaning": "夺得，一把抓住；抓机会做，抽空做；夺取，抢夺",
-    "collocations": [],
+    "collocations": [
+      {
+        "phrase": "snatch at",
+        "meaning": "设法抓住",
+        "relevance": "postgraduate",
+        "source": "redbook",
+        "sourcePage": 309
+      }
+    ],
     "examples": [
       {
         "sentence": "snatch half an hour's rest",
         "meaning": "抓紧时间休息半小时",
         "sourcePage": 309
+      },
+      {
+        "sentence": "He made a snatch at the opportunity.",
+        "meaning": "他抓住了那次机会。",
+        "sourcePage": 309
       }
     ],
     "redbook": {
       "sourcePage": 309,
-      "hasCollocationSection": false
+      "hasCollocationSection": true
     }
   },
   {
@@ -175375,11 +176078,43 @@
   },
   {
     "wordId": 4054,
-    "coreMeaning": "捻，搓，绞，拧",
-    "collocations": [],
+    "coreMeaning": "跌倒，滚下；（价格等）暴跌，（权利、地位等）急剧下降；打滚，翻滚；摔倒，跌跤；暴跌，下降",
+    "collocations": [
+      {
+        "phrase": "tumble into/upon",
+        "meaning": "偶然遇见",
+        "relevance": "postgraduate",
+        "source": "redbook",
+        "sourcePage": 166
+      },
+      {
+        "phrase": "tumble over",
+        "meaning": "被…倒",
+        "relevance": "postgraduate",
+        "source": "redbook",
+        "sourcePage": 166
+      }
+    ],
+    "examples": [
+      {
+        "sentence": "The stock market tumbled.",
+        "meaning": "股票行市暴跌。",
+        "sourcePage": 166
+      },
+      {
+        "sentence": "Children tumble over each other in play.",
+        "meaning": "孩子们玩耍时相互连身翻滚。",
+        "sourcePage": 166
+      },
+      {
+        "sentence": "have a nasty tumble",
+        "meaning": "重重跌了跤",
+        "sourcePage": 166
+      }
+    ],
     "redbook": {
       "sourcePage": 166,
-      "hasCollocationSection": false
+      "hasCollocationSection": true
     }
   },
   {
@@ -178765,36 +179500,23 @@
   },
   {
     "wordId": 4130,
-    "coreMeaning": "向后的，倒行的；落后的；迟钝的；向后，朝反方向",
+    "coreMeaning": "快乐的，愉快的；同性恋的",
     "collocations": [],
     "examples": [
-      {
-        "sentence": "The boy wous gay for he had failed in fice courses.",
-        "meaning": "那男孩很迟钝，他已有五门课程不及格了。",
-        "sourcePage": 275
-      },
-      {
-        "sentence": "She took a step gay as she began to speak.",
-        "meaning": "说话时，她向后倒退了一步。",
-        "sourcePage": 275
-      },
       {
         "sentence": "as gay as a Lark",
         "meaning": "快乐得像只百灵鸟",
         "sourcePage": 279
-      }
-    ],
-    "relatedWords": [
+      },
       {
-        "relation": "antonym",
-        "word": "forward",
-        "meaning": "ad.(also forwards)向前 a.向前的 v.转交",
-        "sourcePage": 275
+        "sentence": "gay bar",
+        "meaning": "同性恋酒吧",
+        "sourcePage": 279
       }
     ],
     "redbook": {
-      "sourcePage": 275,
-      "hasCollocationSection": true
+      "sourcePage": 279,
+      "hasCollocationSection": false
     }
   },
   {
@@ -182886,26 +183608,6 @@
         "sourcePage": 56
       }
     ],
-    "relatedWords": [
-      {
-        "relation": "synonym",
-        "word": "drag",
-        "meaning": "v.拖,拖曳",
-        "sourcePage": 56
-      },
-      {
-        "relation": "synonym",
-        "word": "haul",
-        "meaning": "v.拖曳,拖运,用力拖",
-        "sourcePage": 56
-      },
-      {
-        "relation": "synonym",
-        "word": "pull",
-        "meaning": "v.拉,拖 n.拉,拖;拉力,牵引力",
-        "sourcePage": 56
-      }
-    ],
     "redbook": {
       "sourcePage": 56,
       "hasCollocationSection": true
@@ -183484,6 +184186,35 @@
     ],
     "redbook": {
       "sourcePage": 87,
+      "hasCollocationSection": true
+    }
+  },
+  {
+    "wordId": 4233,
+    "coreMeaning": "碰撞；隆起物；肿胀，肿块",
+    "collocations": [
+      {
+        "phrase": "bump up",
+        "meaning": "突然增加，使猛升，提升",
+        "relevance": "postgraduate",
+        "source": "redbook",
+        "sourcePage": 378
+      }
+    ],
+    "examples": [
+      {
+        "sentence": "The passengers felt a violent bump as the plane landed.",
+        "meaning": "飞机着陆时，乘客感到猛烈的冲撞。",
+        "sourcePage": 378
+      },
+      {
+        "sentence": "get a nasty bump on the head",
+        "meaning": "头上起了个大包",
+        "sourcePage": 378
+      }
+    ],
+    "redbook": {
+      "sourcePage": 378,
       "hasCollocationSection": true
     }
   },
@@ -188242,7 +188973,7 @@
       }
     ],
     "redbook": {
-      "sourcePage": 219,
+      "sourcePage": 222,
       "hasCollocationSection": true
     }
   },
@@ -188379,7 +189110,44 @@
   },
   {
     "wordId": 4347,
-    "collocations": [],
+    "coreMeaning": "搅动，搅拌；使微动，移动；使行动，使奋起；引起，激起；激动，轰动；纷乱，骚动；搅动",
+    "collocations": [
+      {
+        "phrase": "stir up",
+        "meaning": "惹起（麻烦）",
+        "relevance": "postgraduate",
+        "source": "redbook",
+        "sourcePage": 138
+      },
+      {
+        "phrase": "stir oneself",
+        "meaning": "奋发，振作",
+        "relevance": "postgraduate",
+        "source": "redbook",
+        "sourcePage": 138
+      }
+    ],
+    "examples": [
+      {
+        "sentence": "stir eggs and flour with a stick",
+        "meaning": "用木棒搅拌鸡蛋和面粉",
+        "sourcePage": 138
+      },
+      {
+        "sentence": "A breeze stir red my hair.",
+        "meaning": "微风吹拂我的头发。",
+        "sourcePage": 138
+      },
+      {
+        "sentence": "Stir yourself,or well never get this finished！",
+        "meaning": "振作起来赶快干，要不我们就干不完了！",
+        "sourcePage": 138
+      }
+    ],
+    "redbook": {
+      "sourcePage": 138,
+      "hasCollocationSection": true
+    },
     "exam": {
       "count": 2,
       "years": [
@@ -188401,7 +189169,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "搅拌,搅动；动,摇动；激动；轰动"
+          "meaning": "搅动，搅拌；使微动，移动；使行动，使奋起；引起，激起"
         },
         {
           "phrase": "stir children's",
@@ -188417,7 +189185,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "搅拌,搅动；动,摇动；激动；轰动"
+          "meaning": "搅动，搅拌；使微动，移动；使行动，使奋起；引起，激起"
         }
       ]
     }
@@ -188845,7 +189613,65 @@
   },
   {
     "wordId": 4356,
-    "collocations": [],
+    "coreMeaning": "站，站立；坐落，位于；坚持，维持现状；经受，忍受；台，座",
+    "collocations": [
+      {
+        "phrase": "stand by",
+        "meaning": "支持，帮助，站在… 一边；袖手旁观",
+        "relevance": "postgraduate",
+        "source": "redbook",
+        "sourcePage": 145
+      },
+      {
+        "phrase": "stand for",
+        "meaning": "代表，拥护",
+        "relevance": "postgraduate",
+        "source": "redbook",
+        "sourcePage": 145
+      },
+      {
+        "phrase": "stand out",
+        "meaning": "突出，显眼",
+        "relevance": "postgraduate",
+        "source": "redbook",
+        "sourcePage": 145
+      },
+      {
+        "phrase": "stand up",
+        "meaning": "站起来",
+        "relevance": "postgraduate",
+        "source": "redbook",
+        "sourcePage": 145
+      },
+      {
+        "phrase": "stand up for",
+        "meaning": "支持；坚持",
+        "relevance": "postgraduate",
+        "source": "redbook",
+        "sourcePage": 145
+      }
+    ],
+    "examples": [
+      {
+        "sentence": "Ray stood there,watching a distant place.",
+        "meaning": "雷站在那，密切注视着远方。",
+        "sourcePage": 145
+      },
+      {
+        "sentence": "The toun stands on the slope of a hill.",
+        "meaning": "这座城镇坐落在山坡上。",
+        "sourcePage": 145
+      },
+      {
+        "sentence": "The judge's stand was in the centre.",
+        "meaning": "法官的座位在中间。",
+        "sourcePage": 145
+      }
+    ],
+    "redbook": {
+      "sourcePage": 145,
+      "hasCollocationSection": true
+    },
     "exam": {
       "count": 19,
       "years": [
@@ -188880,7 +189706,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "站立；位于；经受 n.台，座；货摊",
+          "meaning": "站，站立；坐落，位于；坚持，维持现状；经受，忍受",
           "usage": "此处使用 stand 的 standing 形式"
         },
         {
@@ -188903,7 +189729,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "站立；位于；经受 n.台，座；货摊",
+          "meaning": "站，站立；坐落，位于；坚持，维持现状；经受，忍受",
           "usage": "此处使用 stand 的 standing 形式"
         }
       ]
@@ -189117,7 +189943,46 @@
   },
   {
     "wordId": 4360,
-    "collocations": [],
+    "coreMeaning": "补丁，补片；碎片，碎屑；小块土地；修补；拼制，拼凑",
+    "collocations": [
+      {
+        "phrase": "patch sth. up",
+        "meaning": "修补；拼凑成；暂 时解决（分岐、争吵、困难等）",
+        "relevance": "postgraduate",
+        "source": "redbook",
+        "sourcePage": 48
+      },
+      {
+        "phrase": "not a patch on",
+        "meaning": "比不上…",
+        "relevance": "postgraduate",
+        "source": "redbook",
+        "sourcePage": 48
+      },
+      {
+        "phrase": "strike a bad patch",
+        "meaning": "倒莓，遭受不幸",
+        "relevance": "postgraduate",
+        "source": "redbook",
+        "sourcePage": 48
+      }
+    ],
+    "examples": [
+      {
+        "sentence": "patch up the tyre",
+        "meaning": "补轮胎",
+        "sourcePage": 48
+      },
+      {
+        "sentence": "They patched together a treaty.",
+        "meaning": "他们草草拼凑了一个条约。",
+        "sourcePage": 48
+      }
+    ],
+    "redbook": {
+      "sourcePage": 48,
+      "hasCollocationSection": true
+    },
     "exam": {
       "count": 2,
       "years": [
@@ -189138,7 +190003,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "补丁,斑点,碎片小块 v.补,修补,掩饰"
+          "meaning": "补丁，补片；碎片，碎屑；小块土地；修补"
         },
         {
           "phrase": "patches of",
@@ -189154,7 +190019,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "补丁,斑点,碎片小块 v.补,修补,掩饰",
+          "meaning": "补丁，补片；碎片，碎屑；小块土地；修补",
           "usage": "此处使用 patch 的 patches 形式；结构：patches of + 名词/代词，表示所属或对象"
         }
       ]
@@ -190595,11 +191460,6 @@
     ],
     "examples": [
       {
-        "sentence": "He cued home daily.",
-        "meaning": "他每天都骑车回家。",
-        "sourcePage": 399
-      },
-      {
         "sentence": "Actors hae to learn their cues as well as their oun lines.",
         "meaning": "演员不仅要记住台词，还要记住其他演员的暗示。",
         "sourcePage": 399
@@ -191994,7 +192854,32 @@
   },
   {
     "wordId": 4420,
-    "collocations": [],
+    "coreMeaning": "贷款；借出",
+    "collocations": [
+      {
+        "phrase": "on loan",
+        "meaning": "借出",
+        "relevance": "postgraduate",
+        "source": "redbook",
+        "sourcePage": 371
+      }
+    ],
+    "examples": [
+      {
+        "sentence": "The loan is interest free.",
+        "meaning": "这贷款是无息的。",
+        "sourcePage": 371
+      },
+      {
+        "sentence": "He loaned his pictures to the museum.",
+        "meaning": "他把他的画借给了博物馆。 26",
+        "sourcePage": 371
+      }
+    ],
+    "redbook": {
+      "sourcePage": 371,
+      "hasCollocationSection": true
+    },
     "exam": {
       "count": 1,
       "years": [
@@ -192015,7 +192900,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "贷款；出借,借出 v.借出"
+          "meaning": "贷款；借出"
         },
         {
           "phrase": "obtained on loan",
@@ -192031,7 +192916,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "贷款；出借,借出 v.借出"
+          "meaning": "贷款；借出"
         }
       ]
     }
@@ -195583,7 +196468,7 @@
   },
   {
     "wordId": 4494,
-    "coreMeaning": "专利，专利权，专利品；专利的，特许的；受专利保护的",
+    "coreMeaning": "专利，专利权，专利品；专利的，特许的；受专利保护的；批准专利，获得专利",
     "collocations": [],
     "examples": [
       {
@@ -195627,7 +196512,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "专利，专利权，专利品；专利的，特许的；受专利保护的",
+          "meaning": "专利，专利权，专利品；专利的，特许的；受专利保护的；批准专利，获得专利",
           "usage": "此处使用 patent 的 patents 形式"
         },
         {
@@ -195650,7 +196535,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "专利，专利权，专利品；专利的，特许的；受专利保护的",
+          "meaning": "专利，专利权，专利品；专利的，特许的；受专利保护的；批准专利，获得专利",
           "usage": "结构：patent on + 名词/动名词，表示对象或方面"
         }
       ]
@@ -197623,6 +198508,20 @@
         "sourcePage": 124
       }
     ],
+    "relatedWords": [
+      {
+        "relation": "synonym",
+        "word": "prove",
+        "meaning": "v.证明,证实;检验;考验;鉴定;结果是,表明是",
+        "sourcePage": 124
+      },
+      {
+        "relation": "synonym",
+        "word": "verify",
+        "meaning": "vt.证实,查证;证明",
+        "sourcePage": 124
+      }
+    ],
     "redbook": {
       "sourcePage": 124,
       "hasCollocationSection": false
@@ -197775,6 +198674,27 @@
     "redbook": {
       "sourcePage": 173,
       "hasCollocationSection": true
+    }
+  },
+  {
+    "wordId": 4542,
+    "coreMeaning": "穿透，渗入；识穿，看破；洞察，了解",
+    "collocations": [],
+    "examples": [
+      {
+        "sentence": "Not many people managed to penetrate his disguise.",
+        "meaning": "没有几个人能识破他的伪装。",
+        "sourcePage": 268
+      },
+      {
+        "sentence": "l was a long time before scientists could penetrate the mystery of the atom.",
+        "meaning": "科学家很久之后才洞悉了原子的奥秘。",
+        "sourcePage": 268
+      }
+    ],
+    "redbook": {
+      "sourcePage": 268,
+      "hasCollocationSection": false
     }
   },
   {
@@ -198593,6 +199513,27 @@
           "usage": "结构：article in + 名词/动名词，表示范围或状态"
         }
       ]
+    }
+  },
+  {
+    "wordId": 4559,
+    "coreMeaning": "（光线的）束，柱；（横）梁，桁条；微笑；发光，照射",
+    "collocations": [],
+    "examples": [
+      {
+        "sentence": "Her face beamed vith joy.",
+        "meaning": "她面露喜色。",
+        "sourcePage": 101
+      },
+      {
+        "sentence": "The moon beamed in the shy at night.",
+        "meaning": "夜晚，月亮在空中发出亮光。",
+        "sourcePage": 101
+      }
+    ],
+    "redbook": {
+      "sourcePage": 101,
+      "hasCollocationSection": false
     }
   },
   {
@@ -206611,7 +207552,51 @@
   },
   {
     "wordId": 4754,
+    "coreMeaning": "使不外出，幽禁，禁闭；限制，使局限",
     "collocations": [],
+    "examples": [
+      {
+        "sentence": "A lion was confined in the cage.",
+        "meaning": "一头狮子被关在笼子里。",
+        "sourcePage": 124
+      }
+    ],
+    "relatedWords": [
+      {
+        "relation": "synonym",
+        "word": "within",
+        "meaning": "prep.在…里面,在…以内 ad.在内",
+        "sourcePage": 124
+      },
+      {
+        "relation": "synonym",
+        "word": "bound",
+        "meaning": "v./n.跳(跃) a.被束缚的，一定的；n.界限",
+        "sourcePage": 124
+      },
+      {
+        "relation": "synonym",
+        "word": "control",
+        "meaning": "n.(over)控制,支配 v.控制,支配",
+        "sourcePage": 124
+      },
+      {
+        "relation": "synonym",
+        "word": "restrain",
+        "meaning": "v.(from)抑制,制止",
+        "sourcePage": 124
+      },
+      {
+        "relation": "synonym",
+        "word": "from",
+        "meaning": "prep.从，自从；由于；离；根据，按；去除",
+        "sourcePage": 124
+      }
+    ],
+    "redbook": {
+      "sourcePage": 124,
+      "hasCollocationSection": false
+    },
     "exam": {
       "count": 1,
       "years": [
@@ -206632,7 +207617,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "限制；使不外出，禁闭n.[pl.]界限，范围",
+          "meaning": "使不外出，幽禁，禁闭；限制，使局限",
           "usage": "此处使用 confine 的 confined 形式；结构：confined to + 名词或动词原形"
         },
         {
@@ -206649,7 +207634,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "限制；使不外出，禁闭n.[pl.]界限，范围",
+          "meaning": "使不外出，幽禁，禁闭；限制，使局限",
           "usage": "此处使用 confine 的 confined 形式"
         }
       ]
@@ -206926,15 +207911,8 @@
   },
   {
     "wordId": 4763,
-    "coreMeaning": "迷人的美（通常指性感的）；魅力，吸引力",
+    "coreMeaning": "发电机，发生器",
     "collocations": [],
-    "examples": [
-      {
-        "sentence": "a girl with lots of generator",
-        "meaning": "性感迷人的女郎",
-        "sourcePage": 40
-      }
-    ],
     "redbook": {
       "sourcePage": 40,
       "hasCollocationSection": false
@@ -206959,7 +207937,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "迷人的美（通常指性感的）；魅力，吸引力",
+          "meaning": "发电机，发生器",
           "usage": "此处使用 generator 的 generators 形式"
         },
         {
@@ -206976,7 +207954,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "迷人的美（通常指性感的）；魅力，吸引力",
+          "meaning": "发电机，发生器",
           "usage": "此处使用 generator 的 generators 形式"
         }
       ]
@@ -211762,6 +212740,15 @@
     }
   },
   {
+    "wordId": 4861,
+    "coreMeaning": "俯身，弯腰；届尊，届从；自贬，堕落",
+    "collocations": [],
+    "redbook": {
+      "sourcePage": 357,
+      "hasCollocationSection": false
+    }
+  },
+  {
     "wordId": 4862,
     "coreMeaning": "布置，装饰；授勋",
     "collocations": [
@@ -212258,11 +213245,41 @@
   },
   {
     "wordId": 4873,
-    "coreMeaning": "爆炸，爆裂",
-    "collocations": [],
+    "coreMeaning": "爆炸，爆裂；突然发生，突然发作；爆炸，爆发",
+    "collocations": [
+      {
+        "phrase": "burst into",
+        "meaning": "闯入；突然…起来",
+        "relevance": "postgraduate",
+        "source": "redbook",
+        "sourcePage": 378
+      },
+      {
+        "phrase": "burst on/ upon",
+        "meaning": "突然来到，意外来临",
+        "relevance": "postgraduate",
+        "source": "redbook",
+        "sourcePage": 378
+      }
+    ],
+    "examples": [
+      {
+        "sentence": "The storm burst at once.",
+        "meaning": "顿时风雨大作。",
+        "sourcePage": 378
+      }
+    ],
+    "relatedWords": [
+      {
+        "relation": "synonym",
+        "word": "explode",
+        "meaning": "v.(使)爆炸,(使)爆发",
+        "sourcePage": 378
+      }
+    ],
     "redbook": {
       "sourcePage": 378,
-      "hasCollocationSection": false
+      "hasCollocationSection": true
     }
   },
   {
@@ -212720,36 +213737,17 @@
   },
   {
     "wordId": 4887,
-    "coreMeaning": "战役，战斗，斗争；战斗，斗争，搏斗",
+    "coreMeaning": "粘附，附着；坚持，遵守",
     "collocations": [],
     "examples": [
-      {
-        "sentence": "The adhere lasted for almost the whole day.",
-        "meaning": "战斗几乎打了一整天。",
-        "sourcePage": 254
-      },
-      {
-        "sentence": "We should continue to adhere against poverty and disease.",
-        "meaning": "我们应该继续向贫穷和疾病开战。",
-        "sourcePage": 254
-      },
       {
         "sentence": "Paste is used to make one surface adhere to another.",
         "meaning": "浆糊是用以使一个接触面粘住另一个接触面的。",
         "sourcePage": 254
-      }
-    ],
-    "relatedWords": [
-      {
-        "relation": "synonym",
-        "word": "fight",
-        "meaning": "v./n.打(仗),搏斗,斗争,战斗",
-        "sourcePage": 254
       },
       {
-        "relation": "synonym",
-        "word": "war",
-        "meaning": "n.战争(状态)；冲突 vi.作战",
+        "sentence": "That government adhered to its original plan in spite of the resistance.",
+        "meaning": "该国政府不顾阻力坚持按原计划行事。",
         "sourcePage": 254
       }
     ],
@@ -212778,7 +213776,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "战役，战斗，斗争；战斗，斗争，搏斗"
+          "meaning": "粘附，附着；坚持，遵守"
         },
         {
           "phrase": "adhered to",
@@ -212794,7 +213792,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "战役，战斗，斗争；战斗，斗争，搏斗",
+          "meaning": "粘附，附着；坚持，遵守",
           "usage": "此处使用 adhere 的 adhered 形式；结构：adhered to + 名词或动词原形"
         }
       ]
@@ -213670,7 +214668,7 @@
       }
     ],
     "redbook": {
-      "sourcePage": 322,
+      "sourcePage": 326,
       "hasCollocationSection": true
     },
     "exam": {
@@ -214295,6 +215293,27 @@
     "collocations": [],
     "redbook": {
       "sourcePage": 380,
+      "hasCollocationSection": false
+    }
+  },
+  {
+    "wordId": 4927,
+    "coreMeaning": "拍卖",
+    "collocations": [],
+    "examples": [
+      {
+        "sentence": "The house is up for auction.",
+        "meaning": "这所房子将要拍卖。",
+        "sourcePage": 385
+      },
+      {
+        "sentence": "Iim going to auction off my house.",
+        "meaning": "我将把房子拍卖掉。",
+        "sourcePage": 385
+      }
+    ],
+    "redbook": {
+      "sourcePage": 385,
       "hasCollocationSection": false
     }
   },
@@ -217488,12 +218507,12 @@
   },
   {
     "wordId": 5002,
-    "coreMeaning": "望远镜",
+    "coreMeaning": "撕开，撕裂；眼泪",
     "collocations": [],
     "examples": [
       {
-        "sentence": "He looked at that ship through his tear.",
-        "meaning": "他用望远镜看那条船。",
+        "sentence": "wipe away tears",
+        "meaning": "擦去眼泪",
         "sourcePage": 261
       }
     ],
@@ -217521,7 +218540,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "望远镜",
+          "meaning": "撕开，撕裂；眼泪",
           "usage": "此处使用 tear 的 tears 形式"
         },
         {
@@ -217538,7 +218557,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "望远镜",
+          "meaning": "撕开，撕裂；眼泪",
           "usage": "此处使用 tear 的 tears 形式"
         }
       ]
@@ -217879,8 +218898,8 @@
       }
     ],
     "redbook": {
-      "sourcePage": 212,
-      "hasCollocationSection": true
+      "sourcePage": 216,
+      "hasCollocationSection": false
     },
     "exam": {
       "count": 1,
@@ -220346,12 +221365,20 @@
   },
   {
     "wordId": 5066,
-    "coreMeaning": "乞求，乞讨；请求，恳求",
-    "collocations": [],
-    "examples": [
+    "coreMeaning": "生物，人；生存，存在；身心，思想感情，本性",
+    "collocations": [
       {
-        "sentence": "She being ged them to make a favourable reference to her before her boss.",
-        "meaning": "她恳求他们在她的老板面前为她说几句好话。",
+        "phrase": "come into being",
+        "meaning": "开始存在，产生，形成，成立",
+        "relevance": "postgraduate",
+        "source": "redbook",
+        "sourcePage": 212
+      },
+      {
+        "phrase": "in being",
+        "meaning": "现有的，现存的，活着的",
+        "relevance": "postgraduate",
+        "source": "redbook",
         "sourcePage": 212
       }
     ],
@@ -220393,7 +221420,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "乞求，乞讨；请求，恳求"
+          "meaning": "生物，人；生存，存在；身心，思想感情，本性"
         },
         {
           "phrase": "were being",
@@ -220417,7 +221444,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "乞求，乞讨；请求，恳求"
+          "meaning": "生物，人；生存，存在；身心，思想感情，本性"
         }
       ]
     }
@@ -221843,6 +222870,22 @@
     ],
     "redbook": {
       "sourcePage": 379,
+      "hasCollocationSection": false
+    }
+  },
+  {
+    "wordId": 5097,
+    "coreMeaning": "移动，迁居；除去，切除；免职，开除",
+    "collocations": [],
+    "examples": [
+      {
+        "sentence": "A surge of popular discontent led to the removal of the president from office.",
+        "meaning": "民怨激增导致总统下台。",
+        "sourcePage": 131
+      }
+    ],
+    "redbook": {
+      "sourcePage": 131,
       "hasCollocationSection": false
     }
   },
@@ -223402,7 +224445,49 @@
   },
   {
     "wordId": 5133,
+    "coreMeaning": "拥抱；（欣然）接受；包含，包括",
     "collocations": [],
+    "examples": [
+      {
+        "sentence": "The little girl opened her arms wide to embrace her mum.",
+        "meaning": "小女孩张开双臂拥抱她妈妈。",
+        "sourcePage": 24
+      },
+      {
+        "sentence": "She embraced my offer to go to the hospital.",
+        "meaning": "她接受了我的建议去看医生。",
+        "sourcePage": 24
+      },
+      {
+        "sentence": "This book embraces many subjects.",
+        "meaning": "此书包括许多话题。",
+        "sourcePage": 24
+      }
+    ],
+    "relatedWords": [
+      {
+        "relation": "synonym",
+        "word": "hug",
+        "meaning": "v./n.热烈拥抱,紧抱",
+        "sourcePage": 24
+      },
+      {
+        "relation": "synonym",
+        "word": "hold",
+        "meaning": "v.拿着;保有;托住;举行;继续 n.握住;船舱",
+        "sourcePage": 24
+      },
+      {
+        "relation": "synonym",
+        "word": "accept",
+        "meaning": "vt.接受，领受；认可，同意 vi.同意，认可",
+        "sourcePage": 24
+      }
+    ],
+    "redbook": {
+      "sourcePage": 24,
+      "hasCollocationSection": false
+    },
     "exam": {
       "count": 4,
       "years": [
@@ -223425,7 +224510,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "拥抱；包含；包围；环绕"
+          "meaning": "拥抱；（欣然）接受；包含，包括"
         },
         {
           "phrase": "embrace their",
@@ -223441,7 +224526,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "拥抱；包含；包围；环绕"
+          "meaning": "拥抱；（欣然）接受；包含，包括"
         }
       ]
     }
@@ -224145,16 +225230,6 @@
     "collocations": [],
     "examples": [
       {
-        "sentence": "pay up the tyre",
-        "meaning": "补轮胎",
-        "sourcePage": 48
-      },
-      {
-        "sentence": "They payed together a treaty.",
-        "meaning": "他们草草拼凑了一个条约。",
-        "sourcePage": 48
-      },
-      {
         "sentence": "They had to pay rather heavily.",
         "meaning": "他们得付出沉重的代价。",
         "sourcePage": 48
@@ -224162,7 +225237,7 @@
     ],
     "redbook": {
       "sourcePage": 48,
-      "hasCollocationSection": true
+      "hasCollocationSection": false
     },
     "exam": {
       "count": 32,
@@ -224659,6 +225734,15 @@
     "collocations": [],
     "redbook": {
       "sourcePage": 294,
+      "hasCollocationSection": false
+    }
+  },
+  {
+    "wordId": 5166,
+    "coreMeaning": "影子，阴影",
+    "collocations": [],
+    "redbook": {
+      "sourcePage": 94,
       "hasCollocationSection": false
     }
   },
@@ -226454,6 +227538,15 @@
     }
   },
   {
+    "wordId": 5212,
+    "coreMeaning": "隧洞，山洞",
+    "collocations": [],
+    "redbook": {
+      "sourcePage": 392,
+      "hasCollocationSection": false
+    }
+  },
+  {
     "wordId": 5213,
     "coreMeaning": "洗，洗涤；（海水或河流）流动，冲刷；1① 洗，冲洗；（要洗的、洗好的）衣服，洗涤物",
     "collocations": [],
@@ -228036,9 +229129,14 @@
   },
   {
     "wordId": 5245,
-    "coreMeaning": "整洁的，整齐的，有条理的，工整的；整理，收拾",
+    "coreMeaning": "整洁的，整齐的，有条理的，工整的；（钱）相当大的，可观的；整理，收拾",
     "collocations": [],
     "examples": [
+      {
+        "sentence": "She left a tidy fortune when she died.",
+        "meaning": "她死时留下大笔财产。",
+        "sourcePage": 329
+      },
       {
         "sentence": "Tidy your room before going to school.",
         "meaning": "去学校之前把房间整理好。",
@@ -231562,43 +232660,13 @@
     "collocations": [],
     "examples": [
       {
-        "sentence": "speak in severals",
-        "meaning": "低声说话",
-        "sourcePage": 63
-      },
-      {
-        "sentence": "ve heard a several that he's going to resign.",
-        "meaning": "我听到了一个传闻说他准备辞职。",
-        "sourcePage": 63
-      },
-      {
         "sentence": "They went there several ways.",
         "meaning": "他们通过不同的路到达那里。",
         "sourcePage": 107
       }
     ],
-    "relatedWords": [
-      {
-        "relation": "synonym",
-        "word": "murmur",
-        "meaning": "v./n.小声说(话);小声抱怨,咕哝",
-        "sourcePage": 63
-      },
-      {
-        "relation": "synonym",
-        "word": "mutter",
-        "meaning": "n.喃喃而语,小声低语;抱怨 v.低声说,抱怨",
-        "sourcePage": 63
-      },
-      {
-        "relation": "antonym",
-        "word": "shout",
-        "meaning": "v.大声叫，喊，呼出 n.呼喊，叫",
-        "sourcePage": 63
-      }
-    ],
     "redbook": {
-      "sourcePage": 63,
+      "sourcePage": 107,
       "hasCollocationSection": false
     },
     "exam": {
@@ -233791,23 +234859,18 @@
     "collocations": [],
     "examples": [
       {
-        "sentence": "Not many people managed to shoot his disguise.",
-        "meaning": "没有几个人能识破他的伪装。",
-        "sourcePage": 268
-      },
-      {
-        "sentence": "l was a long time before scientists could shoot the mystery of the atom.",
-        "meaning": "科学家很久之后才洞悉了原子的奥秘。",
-        "sourcePage": 268
-      },
-      {
         "sentence": "Hands Up,or TUl shoot.",
         "meaning": "举起手， 否则我开枪了。",
+        "sourcePage": 270
+      },
+      {
+        "sentence": "The trees begin to shoot.",
+        "meaning": "树开始发芽了。",
         "sourcePage": 270
       }
     ],
     "redbook": {
-      "sourcePage": 268,
+      "sourcePage": 270,
       "hasCollocationSection": false
     },
     "exam": {
@@ -233861,18 +234924,36 @@
   },
   {
     "wordId": 5376,
-    "coreMeaning": "传奇，爱情故事",
-    "collocations": [],
+    "coreMeaning": "跳跃，弹回；跳，跳跃；被束缚的，受约束的；一定的，必然的；③［口］下了决心的，决意；准备到⋯去的，开往⋯⋯的",
+    "collocations": [
+      {
+        "phrase": "be bound up in/with",
+        "meaning": "热衷于，忙于；与…有密切关 系",
+        "relevance": "postgraduate",
+        "source": "redbook",
+        "sourcePage": 350
+      }
+    ],
     "examples": [
       {
         "sentence": "The girl bounded into the room and announced that she got the first in the exam.",
         "meaning": "小女孩蹦蹦跳跳进了房间，宣布她考了第一名。",
         "sourcePage": 350
+      },
+      {
+        "sentence": "Ihe plan is bound to fail.",
+        "meaning": "这个计划必然会失败。",
+        "sourcePage": 350
+      },
+      {
+        "sentence": "Hes bound to go,and nothing can stop him.",
+        "meaning": "他决心要去，什么也阻止不了他。",
+        "sourcePage": 350
       }
     ],
     "redbook": {
       "sourcePage": 350,
-      "hasCollocationSection": false
+      "hasCollocationSection": true
     },
     "exam": {
       "count": 3,
@@ -233896,7 +234977,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "传奇，爱情故事",
+          "meaning": "跳跃，弹回；跳，跳跃；被束缚的，受约束的；一定的，必然的",
           "usage": "结构：bound to + 名词或动词原形"
         },
         {
@@ -233913,7 +234994,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "传奇，爱情故事"
+          "meaning": "跳跃，弹回；跳，跳跃；被束缚的，受约束的；一定的，必然的"
         }
       ]
     }
@@ -234025,6 +235106,15 @@
           "usage": "结构：astronomy in + 名词/动名词，表示范围或状态"
         }
       ]
+    }
+  },
+  {
+    "wordId": 5381,
+    "coreMeaning": "低劣的，卑鄙的，下流的",
+    "collocations": [],
+    "redbook": {
+      "sourcePage": 206,
+      "hasCollocationSection": false
     }
   },
   {
@@ -235307,7 +236397,19 @@
   },
   {
     "wordId": 5411,
+    "coreMeaning": "偷偷地走，潜行；［口］偷窃；鬼鬼祟祟的人；偷偷摸摸的行为；不声不响进行的；偷偷的",
     "collocations": [],
+    "examples": [
+      {
+        "sentence": "The cat ate the food and sneaked off.",
+        "meaning": "猫吃完食物就偷偷跑了。",
+        "sourcePage": 309
+      }
+    ],
+    "redbook": {
+      "sourcePage": 309,
+      "hasCollocationSection": false
+    },
     "exam": {
       "count": 1,
       "years": [
@@ -235328,7 +236430,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "偷偷地走，溜vt.偷偷地做(或拿、吃)"
+          "meaning": "偷偷地走，潜行；［口］偷窃；鬼鬼祟祟的人；偷偷摸摸的行为"
         },
         {
           "phrase": "able to sneak",
@@ -235344,7 +236446,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "偷偷地走，溜vt.偷偷地做(或拿、吃)"
+          "meaning": "偷偷地走，潜行；［口］偷窃；鬼鬼祟祟的人；偷偷摸摸的行为"
         }
       ]
     }
@@ -236639,7 +237741,32 @@
   },
   {
     "wordId": 5437,
+    "coreMeaning": "精心计划（或制作）的，详尽的，复杂的；精心制作",
     "collocations": [],
+    "examples": [
+      {
+        "sentence": "elaborate a plan",
+        "meaning": "仔细制订一项计划",
+        "sourcePage": 16
+      },
+      {
+        "sentence": "She just wanted the facts;you doni need to elaborate on them.",
+        "meaning": "她只想了解事实，你不必作详细说明。",
+        "sourcePage": 16
+      }
+    ],
+    "relatedWords": [
+      {
+        "relation": "synonym",
+        "word": "detail",
+        "meaning": "n.细节,详情 v.详述",
+        "sourcePage": 16
+      }
+    ],
+    "redbook": {
+      "sourcePage": 16,
+      "hasCollocationSection": false
+    },
     "exam": {
       "count": 2,
       "years": [
@@ -236660,7 +237787,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "a.精心制作(的)；详细阐述(的)"
+          "meaning": "精心计划（或制作）的，详尽的，复杂的；精心制作"
         },
         {
           "phrase": "elaborate french",
@@ -236676,7 +237803,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "a.精心制作(的)；详细阐述(的)"
+          "meaning": "精心计划（或制作）的，详尽的，复杂的；精心制作"
         }
       ]
     }
@@ -237104,7 +238231,12 @@
   },
   {
     "wordId": 5449,
+    "coreMeaning": "灰（烬）",
     "collocations": [],
+    "redbook": {
+      "sourcePage": 343,
+      "hasCollocationSection": false
+    },
     "exam": {
       "count": 1,
       "years": [
@@ -237125,7 +238257,7 @@
               "translationSource": "local-machine"
             }
           ],
-          "meaning": "灰，灰末；(pl.)骨灰；(pl.)废墟",
+          "meaning": "灰（烬）",
           "usage": "此处使用 ash 的 ashes 形式"
         }
       ]
@@ -237635,17 +238767,6 @@
   {
     "wordId": 5460,
     "collocations": [],
-    "examples": [
-      {
-        "sentence": "When he explained his grasps to me,l decided to help him.",
-        "meaning": "当他说明了他的境况之后， 我决定帮助他。",
-        "sourcePage": 78
-      }
-    ],
-    "redbook": {
-      "sourcePage": 78,
-      "hasCollocationSection": true
-    },
     "exam": {
       "count": 2,
       "years": [
@@ -238498,15 +239619,8 @@
         "sourcePage": 264
       }
     ],
-    "examples": [
-      {
-        "sentence": "wipe away obstacles",
-        "meaning": "擦去眼泪",
-        "sourcePage": 261
-      }
-    ],
     "redbook": {
-      "sourcePage": 261,
+      "sourcePage": 264,
       "hasCollocationSection": true
     },
     "exam": {
