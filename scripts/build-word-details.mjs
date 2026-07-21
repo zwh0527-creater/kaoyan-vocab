@@ -318,8 +318,100 @@ const weakContextWords = new Set([
 const examOptionLine = /^\s*(?:\[\s*[A-G](?:\s*[A-Z])?\s*\]?|[A-G][.)])\s*/i
 const examInstructionLine = /^\s*(?:Directions:|Choose the best|Mark your answers|Read the following)/i
 
+function normalizeExamContextText(value) {
+  const literalRepairs = [
+    [/about-fkce/gi, 'about-face'],
+    [/backloadedpublic/gi, 'backloaded public'],
+    [/equ ities/gi, 'equities'],
+    [/firiends/gi, 'friends'],
+    [/\bfiom\b/gi, 'from'],
+    [/judgm ent/gi, 'judgment'],
+    [/on ce/gi, 'once'],
+    [/thoughtfill/gi, 'thoughtful'],
+    [/unammous/gi, 'unanimous'],
+    [/who5ve/gi, "who've"],
+    [/thafs/gi, "that's"],
+    [/ifs safer/gi, "it's safer"],
+    [/courfs judges/gi, "court's judges"],
+    [/Federal Circuifs/gi, "Federal Circuit's"],
+    [/wouldVe/gi, "would've"],
+    [/big-cily/gi, 'big-city'],
+    [/soul-cmshingly/gi, 'soul-crushingly'],
+    [/ccthe/gi, '"the'],
+    [/describingdifferent/gi, 'describing different'],
+    [/indifferent shoes/gi, 'in different shoes'],
+    [/diferent/gi, 'different'],
+    [/huntergatherer/gi, 'hunter-gatherer'],
+    [/canwe/gi, 'can we'],
+    [/ifwe/gi, 'if we'],
+    [/comingfrom/gi, 'coming from'],
+    [/shel£/gi, 'shelf'],
+    [/iT unes/gi, 'iTunes'],
+    [/onthe/gi, 'on the'],
+    [/A n A nsw er/gi, 'An Answer'],
+    [/Enlightenm ent/gi, 'Enlightenment']
+  ]
+  let text = String(value ?? '')
+    .replace(/\u00a0/g, ' ')
+    .replace(/、/g, ',')
+    .replace(/[“”]/g, '"')
+    .replace(/[‘’]/g, "'")
+  for (const [pattern, replacement] of literalRepairs) text = text.replace(pattern, replacement)
+  text = text
+    .replace(/CE O/g, 'CEO')
+    .replace(/W eb/g, 'Web')
+    .replace(/F A SB/g, 'FASB')
+    .replace(/\b([A-Za-z]+)[59]\s+s\b/g, "$1's")
+    .replace(/\b([A-Za-z]+)[59]s\b/g, "$1's")
+    .replace(/\b([A-Za-z]+)[59](?=\s+[A-Za-z])/g, "$1'")
+    .replace(/\b([A-Za-z]+)5ve\b/gi, "$1've")
+    .replace(/(?<=[a-z])\/[59](?=\s|$)/g, ',"')
+    .replace(/(?<=[a-z])[56]{2}(?=\s|$)/g, '"')
+    .replace(/(?<!\d)66(?=[A-Za-z])/g, '"')
+    .replace(/\b(20)\s+(\d)\s+(\d)\b/g, '$1$2$3')
+    .replace(/\b(20)\s+(\d{2})\b/g, '$1$2')
+    .replace(/\b([B-HJ-Z])\s+([a-z]{2,})\b/g, '$1$2')
+    .replace(/\bA\s+(merica|ugust|fter|nd|ccounting|ppeals|llen|ccording|t|s|nyway|chievement|ll|nnette)\b/gi, (_, rest) => `A${rest}`)
+    .replace(/\bA\s+m\s+erica\b/gi, 'America')
+    .replace(/\bI\s+(n|t|s)\b/g, (_, rest) => `I${rest}`)
+    .replace(/\bW\s+e\b/g, 'We')
+    .replace(/\bH\s+e\b/g, 'He')
+    .replace(/\bM\s+r\b/g, 'Mr')
+    .replace(/\b(?:m\s+ost|f\s+ar|par\s+t)\b/g, (match) => match.replace(/\s+/g, ''))
+    .replace(/\bdispropor\s+tionately\b/gi, 'disproportionately')
+    .replace(/\bGeneration\s+Z(?=(?:need|seeking)\b)/g, 'Generation Z ')
+    .replace(/\bAl(?=\s+art\b)/g, 'AI')
+    .replace(/\b(2010)\s+s\b/g, '$1s')
+    .replace(/\/J\s+We\b/g, '. We')
+    .replace(/(?<=[A-Za-z])—(?=[A-Za-z])/g, ' — ')
+    .replace(/\b(?:[A-Z]\s+){2,}[A-Z]\b/g, (match) => match.replace(/\s+/g, ''))
+    .replace(/^\s*Text\s*\d+\s+/i, '')
+    .replace(/^\s*\(\s*(4[1-9]|50)\s*\)\s*(?!_)/, '')
+    .replace(/\s+([,.;:!?])/g, '$1')
+    .replace(/\s+/g, ' ')
+    .trim()
+  return text
+}
+
+function isReliableExamContext(text) {
+  if (text.length < 28 || text.length > 520 || !/[A-Za-z]/.test(text)) return false
+  if (/_{2,}|�|□|■|◆/.test(text)) return false
+  if (/^(?:Directions|Part\s+[A-C]|Section\b|Choose the best|Read the following|In your essay|According to (?:Paragraph|the text)|Which of the following|What does |The author's attitude)/i.test(text)) return false
+  if (/\d{4}\s*年\s*英语|第\s*\d+\s*页|\bquestions?\s+\d+/i.test(text)) return false
+  if (/(?:^|\s)(?:[1-4]?\d|50)$/.test(text) || /\b[A-Za-z]+\d+[A-Za-z]*\b/.test(text) || /_\s*\d+\s*_/.test(text)) return false
+  const blankNumbers = text.match(/(?<!\d)\b(?:[1-9]|[1-3]\d|40)\b(?!\d)/g) ?? []
+  const words = text.match(/[A-Za-z]+(?:'[A-Za-z]+)?/g) ?? []
+  if (blankNumbers.length > 0 || words.length < 6) return false
+  if (/^[\s'"]*[a-z]/.test(text)) return false
+  if (/\b[A-Z]$/.test(text) || /extra choices?.+blanks?/i.test(text)) return false
+  if (/(?:fit in with|best title for|learned from).+\btext\b/i.test(text)) return false
+  if (/(?:Part\s+B|list\s+A-G|numbered paragraphs)/i.test(text)) return false
+  if (/\b(?:Mr|Mrs|Ms|Dr|St|U\.?S\.?)$/.test(text)) return false
+  return true
+}
+
 function examContextAround(fragment, surface) {
-  const text = cleanText(fragment)
+  const text = normalizeExamContextText(cleanText(fragment)
     .replace(/\^[a-z]?/gi, '')
     .replace(/\bfbr\b/gi, 'for')
     .replace(/\bbom\b/g, 'born')
@@ -343,15 +435,15 @@ function examContextAround(fragment, surface) {
     .replace(/\bN oam\b/g, 'Noam')
     .replace(/\btoartifacts\b/gi, 'to artifacts')
     .replace(/\s+([,.:])/g, '$1')
-    .replace(/\s+/g, ' ')
+    .replace(/\s+/g, ' '))
   const index = text.toLowerCase().indexOf(surface.toLowerCase())
   if (index < 0) return null
-  if (text.length <= 440) return text.length >= Math.max(24, surface.length + 8) ? text : null
+  if (text.length <= 440) return isReliableExamContext(text) ? text : null
   const start = Math.max(0, index - 165)
   const end = Math.min(text.length, index + surface.length + 255)
   const context = `${start > 0 ? '…' : ''}${text.slice(start, end).trim()}${end < text.length ? '…' : ''}`
   if (/\b\d{1,2}\s*$/.test(context)) return null
-  return context.length >= Math.max(24, surface.length + 8) ? context : null
+  return isReliableExamContext(context) ? context : null
 }
 
 function buildExamEvidence(rawText) {

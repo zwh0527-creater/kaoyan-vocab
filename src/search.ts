@@ -1,4 +1,4 @@
-import type { WordDetailEntry, WordEntry } from './types'
+import type { WordEntry } from './types'
 
 function normalize(value: string) {
   return value.trim().toLocaleLowerCase('en-US')
@@ -11,7 +11,7 @@ export interface WordSearchResult {
 
 export function searchWords(
   words: WordEntry[],
-  detailMap: ReadonlyMap<number, WordDetailEntry> | null,
+  detailMeaningMap: ReadonlyMap<number, string> | null,
   query: string,
   limit = 80
 ): WordSearchResult {
@@ -21,7 +21,7 @@ export function searchWords(
   const ranked: Array<{ word: WordEntry; rank: number }> = []
 
   for (const word of words) {
-    const detailMeaning = detailMap?.get(word.id)?.coreMeaning ?? ''
+    const detailMeaning = detailMeaningMap?.get(word.id) ?? ''
     if (isChineseSearch) {
       const coreIndex = detailMeaning.indexOf(needle)
       const sourceIndex = word.meaning.indexOf(needle)

@@ -15,7 +15,7 @@ import {
   togglePendingMastered
 } from '../studyEngine'
 import type { StudyStateV4, WordDetailEntry, WordEntry } from '../types'
-import { loadWordDetails } from '../wordDetails'
+import { loadWordDetail } from '../wordDetails'
 import { WordDetailSheet } from './WordDetailSheet'
 
 interface StudyScreenProps {
@@ -40,8 +40,8 @@ export function StudyScreen({
   const reviewedIds = useMemo(() => new Set(state.reviewedWordIds), [state.reviewedWordIds])
   const [revealedIds, setRevealedIds] = useState<Set<number>>(() => new Set())
   const [detailWordId, setDetailWordId] = useState<number | null>(null)
-  const [detailMap, setDetailMap] = useState<Map<number, WordDetailEntry> | null>(null)
-  const [detailsLoading, setDetailsLoading] = useState(true)
+  const [selectedDetail, setSelectedDetail] = useState<WordDetailEntry | undefined>()
+  const [detailsLoading, setDetailsLoading] = useState(false)
   const scrollRef = useRef<HTMLDivElement>(null)
   const ticking = useRef(false)
   const groupKey = `${state.sessionDate}-${state.round}-${state.completedGroups}`
@@ -59,10 +59,17 @@ export function StudyScreen({
   }, [onStateChange])
 
   useEffect(() => {
+    if (detailWordId === null) {
+      setSelectedDetail(undefined)
+      setDetailsLoading(false)
+      return
+    }
     let active = true
-    void loadWordDetails()
-      .then((details) => {
-        if (active) setDetailMap(details)
+    setSelectedDetail(undefined)
+    setDetailsLoading(true)
+    void loadWordDetail(detailWordId)
+      .then((detail) => {
+        if (active) setSelectedDetail(detail)
       })
       .catch(() => onNotify('离线词条数据暂时无法载入'))
       .finally(() => {
@@ -71,7 +78,7 @@ export function StudyScreen({
     return () => {
       active = false
     }
-  }, [onNotify])
+  }, [detailWordId, onNotify])
 
   useEffect(() => {
     setRevealedIds(new Set())
@@ -231,7 +238,7 @@ export function StudyScreen({
       {selectedDetailWord ? (
         <WordDetailSheet
           word={selectedDetailWord}
-          detail={detailMap?.get(selectedDetailWord.id)}
+          detail={selectedDetail}
           loading={detailsLoading}
           status={pendingMastered.has(selectedDetailWord.id) ? 'pending' : 'learning'}
           onClose={() => setDetailWordId(null)}

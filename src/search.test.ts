@@ -1,14 +1,14 @@
 import { describe, expect, it } from 'vitest'
 import { searchWords } from './search'
-import type { WordDetailEntry, WordEntry } from './types'
+import type { WordEntry } from './types'
 
 const words: WordEntry[] = [
   { id: 0, word: 'neglect', phonetic: '/nɪˈɡlekt/', meaning: '忽视；疏忽', sourcePage: 1, originalOrder: 0 },
   { id: 1, word: 'obtain', phonetic: '/əbˈteɪn/', meaning: '得到', sourcePage: 1, originalOrder: 1 },
   { id: 2, word: 'negligent', phonetic: '/ˈneɡlɪdʒənt/', meaning: '疏忽的', sourcePage: 1, originalOrder: 2 }
 ]
-const details = new Map<number, WordDetailEntry>([
-  [1, { wordId: 1, coreMeaning: '获得，得到；存在，流行', collocations: [] }]
+const details = new Map<number, string>([
+  [1, '获得，得到；存在，流行']
 ])
 
 describe('word search', () => {

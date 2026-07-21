@@ -1,7 +1,7 @@
-import { useDeferredValue, useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { searchWords } from '../search'
 import type { WordDetailEntry, WordEntry } from '../types'
-import { loadWordDetails } from '../wordDetails'
+import { loadWordDetail, loadWordSearchIndex } from '../wordDetails'
 import { WordDetailSheet } from './WordDetailSheet'
 
 interface SearchScreenProps {
@@ -23,24 +23,47 @@ export function SearchScreen({
 }: SearchScreenProps) {
   const inputRef = useRef<HTMLInputElement>(null)
   const [query, setQuery] = useState('')
-  const deferredQuery = useDeferredValue(query)
-  const [detailMap, setDetailMap] = useState<Map<number, WordDetailEntry> | null>(null)
+  const [detailMeaningMap, setDetailMeaningMap] = useState<Map<number, string> | null>(null)
+  const [selectedDetail, setSelectedDetail] = useState<WordDetailEntry | undefined>()
   const [selectedWordId, setSelectedWordId] = useState<number | null>(null)
-  const [detailsLoading, setDetailsLoading] = useState(true)
+  const [indexLoading, setIndexLoading] = useState(true)
+  const [detailsLoading, setDetailsLoading] = useState(false)
   const mastered = useMemo(() => new Set(masteredIds), [masteredIds])
   const pending = useMemo(() => new Set(pendingMasteredIds), [pendingMasteredIds])
 
   useEffect(() => {
     inputRef.current?.focus()
-    void loadWordDetails()
-      .then(setDetailMap)
+    void loadWordSearchIndex()
+      .then(setDetailMeaningMap)
       .catch(() => onNotify('离线词条索引暂时无法载入'))
-      .finally(() => setDetailsLoading(false))
+      .finally(() => setIndexLoading(false))
   }, [onNotify])
 
+  useEffect(() => {
+    if (selectedWordId === null) {
+      setSelectedDetail(undefined)
+      setDetailsLoading(false)
+      return
+    }
+    let active = true
+    setSelectedDetail(undefined)
+    setDetailsLoading(true)
+    void loadWordDetail(selectedWordId)
+      .then((detail) => {
+        if (active) setSelectedDetail(detail)
+      })
+      .catch(() => onNotify('离线词条数据暂时无法载入'))
+      .finally(() => {
+        if (active) setDetailsLoading(false)
+      })
+    return () => {
+      active = false
+    }
+  }, [onNotify, selectedWordId])
+
   const searchResult = useMemo(
-    () => searchWords(words, detailMap, deferredQuery),
-    [deferredQuery, detailMap, words]
+    () => searchWords(words, detailMeaningMap, query),
+    [detailMeaningMap, query, words]
   )
 
   const statusFor = (wordId: number): SearchStatus => {
@@ -78,7 +101,7 @@ export function SearchScreen({
         {query ? <button type="button" onClick={() => setQuery('')} aria-label="清空搜索">清空</button> : null}
       </div>
 
-      <section className="search-results" aria-live="polite" aria-busy={detailsLoading}>
+      <section className="search-results" aria-live="polite" aria-busy={indexLoading}>
         {!query ? (
           <div className="search-empty">
             <strong>{words.length} 个词都可以查</strong>
@@ -108,7 +131,7 @@ export function SearchScreen({
               })}
             </div>
           </>
-        ) : detailsLoading ? (
+        ) : indexLoading ? (
           <p className="search-message">正在载入离线释义…</p>
         ) : (
           <div className="search-empty no-result">
@@ -121,7 +144,7 @@ export function SearchScreen({
       {selectedWord ? (
         <WordDetailSheet
           word={selectedWord}
-          detail={detailMap?.get(selectedWord.id)}
+          detail={selectedDetail}
           loading={detailsLoading}
           status={selectedStatus}
           onClose={() => setSelectedWordId(null)}

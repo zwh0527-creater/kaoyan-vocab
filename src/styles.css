@@ -61,6 +61,21 @@ input:focus-visible {
   min-height: 100dvh;
 }
 
+.bootstrap-screen {
+  min-height: 100dvh;
+  display: grid;
+  place-content: center;
+  gap: 12px;
+  padding: 32px;
+  color: var(--ink);
+  background: var(--paper);
+  text-align: center;
+}
+
+.bootstrap-screen span {
+  color: var(--muted);
+}
+
 .page {
   width: min(100%, 720px);
   min-height: 100dvh;

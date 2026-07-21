@@ -116,7 +116,7 @@ export interface ExamPhraseEntry {
     text: string
     year: number
     translation?: string
-    translationSource?: 'official-answer' | 'local-machine'
+    translationSource?: 'official-answer' | 'curated' | 'local-machine'
     translationQuestion?: number
   }>
 }

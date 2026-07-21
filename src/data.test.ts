@@ -117,7 +117,7 @@ describe('optional word details', () => {
             expect(context.year).toBeGreaterThanOrEqual(2010)
             expect(context.year).toBeLessThanOrEqual(2025)
             expect(context.translation).toMatch(/[\u3400-\u9fff]/)
-            expect(['official-answer', 'local-machine']).toContain(context.translationSource)
+            expect(['official-answer', 'curated', 'local-machine']).toContain(context.translationSource)
           }
         }
       }
@@ -159,5 +159,31 @@ describe('optional word details', () => {
     expect(clash?.coreMeaning).toContain('冲突')
     expect(clash?.coreMeaning).not.toContain('包围')
     expect(clash?.redbook?.sourcePage).toBe(244)
+  })
+
+  it('keeps exam examples free of known OCR and literal-translation failures', () => {
+    const contexts = (wordDetails as WordDetailEntry[]).flatMap((detail) =>
+      (detail.exam?.phrases ?? []).flatMap((phrase) => phrase.contexts),
+    )
+    const uniqueContexts = [...new Map(contexts.map((context) => [context.text, context])).values()]
+    const translationFor = (needle: string) =>
+      uniqueContexts.find((context) => context.text.toLowerCase().includes(needle.toLowerCase()))?.translation
+
+    for (const context of uniqueContexts) {
+      expect(context.text).not.toMatch(/_{2,}|�|\b(?:fiom|thafs|who5ve)\b|equ ities|judgm ent|about-fkce/i)
+      expect(context.text).not.toMatch(/^(?:Directions|Choose the best|According to Paragraph|Which of the following)/i)
+      expect(context.translation).not.toMatch(/商业方法索赔的贿赂|打到家里|一名猎人|吃掉他的话|站起来/)
+      expect(context.translation).not.toMatch(/(.{2,8})\1{4,}|\d{20,}/)
+      const englishWordCount = context.text.match(/[A-Za-z]+(?:'[A-Za-z]+)?/g)?.length ?? 0
+      const chineseCharacterCount = context.translation?.match(/[\u3400-\u9fff]/g)?.length ?? 0
+      if (englishWordCount >= 12) expect(chineseCharacterCount / englishWordCount).toBeGreaterThanOrEqual(0.7)
+    }
+
+    expect(translationFor('traffic on their network')).toContain('数据流量')
+    expect(translationFor('expand user traffic')).toContain('用户流量')
+    expect(translationFor('really hit home')).toContain('真切意识到')
+    expect(translationFor('one headhunter')).toContain('猎头')
+    expect(translationFor('eat his words and stand down')).toContain('收回前言并辞职')
+    expect(translationFor("Latin phrase 'sapere aude'")).toContain('康德')
   })
 })

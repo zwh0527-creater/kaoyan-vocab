@@ -1,7 +1,7 @@
 {
   "version": 4,
   "corpusFingerprint": "2a79ed252105e107ca96314e8fd975e944457c1538133d8064efb98432171182",
-  "entryCount": 4826,
+  "entryCount": 4703,
   "coreMeaningCount": 3914,
   "collocationCount": 1896,
   "redbookEntryCount": 3929,
@@ -9,13 +9,13 @@
   "unparsedCollocationSectionCount": 103,
   "exampleCount": 4181,
   "relatedWordCount": 1459,
-  "examEntryCount": 3298,
-  "examPhraseCount": 6399,
-  "examContextCount": 8076,
-  "examTranslationCount": 8076,
+  "examEntryCount": 2873,
+  "examPhraseCount": 4959,
+  "examContextCount": 5784,
+  "examTranslationCount": 5784,
   "examYears": [
     2010,
     2025
   ],
-  "fingerprint": "28de304c760885321d97484842a4aebb7b3a331319d8a1da76f02477021c38bd"
+  "fingerprint": "c79f40926add225f76b62e1757259856c665ce21cb3368aef381d94dd8fcaa33"
 }

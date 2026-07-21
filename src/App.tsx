@@ -1,5 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
-import wordsJson from './data/words.json'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import wordDetailsMeta from './data/word-details-meta.json'
 import corpusMeta from './data/corpus-meta.json'
 import { MasteredBookScreen } from './components/MasteredBookScreen'
@@ -24,11 +23,7 @@ type Screen = 'home' | 'study' | 'group-summary' | 'summary' | 'settings' | 'mas
 type Toast = { id: number; message: string }
 type GroupSummary = { reviewed: number; mastered: number; groupNumber: number }
 
-const words = wordsJson as WordEntry[]
-const wordMap = new Map(words.map((word) => [word.id, word]))
-const allWordIds = words.map((word) => word.id)
-
-function initializeState() {
+function initializeState(allWordIds: number[]) {
   const now = new Date()
   const saved = loadStudyState(corpusMeta.fingerprint, allWordIds, now)
   return rolloverToDate(
@@ -44,8 +39,10 @@ function isIosSafari() {
   return ios && !standalone
 }
 
-function App() {
-  const [state, setState] = useState<StudyStateV4>(initializeState)
+function App({ words }: { words: WordEntry[] }) {
+  const wordMap = useMemo(() => new Map(words.map((word) => [word.id, word])), [words])
+  const allWordIds = useMemo(() => words.map((word) => word.id), [words])
+  const [state, setState] = useState<StudyStateV4>(() => initializeState(allWordIds))
   const [screen, setScreen] = useState<Screen>('home')
   const [groupSummary, setGroupSummary] = useState<GroupSummary | null>(null)
   const [toasts, setToasts] = useState<Toast[]>([])
