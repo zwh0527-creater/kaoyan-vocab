@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest'
 import { createInitialState } from './studyEngine'
 import { createBackup, isValidStudyState, parseBackup } from './storage'
-import type { BackupV1, StudyStateV1 } from './types'
+import type { BackupV1, BackupV3, StudyStateV1, StudyStateV3 } from './types'
 
 const ids = Array.from({ length: 60 }, (_, index) => index)
 
-describe('v3 backup validation', () => {
-  it('round-trips a valid V3 backup', () => {
+describe('v4 backup validation', () => {
+  it('round-trips a valid V4 backup', () => {
     const state = createInitialState(ids, 'fingerprint', '2026-07-12')
     const parsed = parseBackup(JSON.stringify(createBackup(state)), 'fingerprint', ids)
     expect(parsed).toEqual(state)
@@ -25,6 +25,33 @@ describe('v3 backup validation', () => {
     expect(isValidStudyState({ ...state, dailyBatch: [999] }, 'fingerprint', new Set(ids))).toBe(false)
     expect(isValidStudyState({ ...state, currentQueue: [59, 59] }, 'fingerprint', new Set(ids))).toBe(false)
     expect(isValidStudyState({ ...state, pendingMasteredIds: [59] }, 'fingerprint', new Set(ids))).toBe(false)
+    expect(isValidStudyState({ ...state, reviewedWordIds: [59] }, 'fingerprint', new Set(ids))).toBe(false)
+  })
+
+  it('imports V3 progress and converts the seen prefix into reviewed words', () => {
+    const current = createInitialState(ids, 'fingerprint', '2026-07-12')
+    const {
+      reviewedWordIds: _reviewedWordIds,
+      schemaVersion: _schemaVersion,
+      ...legacyFields
+    } = current
+    const legacyState: StudyStateV3 = {
+      ...legacyFields,
+      schemaVersion: 3,
+      groupSeenCount: 2,
+      groupScrollIndex: 1
+    }
+    const backup: BackupV3 = {
+      format: 'kaoyan-vocab-backup',
+      version: 3,
+      exportedAt: '2026-07-12T00:00:00.000Z',
+      corpusFingerprint: 'fingerprint',
+      state: legacyState
+    }
+
+    const migrated = parseBackup(JSON.stringify(backup), 'fingerprint', ids)
+    expect(migrated.schemaVersion).toBe(4)
+    expect(migrated.reviewedWordIds).toEqual([0, 1])
   })
 
   it('imports a valid V1 backup through the safe migration', () => {
@@ -58,8 +85,9 @@ describe('v3 backup validation', () => {
       new Date(2026, 6, 12, 8, 0)
     )
 
-    expect(migrated.schemaVersion).toBe(3)
+    expect(migrated.schemaVersion).toBe(4)
     expect(migrated.studyDayResetHour).toBe(12)
+    expect(migrated.reviewedWordIds).toEqual([])
     expect(migrated.masteredIds).toEqual([])
     expect(migrated.nextRoundQueue).toEqual(ids.slice(0, 20))
     expect(new Set([

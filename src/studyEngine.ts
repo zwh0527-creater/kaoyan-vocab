@@ -1,4 +1,10 @@
-import type { StudyStateV1, StudyStateV2, StudyStateV3, StudySummaryV2 } from './types'
+import type {
+  StudyStateV1,
+  StudyStateV2,
+  StudyStateV3,
+  StudyStateV4,
+  StudySummaryV2
+} from './types'
 
 export const DAILY_LIMIT = 300
 export const GROUP_SIZE = 20
@@ -52,10 +58,10 @@ export function createInitialState(
   allWordIds: number[],
   corpusFingerprint: string,
   sessionDate = studyDateKey()
-): StudyStateV3 {
+): StudyStateV4 {
   const { taken, remaining } = takeFromQueue(allWordIds, DAILY_LIMIT)
   return {
-    schemaVersion: 3,
+    schemaVersion: 4,
     studyDayResetHour: STUDY_DAY_RESET_HOUR,
     corpusFingerprint,
     round: 1,
@@ -66,6 +72,7 @@ export function createInitialState(
     completedGroups: 0,
     groupSeenCount: 0,
     groupScrollIndex: 0,
+    reviewedWordIds: [],
     pendingMasteredIds: [],
     masteredIds: [],
     completedToday: false,
@@ -74,38 +81,53 @@ export function createInitialState(
   }
 }
 
-export function dailyGroupCount(state: StudyStateV3) {
+export function dailyGroupCount(state: StudyStateV4) {
   return Math.ceil(state.dailyBatch.length / GROUP_SIZE)
 }
 
-export function currentGroupIds(state: StudyStateV3) {
+export function currentGroupIds(state: StudyStateV4) {
   const start = state.completedGroups * GROUP_SIZE
   return state.dailyBatch.slice(start, start + GROUP_SIZE)
 }
 
-export function markGroupSeen(state: StudyStateV3, index: number): StudyStateV3 {
+export function markGroupScroll(state: StudyStateV4, index: number): StudyStateV4 {
   const group = currentGroupIds(state)
   if (state.completedToday || index < 0 || index >= group.length) return state
-  const groupSeenCount = Math.max(state.groupSeenCount, index + 1)
-  if (groupSeenCount === state.groupSeenCount && index === state.groupScrollIndex) return state
-  return { ...state, groupSeenCount, groupScrollIndex: index }
+  if (index === state.groupScrollIndex) return state
+  return { ...state, groupScrollIndex: index }
 }
 
-export function togglePendingMastered(state: StudyStateV3, wordId: number): StudyStateV3 {
+export function markWordReviewed(state: StudyStateV4, wordId: number): StudyStateV4 {
+  const group = currentGroupIds(state)
+  if (state.completedToday || !group.includes(wordId) || state.reviewedWordIds.includes(wordId)) return state
+  const reviewed = new Set([...state.reviewedWordIds, wordId])
+  const reviewedWordIds = group.filter((id) => reviewed.has(id))
+  return {
+    ...state,
+    reviewedWordIds,
+    groupSeenCount: reviewedWordIds.length,
+    groupScrollIndex: group.indexOf(wordId)
+  }
+}
+
+export function togglePendingMastered(state: StudyStateV4, wordId: number): StudyStateV4 {
   const group = currentGroupIds(state)
   if (state.completedToday || !group.includes(wordId)) return state
   const pending = new Set(state.pendingMasteredIds)
   if (pending.has(wordId)) pending.delete(wordId)
-  else pending.add(wordId)
+  else {
+    if (!state.reviewedWordIds.includes(wordId)) return state
+    pending.add(wordId)
+  }
   return {
     ...state,
     pendingMasteredIds: group.filter((id) => pending.has(id))
   }
 }
 
-export function completeGroup(state: StudyStateV3): StudyStateV3 {
+export function completeGroup(state: StudyStateV4): StudyStateV4 {
   const group = currentGroupIds(state)
-  if (state.completedToday || group.length === 0 || state.groupSeenCount < group.length) return state
+  if (state.completedToday || group.length === 0 || state.reviewedWordIds.length < group.length) return state
 
   const pending = new Set(state.pendingMasteredIds)
   const newlyMastered = group.filter((id) => pending.has(id))
@@ -122,6 +144,7 @@ export function completeGroup(state: StudyStateV3): StudyStateV3 {
       completedGroups,
       groupSeenCount: 0,
       groupScrollIndex: 0,
+      reviewedWordIds: [],
       pendingMasteredIds: [],
       masteredIds
     }
@@ -144,6 +167,7 @@ export function completeGroup(state: StudyStateV3): StudyStateV3 {
     completedGroups: 0,
     groupSeenCount: 0,
     groupScrollIndex: 0,
+    reviewedWordIds: [],
     pendingMasteredIds: [],
     masteredIds,
     completedToday: true,
@@ -152,7 +176,7 @@ export function completeGroup(state: StudyStateV3): StudyStateV3 {
   }
 }
 
-function beginNextRoundIfNeeded(state: StudyStateV3): StudyStateV3 {
+function beginNextRoundIfNeeded(state: StudyStateV4): StudyStateV4 {
   if (state.currentQueue.length > 0) return state
   if (state.nextRoundQueue.length === 0) return { ...state, allCompleted: true }
   return {
@@ -164,7 +188,7 @@ function beginNextRoundIfNeeded(state: StudyStateV3): StudyStateV3 {
   }
 }
 
-export function rolloverToDate(state: StudyStateV3, newDate = studyDateKey()): StudyStateV3 {
+export function rolloverToDate(state: StudyStateV4, newDate = studyDateKey()): StudyStateV4 {
   if (state.sessionDate === newDate) return state
 
   if (state.completedToday) {
@@ -174,6 +198,7 @@ export function rolloverToDate(state: StudyStateV3, newDate = studyDateKey()): S
       completedGroups: 0,
       groupSeenCount: 0,
       groupScrollIndex: 0,
+      reviewedWordIds: [],
       pendingMasteredIds: [],
       completedToday: false,
       lastSummary: null
@@ -204,6 +229,7 @@ export function rolloverToDate(state: StudyStateV3, newDate = studyDateKey()): S
     completedGroups: 0,
     groupSeenCount: 0,
     groupScrollIndex: 0,
+    reviewedWordIds: [],
     pendingMasteredIds,
     completedToday: false,
     allCompleted: carry.length === 0 && taken.length === 0 && state.nextRoundQueue.length === 0,
@@ -212,10 +238,10 @@ export function rolloverToDate(state: StudyStateV3, newDate = studyDateKey()): S
 }
 
 export function restoreMastered(
-  state: StudyStateV3,
+  state: StudyStateV4,
   wordId: number,
   allWordIds: number[]
-): StudyStateV3 {
+): StudyStateV4 {
   if (!state.masteredIds.includes(wordId)) return state
   return {
     ...state,
@@ -298,10 +324,26 @@ export function migrateV2ToV3(
   const migrationSource = state.sessionDate === targetDate
     ? { ...converted, sessionDate: formatLocalDate(new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1)) }
     : converted
-  return rolloverToDate(migrationSource, targetDate)
+  const migrated = rolloverToDate(migrateV3ToV4(migrationSource), targetDate)
+  const {
+    reviewedWordIds: _reviewedWordIds,
+    schemaVersion: _schemaVersion,
+    ...legacyState
+  } = migrated
+  return { ...legacyState, schemaVersion: 3 }
 }
 
-export function roundRemaining(state: StudyStateV3) {
+export function migrateV3ToV4(state: StudyStateV3): StudyStateV4 {
+  const start = state.completedGroups * GROUP_SIZE
+  const group = state.dailyBatch.slice(start, start + GROUP_SIZE)
+  return {
+    ...state,
+    schemaVersion: 4,
+    reviewedWordIds: group.slice(0, Math.min(state.groupSeenCount, group.length))
+  }
+}
+
+export function roundRemaining(state: StudyStateV4) {
   const completedWords = state.completedGroups * GROUP_SIZE
   return state.currentQueue.length + Math.max(0, state.dailyBatch.length - completedWords)
 }

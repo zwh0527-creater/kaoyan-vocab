@@ -1,13 +1,15 @@
 import { describe, expect, it } from 'vitest'
-import type { StudyStateV1, StudyStateV2, StudyStateV3 } from './types'
+import type { StudyStateV1, StudyStateV2, StudyStateV4 } from './types'
 import {
   completeGroup,
   createInitialState,
   currentGroupIds,
   dailyGroupCount,
-  markGroupSeen,
+  markGroupScroll,
+  markWordReviewed,
   migrateV1ToV2,
   migrateV2ToV3,
+  migrateV3ToV4,
   nextStudyDayBoundary,
   restoreMastered,
   rolloverToDate,
@@ -18,17 +20,26 @@ import {
 
 const ids = Array.from({ length: 5493 }, (_, index) => index)
 
-function finishCurrentGroup(state: StudyStateV3) {
-  return completeGroup(markGroupSeen(state, currentGroupIds(state).length - 1))
+function reviewCurrentGroup(state: StudyStateV4) {
+  for (const id of currentGroupIds(state)) state = markWordReviewed(state, id)
+  return state
 }
 
-function finishDay(state: StudyStateV3) {
+function finishCurrentGroup(state: StudyStateV4) {
+  return completeGroup(reviewCurrentGroup(state))
+}
+
+function finishDay(state: StudyStateV4) {
   while (!state.completedToday) state = finishCurrentGroup(state)
   return state
 }
 
-function toLegacyV2(state: StudyStateV3): StudyStateV2 {
-  const { studyDayResetHour: _studyDayResetHour, ...legacy } = state
+function toLegacyV2(state: StudyStateV4): StudyStateV2 {
+  const {
+    studyDayResetHour: _studyDayResetHour,
+    reviewedWordIds: _reviewedWordIds,
+    ...legacy
+  } = state
   return { ...legacy, schemaVersion: 2 }
 }
 
@@ -51,7 +62,7 @@ describe('noon study-day boundary', () => {
     expect(beforeNoon.sessionDate).toBe('2026-07-14')
     expect(beforeNoon.completedToday).toBe(true)
 
-    const atNoon = rolloverToDate(beforeNoon, studyDateKey(new Date(2026, 6, 15, 12, 0)))
+    const atNoon = rolloverToDate(migrateV3ToV4(beforeNoon), studyDateKey(new Date(2026, 6, 15, 12, 0)))
     expect(atNoon.sessionDate).toBe('2026-07-15')
     expect(atNoon.completedToday).toBe(false)
     expect(atNoon.dailyBatch).toEqual(ids.slice(300, 600))
@@ -67,7 +78,7 @@ describe('noon study-day boundary', () => {
   })
 })
 
-describe('study engine v3', () => {
+describe('study engine v4', () => {
   it('creates fifteen groups of twenty for the first day', () => {
     const state = createInitialState(ids, 'fingerprint', '2026-07-12')
     expect(state.dailyBatch).toHaveLength(300)
@@ -77,8 +88,29 @@ describe('study engine v3', () => {
     expect(roundRemaining(state)).toBe(5493)
   })
 
+  it('counts reviewed meanings instead of scroll position', () => {
+    let state = createInitialState(ids, 'fingerprint', '2026-07-12')
+    state = markGroupScroll(state, 19)
+    expect(state.groupSeenCount).toBe(0)
+    expect(completeGroup(state)).toBe(state)
+
+    state = markWordReviewed(state, 3)
+    expect(state.groupSeenCount).toBe(1)
+    expect(state.reviewedWordIds).toEqual([3])
+  })
+
+  it('requires a meaning review before a word can be marked familiar', () => {
+    let state = createInitialState(ids, 'fingerprint', '2026-07-12')
+    expect(togglePendingMastered(state, 12)).toBe(state)
+
+    state = markWordReviewed(state, 12)
+    state = togglePendingMastered(state, 12)
+    expect(state.pendingMasteredIds).toEqual([12])
+  })
+
   it('toggles a pending mastered word before group completion', () => {
     let state = createInitialState(ids, 'fingerprint', '2026-07-12')
+    state = markWordReviewed(state, 12)
     state = togglePendingMastered(state, 12)
     expect(state.pendingMasteredIds).toEqual([12])
     state = togglePendingMastered(state, 12)
@@ -87,7 +119,10 @@ describe('study engine v3', () => {
 
   it('sends every unmarked word to the next round', () => {
     let state = createInitialState(ids.slice(0, 20), 'fingerprint', '2026-07-12')
-    for (const id of ids.slice(0, 15)) state = togglePendingMastered(state, id)
+    for (const id of ids.slice(0, 15)) {
+      state = markWordReviewed(state, id)
+      state = togglePendingMastered(state, id)
+    }
     state = finishCurrentGroup(state)
     expect(state.masteredIds).toEqual(ids.slice(0, 15))
     expect(state.nextRoundQueue).toEqual(ids.slice(15, 20))
@@ -98,6 +133,7 @@ describe('study engine v3', () => {
   it('keeps 285 unmarked words waiting while tomorrow continues unseen round-one words', () => {
     let state = createInitialState(ids, 'fingerprint', '2026-07-12')
     for (let group = 0; group < 15; group += 1) {
+      state = markWordReviewed(state, group * 20)
       state = togglePendingMastered(state, group * 20)
       state = finishCurrentGroup(state)
     }
@@ -114,8 +150,9 @@ describe('study engine v3', () => {
   it('settles complete groups and repeats only the partial group across days', () => {
     let state = createInitialState(ids, 'fingerprint', '2026-07-12')
     for (let group = 0; group < 6; group += 1) state = finishCurrentGroup(state)
+    state = markWordReviewed(state, 121)
     state = togglePendingMastered(state, 121)
-    state = markGroupSeen(state, 12)
+    state = markGroupScroll(state, 12)
 
     state = rolloverToDate(state, '2026-07-13')
 
@@ -125,6 +162,7 @@ describe('study engine v3', () => {
     expect(state.pendingMasteredIds).toEqual([121])
     expect(state.groupSeenCount).toBe(0)
     expect(state.groupScrollIndex).toBe(0)
+    expect(state.reviewedWordIds).toEqual([])
   })
 
   it('does not mix a new round into a short final day', () => {
@@ -147,7 +185,7 @@ describe('study engine v3', () => {
 
   it('restores exactly one mastered word without changing the active batch', () => {
     const initial = createInitialState(ids, 'fingerprint', '2026-07-12')
-    const before: StudyStateV3 = {
+    const before: StudyStateV4 = {
       ...initial,
       masteredIds: [1, 2, 3],
       currentQueue: initial.currentQueue.filter((id) => ![1, 2, 3].includes(id)),

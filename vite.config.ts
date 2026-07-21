@@ -6,6 +6,10 @@ const base = process.env.GITHUB_ACTIONS ? '/kaoyan-vocab/' : '/'
 
 export default defineConfig({
   base,
+  server: {
+    host: '0.0.0.0',
+    allowedHosts: ['terminal.local']
+  },
   plugins: [
     react(),
     VitePWA({
@@ -16,8 +20,8 @@ export default defineConfig({
         short_name: '考研单词',
         description: '每天十五组考研词汇，只让明确标熟的词退出下一轮。',
         lang: 'zh-CN',
-        theme_color: '#f2ede3',
-        background_color: '#f2ede3',
+        theme_color: '#f4f0e8',
+        background_color: '#f4f0e8',
         display: 'standalone',
         orientation: 'portrait-primary',
         start_url: base,

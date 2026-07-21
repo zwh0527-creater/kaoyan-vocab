@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { IconX } from '@tabler/icons-react'
 import type { RelatedWordEntry, WordDetailEntry, WordEntry } from '../types'
 
 interface WordDetailSheetProps {
@@ -51,7 +52,9 @@ export function WordDetailSheet({ word, detail, loading, status, onClose }: Word
             <h2 id="detail-title">{word.word}</h2>
             <span>{word.phonetic}</span>
           </div>
-          <button ref={closeRef} className="detail-close" type="button" onClick={onClose}>关闭</button>
+          <button ref={closeRef} className="detail-close" type="button" onClick={onClose} aria-label="关闭">
+            <IconX aria-hidden="true" stroke={1.7} />
+          </button>
         </header>
         <div className="detail-section meaning-section">
           <h3>考研大纲释义</h3>

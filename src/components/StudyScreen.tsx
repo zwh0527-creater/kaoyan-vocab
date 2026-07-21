@@ -1,14 +1,27 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { Dispatch, SetStateAction } from 'react'
-import { currentGroupIds, dailyGroupCount, markGroupSeen, togglePendingMastered } from '../studyEngine'
-import type { StudyStateV3, WordDetailEntry, WordEntry } from '../types'
+import {
+  IconChevronLeft,
+  IconCircle,
+  IconCircleCheckFilled,
+  IconNotebook,
+  IconVolume
+} from '@tabler/icons-react'
+import {
+  currentGroupIds,
+  dailyGroupCount,
+  markGroupScroll,
+  markWordReviewed,
+  togglePendingMastered
+} from '../studyEngine'
+import type { StudyStateV4, WordDetailEntry, WordEntry } from '../types'
 import { loadWordDetails } from '../wordDetails'
 import { WordDetailSheet } from './WordDetailSheet'
 
 interface StudyScreenProps {
-  state: StudyStateV3
+  state: StudyStateV4
   wordMap: Map<number, WordEntry>
-  onStateChange: Dispatch<SetStateAction<StudyStateV3>>
+  onStateChange: Dispatch<SetStateAction<StudyStateV4>>
   onBack: () => void
   onCompleteGroup: () => void
   onNotify: (message: string) => void
@@ -24,6 +37,7 @@ export function StudyScreen({
 }: StudyScreenProps) {
   const groupIds = currentGroupIds(state)
   const pendingMastered = useMemo(() => new Set(state.pendingMasteredIds), [state.pendingMasteredIds])
+  const reviewedIds = useMemo(() => new Set(state.reviewedWordIds), [state.reviewedWordIds])
   const [revealedIds, setRevealedIds] = useState<Set<number>>(() => new Set())
   const [detailWordId, setDetailWordId] = useState<number | null>(null)
   const [detailMap, setDetailMap] = useState<Map<number, WordDetailEntry> | null>(null)
@@ -41,7 +55,7 @@ export function StudyScreen({
       if (element.getBoundingClientRect().top <= checkpoint) latest = Number(element.dataset.wordIndex)
       else break
     }
-    if (latest >= 0) onStateChange((current) => markGroupSeen(current, latest))
+    if (latest >= 0) onStateChange((current) => markGroupScroll(current, latest))
   }, [onStateChange])
 
   useEffect(() => {
@@ -76,6 +90,9 @@ export function StudyScreen({
   }
 
   const toggleMeaning = (id: number) => {
+    if (!revealedIds.has(id)) {
+      onStateChange((current) => markWordReviewed(current, id))
+    }
     setRevealedIds((current) => {
       const next = new Set(current)
       if (next.has(id)) next.delete(id)
@@ -106,16 +123,28 @@ export function StudyScreen({
 
   const selectedDetailWord = detailWordId === null ? undefined : wordMap.get(detailWordId)
   const groupNumber = state.completedGroups + 1
+  const remainingWords = Math.max(0, groupIds.length - state.groupSeenCount)
+
+  const toggleMastered = (wordId: number, isReviewed: boolean, isMastered: boolean) => {
+    if (!isReviewed && !isMastered) {
+      onNotify('先查看这个词的释义，再决定是否标为熟词')
+      return
+    }
+    onStateChange((current) => togglePendingMastered(current, wordId))
+  }
 
   return (
     <main className="study-page">
       <header className="study-header">
-        <button className="back-button" type="button" onClick={onBack}>返回</button>
+        <button className="back-button study-back" type="button" onClick={onBack}>
+          <IconChevronLeft aria-hidden="true" stroke={1.8} />
+          <span>返回</span>
+        </button>
         <div className="study-title">
           <strong>第 {groupNumber} 组</strong>
           <span>今日共 {dailyGroupCount(state)} 组</span>
         </div>
-        <span className="study-count">{state.groupSeenCount}<small> / {groupIds.length}</small></span>
+        <span className="study-count">{String(state.groupSeenCount).padStart(2, '0')}<small> / {groupIds.length}</small></span>
       </header>
       <div className="study-progress" aria-hidden="true">
         <span style={{ width: `${groupIds.length ? (state.groupSeenCount / groupIds.length) * 100 : 0}%` }} />
@@ -124,7 +153,7 @@ export function StudyScreen({
       <div className="word-list" ref={scrollRef} onScroll={handleScroll}>
         <div className="group-intro">
           <p>第 {state.round} 轮 · Group {String(groupNumber).padStart(2, '0')}</p>
-          <h1>先想词义，再点开确认。</h1>
+          <h1>先想词义，再点确认。</h1>
           <span>只有非常确定已经吃透的词，才标为熟词。</span>
         </div>
 
@@ -132,56 +161,72 @@ export function StudyScreen({
           const word = wordMap.get(id)
           if (!word) return null
           const isMastered = pendingMastered.has(id)
+          const isReviewed = reviewedIds.has(id)
           const isMeaningVisible = revealedIds.has(id)
           return (
             <article
-              className={`word-row${isMastered ? ' mastered' : ''}`}
+              className={`word-row${isMastered ? ' mastered' : ''}${isReviewed ? ' reviewed' : ''}`}
               data-word-index={index}
               key={id}
             >
               <span className="word-number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
-              <button
-                className="word-main"
-                type="button"
-                onClick={() => toggleMeaning(id)}
-                aria-expanded={isMeaningVisible}
-              >
-                <span className="word-copy">
-                  <strong>{word.word}</strong>
-                  <small>{word.phonetic}</small>
-                </span>
-                <span className={`meaning${isMeaningVisible ? ' visible' : ''}`}>
-                  {isMeaningVisible ? word.meaning : '点击查看中文释义'}
-                </span>
-              </button>
-              <div className="word-actions">
-                <button type="button" onClick={() => speak(word.word)}>发音</button>
-                <button type="button" onClick={() => openDetails(id)}>详解</button>
+              <div className="word-row-content">
+                <div className="word-topline">
+                  <span className="word-copy">
+                    <strong>{word.word}</strong>
+                    <small>{word.phonetic}</small>
+                  </span>
+                  <div className="word-actions">
+                    <button type="button" onClick={() => speak(word.word)} aria-label={`播放 ${word.word} 发音`}>
+                      <IconVolume aria-hidden="true" stroke={1.7} />
+                      <span>发音</span>
+                    </button>
+                    <button type="button" onClick={() => openDetails(id)} aria-label={`查看 ${word.word} 详解`}>
+                      <IconNotebook aria-hidden="true" stroke={1.7} />
+                      <span>详解</span>
+                    </button>
+                    <button
+                      className={`mastered-button${isMastered ? ' selected' : ''}`}
+                      type="button"
+                      onClick={() => toggleMastered(id, isReviewed, isMastered)}
+                      aria-pressed={isMastered}
+                      aria-label={`${isMastered ? '取消' : ''}标记 ${word.word} 为熟词`}
+                    >
+                      {isMastered
+                        ? <IconCircleCheckFilled aria-hidden="true" />
+                        : <IconCircle aria-hidden="true" stroke={1.55} />}
+                      <span>{isMastered ? '已熟' : '熟词'}</span>
+                    </button>
+                  </div>
+                </div>
                 <button
-                  className={`mastered-button${isMastered ? ' selected' : ''}`}
+                  className={`meaning${isMeaningVisible ? ' visible' : ''}${isReviewed ? ' reviewed' : ''}`}
                   type="button"
-                  onClick={() => onStateChange((current) => togglePendingMastered(current, id))}
-                  aria-pressed={isMastered}
+                  onClick={() => toggleMeaning(id)}
+                  aria-expanded={isMeaningVisible}
+                  aria-label={`${word.word} ${isMeaningVisible ? word.meaning : '轻触揭示释义'}`}
                 >
-                  {isMastered ? '已熟' : '熟词'}
+                  {isMeaningVisible ? word.meaning : '轻触揭示释义'}
                 </button>
               </div>
             </article>
           )
         })}
 
-        <section className="group-end">
-          <p>{state.groupSeenCount < groupIds.length ? '滑到本组最后一个词后即可完成。' : '本组已看完，未标熟词会进入下一轮。'}</p>
-          <button
-            className="primary-button"
-            type="button"
-            onClick={onCompleteGroup}
-            disabled={state.groupSeenCount < groupIds.length}
-          >
-            完成本组
-          </button>
-        </section>
       </div>
+
+      <footer className={`study-footer${remainingWords === 0 ? ' ready' : ''}`}>
+        <div className="study-footer-inner">
+          {remainingWords === 0 ? (
+            <>
+              <p><i aria-hidden="true" />{groupIds.length} 个词均已查看，未标熟词会进入下一轮。</p>
+              <button className="primary-button" type="button" onClick={onCompleteGroup}>完成本组</button>
+            </>
+          ) : (
+            <p><i aria-hidden="true" />逐词查看释义后才能标熟；还剩 {remainingWords} 个词未查看。</p>
+          )}
+        </div>
+      </footer>
 
       {selectedDetailWord ? (
         <WordDetailSheet
