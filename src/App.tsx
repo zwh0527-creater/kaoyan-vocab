@@ -17,7 +17,7 @@ import {
   studyDateKey
 } from './studyEngine'
 import { downloadBackup, loadStudyState, parseBackup, saveStudyState } from './storage'
-import type { StudyStateV3, WordEntry } from './types'
+import type { StudyStateV4, WordEntry } from './types'
 import { updatePwa } from './pwa'
 
 type Screen = 'home' | 'study' | 'group-summary' | 'summary' | 'settings' | 'mastered' | 'search'
@@ -45,7 +45,7 @@ function isIosSafari() {
 }
 
 function App() {
-  const [state, setState] = useState<StudyStateV3>(initializeState)
+  const [state, setState] = useState<StudyStateV4>(initializeState)
   const [screen, setScreen] = useState<Screen>('home')
   const [groupSummary, setGroupSummary] = useState<GroupSummary | null>(null)
   const [toasts, setToasts] = useState<Toast[]>([])
@@ -220,7 +220,7 @@ function App() {
 }
 
 interface HomeProps {
-  state: StudyStateV3
+  state: StudyStateV4
   showInstallGuide: boolean
   onDismissInstallGuide: () => void
   onStudy: () => void
@@ -244,7 +244,9 @@ function HomeScreen({
 }: HomeProps) {
   const completedGroups = state.completedToday ? state.lastSummary?.groups ?? 0 : state.completedGroups
   const totalGroups = state.completedToday ? state.lastSummary?.groups ?? 0 : dailyGroupCount(state)
-  const completedWords = state.completedToday ? state.lastSummary?.reviewed ?? 0 : state.completedGroups * 20
+  const completedWords = state.completedToday
+    ? state.lastSummary?.reviewed ?? 0
+    : state.completedGroups * 20 + state.groupSeenCount
   const totalWords = state.completedToday ? state.lastSummary?.reviewed ?? 0 : state.dailyBatch.length
   const progress = totalGroups === 0 ? 100 : Math.round((completedGroups / totalGroups) * 100)
   const buttonLabel = state.allCompleted ? '全部过完' : state.completedToday
@@ -331,7 +333,7 @@ function GroupSummaryScreen({
   )
 }
 
-function SummaryScreen({ state, onHome }: { state: StudyStateV3; onHome: () => void }) {
+function SummaryScreen({ state, onHome }: { state: StudyStateV4; onHome: () => void }) {
   const summary = state.lastSummary
   return (
     <main className="summary-page page">
@@ -351,7 +353,7 @@ function SummaryScreen({ state, onHome }: { state: StudyStateV3; onHome: () => v
 }
 
 interface SettingsProps {
-  state: StudyStateV3
+  state: StudyStateV4
   onBack: () => void
   onExport: () => void
   onImport: (file: File) => Promise<void>
