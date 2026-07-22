@@ -396,7 +396,7 @@ function SettingsScreen({ state, onBack, onExport, onImport, onReset }: Settings
         <h2>词表</h2>
         <div className="source-note">
           <strong>{corpusMeta.wordCount} 条乱序词汇</strong>
-          <p>全部 {studyMeaningsMeta.wordCount} 个词已与 ECDICT 逐词核对，其中 {studyMeaningsMeta.crossCheck.coveredWords} 个又与独立考研词库交叉检查，{studyMeaningsMeta.statusCounts.curated} 个冲突或异常词经过人工校订。学习页优先显示校订后的常用义；原考研词表释义只在详情页留档，红宝书扫描释义不再作为主释义。另收录 {wordDetailsMeta.collocationCount} 条红宝书固定搭配、{wordDetailsMeta.examEntryCount} 个英语一真题词条。App 不包含原 PDF。</p>
+          <p>全部 {studyMeaningsMeta.wordCount} 个词以考研大纲释义为底，并与 ECDICT 逐词核对；其中 {studyMeaningsMeta.qwertyCrossCheck.coveredWords} 个又与 Qwerty Learner 公开考研词表交叉检查，{studyMeaningsMeta.crossCheck.coveredWords} 个与另一份独立考研词库复核，{studyMeaningsMeta.statusCounts.curated} 个冲突、缺项或常见义问题经过人工校订，目前没有待定冲突。红宝书扫描释义不再作为主释义。另收录 {wordDetailsMeta.collocationCount} 条红宝书固定搭配、{wordDetailsMeta.examEntryCount} 个英语一真题词条。App 不包含原 PDF。</p>
         </div>
       </section>
 

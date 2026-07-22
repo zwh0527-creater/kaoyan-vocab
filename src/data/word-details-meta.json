@@ -3,10 +3,10 @@
   "corpusFingerprint": "2a79ed252105e107ca96314e8fd975e944457c1538133d8064efb98432171182",
   "entryCount": 4696,
   "coreMeaningCount": 0,
-  "collocationCount": 1894,
+  "collocationCount": 2007,
   "redbookEntryCount": 3919,
-  "collocationSectionCount": 1152,
-  "unparsedCollocationSectionCount": 103,
+  "collocationSectionCount": 1145,
+  "unparsedCollocationSectionCount": 0,
   "exampleCount": 4172,
   "relatedWordCount": 1459,
   "examEntryCount": 2871,
@@ -17,5 +17,7 @@
     2010,
     2025
   ],
-  "fingerprint": "230cd9ac1a25635bfb9f1c0beb0ba6c321cbc725e4c178a28f3e5df6f8115504"
+  "fingerprint": "929eb28fbb26b8f08d2563cb1baffe594f1c85edae03ec43ac82d6db6aa370c7",
+  "redbookRecoveredWordCount": 96,
+  "redbookFalsePositiveSectionCount": 7
 }

@@ -6,11 +6,13 @@ const wordsPath = process.argv[2] ?? 'src/data/words.json'
 const detailsPath = process.argv[3] ?? 'src/data/word-details.json'
 const metaPath = process.argv[4] ?? 'src/data/word-details-meta.json'
 const studyMeaningsPath = process.argv[5] ?? 'src/data/study-meanings.json'
+const redbookRecoveriesPath = new URL('./data/redbook-collocation-recoveries.json', import.meta.url)
 
 const words = JSON.parse(await readFile(wordsPath, 'utf8'))
 const details = JSON.parse(await readFile(detailsPath, 'utf8'))
 const meta = JSON.parse(await readFile(metaPath, 'utf8'))
 const studyMeanings = JSON.parse(await readFile(studyMeaningsPath, 'utf8'))
+const redbookRecoveries = JSON.parse(await readFile(redbookRecoveriesPath, 'utf8'))
 const wordById = new Map(words.map((word) => [word.id, word]))
 const wordsByHeadword = new Map()
 
@@ -25,8 +27,26 @@ const issueCounts = new Map()
 let examMeaningUpdateCount = 0
 
 function applyCuratedCorrections(word, detail) {
-  if (word.word.toLowerCase() !== 'odds') return detail
-  const contexts = (detail.exam?.phrases ?? [])
+  const key = word.word.toLowerCase()
+  const recovered = redbookRecoveries[key]
+  let nextDetail = detail
+  if (recovered) {
+    nextDetail = {
+      ...detail,
+      collocations: recovered.map((item) => ({
+        phrase: item.phrase,
+        meaning: item.meaning,
+        relevance: 'postgraduate',
+        source: 'redbook',
+        sourcePage: item.page
+      })),
+      redbook: recovered.length > 0
+        ? { ...detail.redbook, hasCollocationSection: true }
+        : { ...detail.redbook, hasCollocationSection: false }
+    }
+  }
+  if (key !== 'odds') return nextDetail
+  const contexts = (nextDetail.exam?.phrases ?? [])
     .flatMap((phrase) => phrase.contexts)
     .filter((context, index, all) => all.findIndex((candidate) => candidate.text === context.text) === index)
     .map((context) => ({
@@ -37,7 +57,7 @@ function applyCuratedCorrections(word, detail) {
       translationSource: 'curated'
     }))
   return {
-    ...detail,
+    ...nextDetail,
     collocations: [
       { phrase: 'at odds with', meaning: '与……不一致；与……相冲突', relevance: 'english-1', source: 'redbook', sourcePage: 265 },
       { phrase: 'It makes no odds.', meaning: '没有关系；没有差别', relevance: 'postgraduate', source: 'redbook', sourcePage: 265 },
@@ -48,9 +68,9 @@ function applyCuratedCorrections(word, detail) {
       meaning: '你相信自己的努力能让双方机会均等吗？',
       sourcePage: 265
     }],
-    ...(detail.exam ? {
+    ...(nextDetail.exam ? {
       exam: {
-        ...detail.exam,
+        ...nextDetail.exam,
         phrases: [{
           phrase: 'at odds with',
           count: detail.exam.count,
@@ -110,6 +130,8 @@ meta.collocationSectionCount = cleanedDetails.filter((detail) => detail.redbook?
 meta.unparsedCollocationSectionCount = cleanedDetails.filter((detail) =>
   detail.redbook?.hasCollocationSection && detail.collocations.length === 0
 ).length
+meta.redbookRecoveredWordCount = Object.values(redbookRecoveries).filter((items) => items.length > 0).length
+meta.redbookFalsePositiveSectionCount = Object.values(redbookRecoveries).filter((items) => items.length === 0).length
 meta.exampleCount = cleanedDetails.reduce((sum, detail) => sum + (detail.examples?.length ?? 0), 0)
 meta.relatedWordCount = cleanedDetails.reduce((sum, detail) => sum + (detail.relatedWords?.length ?? 0), 0)
 meta.examEntryCount = cleanedDetails.filter((detail) => detail.exam).length

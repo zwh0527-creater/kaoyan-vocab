@@ -10,6 +10,7 @@ export interface WordEntry {
 }
 
 export type StudyMeaningStatus =
+  | 'triple-cross-checked'
   | 'cross-checked'
   | 'source-cross-checked'
   | 'dictionary-reviewed'

@@ -75,7 +75,7 @@ export function WordDetailSheet({ word, detail, loading, status, onClose }: Word
             <h3>英语一真题</h3>
             <p className="exam-summary">2010—2025 真题正文中检出 {detail.exam.count} 处</p>
             <p className="exam-years">涉及年份：{detail.exam.years.join('、')}</p>
-            <p className="exam-note">“官方译文”来自本机答案资料；“校订译文”经过人工核对；其余辅助翻译由本地模型生成，遇到生硬处以英文原句为准。</p>
+            <p className="exam-note">“官方译文”来自本机答案资料；“校订译文”经过人工核对；其余辅助翻译由本地模型生成，只帮助理解上下文，不作为单词释义依据，遇到生硬处以英文原句为准。</p>
             {detail.exam.phrases.length ? (
               <ol className="exam-phrase-list">
                 {detail.exam.phrases.map((item) => (

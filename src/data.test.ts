@@ -33,14 +33,20 @@ describe('vocabulary corpus', () => {
 
   it('provides a complete, compact, source-traceable study meaning layer', () => {
     const meanings = studyMeanings as StudyMeaningEntry[]
-    const statuses = new Set(['cross-checked', 'source-cross-checked', 'dictionary-reviewed', 'curated'])
+    const statuses = new Set(['triple-cross-checked', 'cross-checked', 'source-cross-checked', 'dictionary-reviewed', 'curated'])
 
     expect(meanings).toHaveLength(words.length)
     expect(studyMeaningsMeta.wordCount).toBe(words.length)
-    expect(studyMeaningsMeta.primarySource.name).toBe('ECDICT')
-    expect(studyMeaningsMeta.primarySource.license).toBe('MIT')
+    expect(studyMeaningsMeta.authoritativeSource.name).toBe('考研大纲词汇乱序版')
+    expect(studyMeaningsMeta.dictionaryCrossCheck.name).toBe('ECDICT')
+    expect(studyMeaningsMeta.dictionaryCrossCheck.license).toBe('MIT')
+    expect(studyMeaningsMeta.dictionaryCrossCheck.exactHeadwordCoverage).toBe(words.length)
     expect(studyMeaningsMeta.crossCheck.coveredWords).toBe(4883)
+    expect(studyMeaningsMeta.qwertyCrossCheck.coveredWords).toBe(5406)
     expect(studyMeaningsMeta.crossCheck.copiedIntoApp).toBe(false)
+    expect(studyMeaningsMeta.qwertyCrossCheck.copiedIntoApp).toBe(false)
+    expect(studyMeaningsMeta.unresolvedConflictWords).toEqual([])
+    expect(studyMeaningsMeta.statusCounts.curated).toBe(131)
     expect(Object.values(studyMeaningsMeta.statusCounts).reduce((sum, count) => sum + count, 0)).toBe(words.length)
 
     for (const [index, entry] of meanings.entries()) {
@@ -57,6 +63,13 @@ describe('vocabulary corpus', () => {
     expect(meaningFor('odds')).not.toContain('气味')
     expect(meaningFor('traffic')).toContain('交通')
     expect(meaningFor('they')).toContain('他们')
+    expect(meaningFor('show')).toContain('显示')
+    expect(meaningFor('which')).toContain('定语从句')
+    expect(meaningFor('available')).toContain('有空')
+    expect(meaningFor('bill')).toContain('法案、议案')
+    expect(meaningFor('due')).toContain('由于')
+    expect(meaningFor('account')).toContain('占（比例）')
+    expect(meaningFor('for')).not.toContain('?')
   })
 })
 
@@ -76,6 +89,9 @@ describe('optional word details', () => {
     expect(wordDetailsMeta.redbookEntryCount).toBe(details.filter((detail) => detail.redbook).length)
     expect(wordDetailsMeta.collocationSectionCount).toBe(details.filter((detail) => detail.redbook?.hasCollocationSection).length)
     expect(wordDetailsMeta.unparsedCollocationSectionCount).toBe(details.filter((detail) => detail.redbook?.hasCollocationSection && detail.collocations.length === 0).length)
+    expect(wordDetailsMeta.unparsedCollocationSectionCount).toBe(0)
+    expect(wordDetailsMeta.redbookRecoveredWordCount).toBe(96)
+    expect(wordDetailsMeta.redbookFalsePositiveSectionCount).toBe(7)
     expect(wordDetailsMeta.exampleCount).toBe(details.reduce((sum, detail) => sum + (detail.examples?.length ?? 0), 0))
     expect(wordDetailsMeta.relatedWordCount).toBe(details.reduce((sum, detail) => sum + (detail.relatedWords?.length ?? 0), 0))
     expect(wordDetailsMeta.examEntryCount).toBe(details.filter((detail) => detail.exam).length)

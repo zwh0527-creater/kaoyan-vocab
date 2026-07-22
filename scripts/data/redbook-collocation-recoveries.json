@@ -1,0 +1,154 @@
+{
+  "absence": [{"phrase":"in the absence of sb.","meaning":"某人不在时；在某人背后","page":17}],
+  "ache": [{"phrase":"ache for sth.","meaning":"渴望；向往","page":248}],
+  "agony": [{"phrase":"in agony with sth.","meaning":"因……而痛苦不堪","page":288}],
+  "aisle": [
+    {"phrase":"knock them in the aisles","meaning":"（戏剧演出等）大受观众欢迎","page":208},
+    {"phrase":"rolling in the aisles","meaning":"捧腹大笑","page":208}
+  ],
+  "allowance": [{"phrase":"make allowance(s) for sth./sb.","meaning":"考虑到某事；体谅或照顾某人","page":213}],
+  "ambassador": [{"phrase":"the ambassador to ...","meaning":"驻……大使","page":243}],
+  "awful": [],
+  "behave": [{"phrase":"behave oneself","meaning":"检点自己的行为；表现得体","page":28}],
+  "between": [{"phrase":"(read) between the lines","meaning":"看出字里行间的意思","page":331}],
+  "bill": [{"phrase":"foot the bill","meaning":"买单；承担费用或责任","page":72}],
+  "blind": [{"phrase":"turn a blind eye to sth.","meaning":"对……视而不见","page":336}],
+  "bounce": [{"phrase":"bounce back","meaning":"（经济等）复苏；（价格等）回升","page":350}],
+  "breed": [{"phrase":"born and bred","meaning":"土生土长的","page":96}],
+  "capable": [{"phrase":"be capable of doing sth.","meaning":"有能力做某事","page":19}],
+  "caution": [
+    {"phrase":"caution sb. about sth.","meaning":"警告某人注意某事","page":20},
+    {"phrase":"caution sb. against doing sth.","meaning":"警告某人不要做某事","page":20}
+  ],
+  "close": [
+    {"phrase":"close in on sb./sth.","meaning":"逼近；靠近","page":89},
+    {"phrase":"close one's mind to sth.","meaning":"拒不考虑某事；对某事置若罔闻","page":89},
+    {"phrase":"bring sth. to a close","meaning":"结束某事","page":89}
+  ],
+  "cloud": [{"phrase":"have one's head in the clouds","meaning":"处于幻想之中；爱幻想","page":332}],
+  "condition": [
+    {"phrase":"in mint condition","meaning":"完好无损的；状况极佳的","page":149},
+    {"phrase":"on condition that ...","meaning":"在……条件下；倘若","page":149}
+  ],
+  "consume": [
+    {"phrase":"consume energy","meaning":"消耗能源","page":123},
+    {"phrase":"consume away","meaning":"消耗；耗尽；吃光；烧光","page":123}
+  ],
+  "contend": [{"phrase":"contend with sth.","meaning":"处理问题；对付困境","page":133}],
+  "crazy": [{"phrase":"like crazy","meaning":"极度地；非常；拼命地","page":387}],
+  "creep": [{"phrase":"creep into ...","meaning":"悄然出现于……；溜进","page":387}],
+  "develop": [
+    {"phrase":"develop from ...","meaning":"从……产生；由……发展而来","page":99},
+    {"phrase":"develop into ...","meaning":"（使）发展成；变成","page":99}
+  ],
+  "dim": [{"phrase":"take a dim view of sth.","meaning":"对……持怀疑或不赞成的态度","page":160}],
+  "director": [{"phrase":"the board of directors","meaning":"董事会","page":340}],
+  "dismiss": [{"phrase":"dismiss sb. for sth.","meaning":"因……解雇某人","page":141}],
+  "drawing": [
+    {"phrase":"in drawing","meaning":"画得准确","page":362},
+    {"phrase":"out of drawing","meaning":"画得不准确；画得不像","page":362}
+  ],
+  "embed": [{"phrase":"embedded hyperlink","meaning":"嵌入式超链接","page":24}],
+  "engage": [{"phrase":"engage in sth./engage sb. in sth.","meaning":"（使）从事；（使）参加","page":81}],
+  "entertain": [
+    {"phrase":"entertain oneself","meaning":"自娱自乐","page":154},
+    {"phrase":"entertain sb. with sth.","meaning":"用……使某人快乐；用……招待某人","page":154}
+  ],
+  "familiar": [
+    {"phrase":"be familiar with sth.","meaning":"熟悉……","page":294},
+    {"phrase":"be familiar to sb.","meaning":"为某人所熟知","page":294}
+  ],
+  "flatter": [{"phrase":"flatter oneself","meaning":"自以为；自信","page":311}],
+  "furnish": [{"phrase":"furnish sth. to sb./furnish sb. with sth.","meaning":"向某人提供某物","page":395}],
+  "green": [{"phrase":"green with envy","meaning":"十分妒忌的；眼红的","page":335}],
+  "halt": [{"phrase":"bring sth. to a halt/bring a halt to sth.","meaning":"使……停止；终止……","page":279}],
+  "ham": [{"phrase":"ham and eggs","meaning":"火腿和鸡蛋（固定词序）","page":280}],
+  "holy": [],
+  "horizon": [{"phrase":"on the horizon","meaning":"即将发生的；已露端倪的","page":117}],
+  "horror": [{"phrase":"horror film/comics/fiction","meaning":"恐怖电影／连环画／小说","page":303}],
+  "insist": [{"phrase":"insist on sth./doing sth.","meaning":"坚持；坚决要求","page":297}],
+  "instantaneous": [
+    {"phrase":"instantaneous photograph","meaning":"快照","page":341},
+    {"phrase":"instantaneous death","meaning":"猝死","page":341}
+  ],
+  "insulate": [{"phrase":"insulate ... from ...","meaning":"使……与……绝缘或隔离","page":304}],
+  "insure": [{"phrase":"insure sb./sth. against ...","meaning":"给……保险；投保以防……","page":179}],
+  "interference": [{"phrase":"run interference","meaning":"（为帮助某人而）积极介入","page":369}],
+  "intervene": [{"phrase":"intervene in ...","meaning":"介入；干涉；干预","page":369}],
+  "invisible": [{"phrase":"be invisible to sb.","meaning":"某人看不见的；对某人而言不可见的","page":182}],
+  "irrespective": [{"phrase":"irrespective of ...","meaning":"不顾；不考虑","page":396}],
+  "jewel": [{"phrase":"the jewel in the crown","meaning":"王冠上的宝石；最珍贵或最有吸引力的部分","page":281}],
+  "jolly": [{"phrase":"jolly well","meaning":"无疑地；肯定地（用于强调）","page":259}],
+  "keyboard": [],
+  "lend": [{"phrase":"lend oneself to sth.","meaning":"同意参与；适合于","page":334}],
+  "lightning": [{"phrase":"at/with lightning speed","meaning":"飞快地；以闪电般的速度","page":274}],
+  "likely": [{"phrase":"as likely as not","meaning":"很可能","page":77}],
+  "loaf": [{"phrase":"use one's loaf","meaning":"好好想想；动动脑筋","page":371}],
+  "mainland": [],
+  "mess": [
+    {"phrase":"be in a mess","meaning":"一团糟","page":163},
+    {"phrase":"get into a mess","meaning":"陷入困境","page":163}
+  ],
+  "minister": [{"phrase":"the Prime Minister","meaning":"首相；总理","page":342}],
+  "misfortune": [{"phrase":"Misfortunes never come singly.","meaning":"祸不单行。","page":304}],
+  "modify": [],
+  "notify": [{"phrase":"notify sb. of sth./notify sth. to sb.","meaning":"通知某人某事","page":327}],
+  "numb": [{"phrase":"become/get/be numb with ...","meaning":"因……而麻木","page":374}],
+  "owe": [
+    {"phrase":"owe it to ... that ...","meaning":"把……归功于……","page":396},
+    {"phrase":"owe sb. sth./owe sth. to sb.","meaning":"欠某人某物；应给予某人某物","page":396}
+  ],
+  "perfect": [
+    {"phrase":"in perfect silence","meaning":"鸦雀无声；一片寂静","page":49},
+    {"phrase":"Practice makes perfect.","meaning":"熟能生巧。","page":49}
+  ],
+  "pest": [{"phrase":"eliminate the four pests","meaning":"消灭四害","page":222}],
+  "platform": [{"phrase":"be at home on the platform","meaning":"善于或惯于公开演说","page":216}],
+  "plight": [],
+  "ponder": [{"phrase":"ponder on/over sth.","meaning":"长时间仔细考虑某事","page":100}],
+  "practical": [
+    {"phrase":"for all practical purposes","meaning":"实际上；事实上","page":129},
+    {"phrase":"practical activities","meaning":"实践活动","page":129}
+  ],
+  "predominant": [{"phrase":"be predominant over ...","meaning":"比……占优势；在……中居主导地位","page":305}],
+  "probe": [{"phrase":"mount a probe of ...","meaning":"对……展开调查","page":177}],
+  "proficiency": [{"phrase":"proficiency in/at ...","meaning":"精通……；熟练掌握……","page":347}],
+  "prominent": [{"phrase":"be prominent in ...","meaning":"在……方面突出","page":188}],
+  "proper": [{"phrase":"prim and proper","meaning":"循规蹈矩的；一本正经的","page":193}],
+  "protect": [{"phrase":"protect ... from/against ...","meaning":"保护……免受……","page":397}],
+  "punish": [{"phrase":"punish sb. for sth./doing sth.","meaning":"因某事惩罚某人","page":403}],
+  "purse": [],
+  "pursuit": [{"phrase":"in pursuit of ...","meaning":"追求；追寻","page":183}],
+  "rack": [{"phrase":"rack one's brains/head/wits","meaning":"绞尽脑汁；苦思冥想","page":269}],
+  "rail": [{"phrase":"back on the rails","meaning":"恢复正常；重回正轨","page":49}],
+  "ratio": [{"phrase":"by a ratio of ...","meaning":"以……的比率","page":111}],
+  "react": [
+    {"phrase":"react on/upon ...","meaning":"对……产生影响","page":112},
+    {"phrase":"react against ...","meaning":"反对；反抗","page":112}
+  ],
+  "rear": [{"phrase":"rear sb./sth. on sth.","meaning":"用……喂养；以……教养","page":225}],
+  "recognition": [{"phrase":"beyond/out of recognition","meaning":"认不出来；面目全非","page":91}],
+  "recur": [{"phrase":"recur to sb./sth.","meaning":"（想法、事情等）在头脑中重现","page":203}],
+  "refine": [{"phrase":"refine on/upon ...","meaning":"对……作进一步完善或改进","page":217}],
+  "represent": [{"phrase":"represent ... as ...","meaning":"把……描述为……","page":327}],
+  "resemblance": [{"phrase":"resemblance between ...","meaning":"……之间的相似之处","page":316}],
+  "resemble": [{"phrase":"resemble sb. in ...","meaning":"在某方面与某人相似","page":316}],
+  "ripe": [{"phrase":"be ripe for ...","meaning":"时机成熟；为……做好准备","page":347}],
+  "rouse": [{"phrase":"rouse ... to ...","meaning":"激起某人的情绪或行动","page":383}],
+  "sacred": [{"phrase":"sacred cow","meaning":"貌似神圣不可冒犯的人或事物（贬义）","page":286}],
+  "sandwich": [{"phrase":"be sandwiched between ...","meaning":"被夹在……之间","page":286}],
+  "savage": [{"phrase":"savage bad manners","meaning":"粗暴无礼的举止","page":14}],
+  "shy": [{"phrase":"fight shy of sth./sb.","meaning":"不愿承担某事或面对某人","page":204}],
+  "sly": [{"phrase":"on the sly","meaning":"诡秘地；秘密地；偷偷地","page":224}],
+  "sprinkle": [{"phrase":"sprinkle ... with ...","meaning":"把……撒在……上；使……点缀着……","page":306}],
+  "stretch": [{"phrase":"at a stretch","meaning":"连续地；一口气地","page":130}],
+  "suppose": [{"phrase":"be supposed to do/be sth.","meaning":"按规定或习惯应当；本应","page":171}],
+  "switch": [{"phrase":"switch on/off","meaning":"打开／关闭","page":186}],
+  "understanding": [{"phrase":"come to/arrive at/reach an understanding with sb. about sth.","meaning":"与某人就某事达成非正式协议","page":59}],
+  "urge": [
+    {"phrase":"urge sb. on","meaning":"鼓励；激励某人","page":54},
+    {"phrase":"urge sb. to do/into doing sth.","meaning":"敦促或怂恿某人做某事","page":54}
+  ],
+  "valve": [{"phrase":"safety valve","meaning":"安全阀","page":287}],
+  "volcano": [{"phrase":"sit on a volcano","meaning":"处境危险；面临一触即发的危机","page":242}]
+}
