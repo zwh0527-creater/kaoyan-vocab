@@ -1,11 +1,17 @@
 #!/usr/bin/env python3
 """Build source-first, cross-checked study meanings for the offline app.
 
-The exam-syllabus meaning in ``words.json`` is authoritative. ECDICT verifies
-that every headword maps to a real dictionary entry, while independent public
-postgraduate lists are used only to detect likely extraction errors. Their text
-is never copied into the output. Confirmed conflicts are corrected explicitly
-in ``CURATED_MEANINGS`` so every deviation remains reviewable.
+The exam-syllabus meaning in ``words.json`` is the starting point. ECDICT
+verifies that every headword maps to a real dictionary entry, while independent
+public postgraduate lists provide additional review evidence. Their text is
+never copied wholesale into the output. The automatic score detects likely
+extraction conflicts; missing high-value senses still require manual review.
+Confirmed problems are corrected explicitly in ``CURATED_MEANINGS`` so every
+deviation remains reviewable.
+
+The automatic agreement score only proves that two entries share at least one
+meaning. It must never be presented as proof that the source covers every
+common or exam-relevant sense.
 """
 
 from __future__ import annotations
@@ -77,6 +83,7 @@ CURATED_MEANINGS = {
     "kind": "adj.友善的；仁慈的 n.种类；类型",
     "liquor": "n.烈酒；酒类；液体、溶液",
     "mean": "v.意思是；意味着；打算 adj.卑鄙的；吝啬的；平均的 n.平均数",
+    "magnitude": "n.大小；规模；数量级；重要性、重大程度；震级",
     "nonsense": "n.胡说、废话；荒谬言行",
     "noun": "n.名词",
     "often": "adv.常常；经常；通常",
@@ -434,6 +441,10 @@ def main() -> None:
             "copiedIntoApp": False,
         },
         "statusCounts": dict(statuses),
+        "validationScope": {
+            "agreementMeaning": "自动交叉核对只确认词头和至少一个已有义项相符，不代表常用义完整",
+            "curatedMeaning": "人工校订项补充已确认的常见义、考研义或修正明显错误",
+        },
         "curatedWords": sorted(CURATED_MEANINGS),
         "lowAgreementWords": sorted(low_agreement_words),
         "sourceOnlyWords": sorted(source_only_words),

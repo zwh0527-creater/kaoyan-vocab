@@ -46,7 +46,7 @@ describe('vocabulary corpus', () => {
     expect(studyMeaningsMeta.crossCheck.copiedIntoApp).toBe(false)
     expect(studyMeaningsMeta.qwertyCrossCheck.copiedIntoApp).toBe(false)
     expect(studyMeaningsMeta.unresolvedConflictWords).toEqual([])
-    expect(studyMeaningsMeta.statusCounts.curated).toBe(131)
+    expect(studyMeaningsMeta.statusCounts.curated).toBe(132)
     expect(Object.values(studyMeaningsMeta.statusCounts).reduce((sum, count) => sum + count, 0)).toBe(words.length)
 
     for (const [index, entry] of meanings.entries()) {
@@ -61,6 +61,9 @@ describe('vocabulary corpus', () => {
     expect(meaningFor('odds')).toContain('可能性、几率')
     expect(meaningFor('odds')).toContain('赔率')
     expect(meaningFor('odds')).not.toContain('气味')
+    expect(meaningFor('magnitude')).toContain('重要性')
+    expect(meaningFor('magnitude')).toContain('规模')
+    expect(meaningFor('magnitude')).toContain('震级')
     expect(meaningFor('traffic')).toContain('交通')
     expect(meaningFor('they')).toContain('他们')
     expect(meaningFor('show')).toContain('显示')

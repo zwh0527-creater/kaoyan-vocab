@@ -409,7 +409,7 @@ function SettingsScreen({ state, onBack, onExport, onImport, onCheckUpdate, onRe
         <h2>词表</h2>
         <div className="source-note">
           <strong>{corpusMeta.wordCount} 条乱序词汇</strong>
-          <p>全部 {studyMeaningsMeta.wordCount} 个词以考研大纲释义为底，并与 ECDICT 逐词核对；其中 {studyMeaningsMeta.qwertyCrossCheck.coveredWords} 个又与 Qwerty Learner 公开考研词表交叉检查，{studyMeaningsMeta.crossCheck.coveredWords} 个与另一份独立考研词库复核，{studyMeaningsMeta.statusCounts.curated} 个冲突、缺项或常见义问题经过人工校订，目前没有待定冲突。红宝书扫描释义不再作为主释义。另收录 {wordDetailsMeta.collocationCount} 条红宝书固定搭配、{wordDetailsMeta.examEntryCount} 个英语一真题词条。App 不包含原 PDF。</p>
+          <p>全部 {studyMeaningsMeta.wordCount} 个词以考研大纲释义为底，并用 ECDICT 核对词头；其中 {studyMeaningsMeta.qwertyCrossCheck.coveredWords} 个又与 Qwerty Learner 公开考研词表交叉检查，{studyMeaningsMeta.crossCheck.coveredWords} 个与另一份独立考研词库复核，{studyMeaningsMeta.statusCounts.curated} 个冲突、缺项或常见义问题经过人工校订。自动交叉检查只说明词头和已有义项相符，不代表常见义已经完整；发现遗漏会继续人工补正。红宝书扫描释义不作为主释义。另收录 {wordDetailsMeta.collocationCount} 条红宝书固定搭配、{wordDetailsMeta.examEntryCount} 个英语一真题词条。App 不包含原 PDF。</p>
         </div>
       </section>
 

@@ -1,7 +1,7 @@
 {
   "version": 1,
   "wordCount": 5493,
-  "fingerprint": "f599b088e166ce9ca2b196c1011da5347e87c41bb1f5eca5a9d86dad74ebfae3",
+  "fingerprint": "657c6af68c67a1227284e95dfd805787e2cf4f3a52c32a99188d38ce98564bc7",
   "authoritativeSource": {
     "name": "考研大纲词汇乱序版",
     "wordCount": 5493,
@@ -66,10 +66,14 @@
     "copiedIntoApp": false
   },
   "statusCounts": {
-    "curated": 131,
-    "triple-cross-checked": 4721,
+    "curated": 132,
+    "triple-cross-checked": 4720,
     "cross-checked": 638,
     "source-cross-checked": 3
+  },
+  "validationScope": {
+    "agreementMeaning": "自动交叉核对只确认词头和至少一个已有义项相符，不代表常用义完整",
+    "curatedMeaning": "人工校订项补充已确认的常见义、考研义或修正明显错误"
   },
   "curatedWords": [
     "a",
@@ -143,6 +147,7 @@
     "laptop",
     "liquor",
     "long",
+    "magnitude",
     "make",
     "mean",
     "napkin",
