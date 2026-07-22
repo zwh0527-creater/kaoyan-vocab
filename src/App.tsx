@@ -17,7 +17,7 @@ import {
 } from './studyEngine'
 import { downloadBackup, loadStudyState, parseBackup, saveStudyState } from './storage'
 import type { StudyStateV4, WordEntry } from './types'
-import { updatePwa } from './pwa'
+import { subscribeToPwaUpdate, updatePwa } from './pwa'
 
 type Screen = 'home' | 'study' | 'group-summary' | 'summary' | 'settings' | 'mastered' | 'search'
 type Toast = { id: number; message: string }
@@ -98,10 +98,10 @@ function App({ words }: { words: WordEntry[] }) {
       notify('新版本已准备好，可在首页更新')
     }
     const handleOffline = () => notify('离线内容已准备好')
-    window.addEventListener('kaoyan-pwa-update', handleUpdate)
+    const unsubscribeUpdate = subscribeToPwaUpdate(handleUpdate)
     window.addEventListener('kaoyan-offline-ready', handleOffline)
     return () => {
-      window.removeEventListener('kaoyan-pwa-update', handleUpdate)
+      unsubscribeUpdate()
       window.removeEventListener('kaoyan-offline-ready', handleOffline)
     }
   }, [notify])
