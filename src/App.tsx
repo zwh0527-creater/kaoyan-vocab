@@ -18,7 +18,7 @@ import {
 } from './studyEngine'
 import { downloadBackup, loadStudyState, parseBackup, saveStudyState } from './storage'
 import type { StudyStateV4, WordEntry } from './types'
-import { subscribeToPwaUpdate, updatePwa } from './pwa'
+import { checkPwaUpdate, subscribeToPwaUpdate, updatePwa } from './pwa'
 
 type Screen = 'home' | 'study' | 'group-summary' | 'summary' | 'settings' | 'mastered' | 'search'
 type Toast = { id: number; message: string }
@@ -207,6 +207,11 @@ function App({ words }: { words: WordEntry[] }) {
           onBack={() => setScreen('home')}
           onExport={() => downloadBackup(state)}
           onImport={importBackup}
+          onCheckUpdate={() => {
+            void checkPwaUpdate().then((checked) => {
+              notify(checked ? '已检查更新；有新版时首页会显示更新按钮' : '暂时无法检查，请联网后再试')
+            })
+          }}
           onReset={resetProgress}
         />
       ) : null}
@@ -355,10 +360,11 @@ interface SettingsProps {
   onBack: () => void
   onExport: () => void
   onImport: (file: File) => Promise<void>
+  onCheckUpdate: () => void
   onReset: () => void
 }
 
-function SettingsScreen({ state, onBack, onExport, onImport, onReset }: SettingsProps) {
+function SettingsScreen({ state, onBack, onExport, onImport, onCheckUpdate, onReset }: SettingsProps) {
   const inputRef = useRef<HTMLInputElement>(null)
   const [resetStep, setResetStep] = useState<0 | 1 | 2>(0)
 
@@ -390,6 +396,13 @@ function SettingsScreen({ state, onBack, onExport, onImport, onReset }: Settings
             event.target.value = ''
           }}
         />
+      </section>
+
+      <section className="settings-group">
+        <h2>应用更新</h2>
+        <button className="settings-row" type="button" onClick={onCheckUpdate}>
+          <span><strong>检查新版本</strong><small>有新版时回到首页更新，学习进度不会清空</small></span><b>检查</b>
+        </button>
       </section>
 
       <section className="settings-group">

@@ -36,7 +36,9 @@ export default defineConfig({
         globPatterns: ['**/*.{js,css,html,json,png,ico}'],
         maximumFileSizeToCacheInBytes: 7 * 1024 * 1024,
         cleanupOutdatedCaches: true,
-        skipWaiting: true,
+        // `prompt` mode must leave the new worker waiting until the user taps
+        // the update button. Forcing skipWaiting here activates the worker
+        // without either refreshing the old iOS page or showing the prompt.
         clientsClaim: true,
         navigateFallback: `${base}index.html`
       }
