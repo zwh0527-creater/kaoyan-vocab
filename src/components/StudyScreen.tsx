@@ -16,6 +16,7 @@ import {
 } from '../studyEngine'
 import type { StudyStateV4, WordDetailEntry, WordEntry } from '../types'
 import { loadWordDetail } from '../wordDetails'
+import { wordLengthClass } from '../wordDisplay'
 import { WordDetailSheet } from './WordDetailSheet'
 
 interface StudyScreenProps {
@@ -179,7 +180,7 @@ export function StudyScreen({
               <span className="word-number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
               <div className="word-row-content">
                 <div className="word-topline">
-                  <span className="word-copy">
+                  <span className={`word-copy ${wordLengthClass(word.word)}`}>
                     <strong>{word.word}</strong>
                     <small>{word.phonetic}</small>
                   </span>

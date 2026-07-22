@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { searchWords } from '../search'
 import type { WordDetailEntry, WordEntry } from '../types'
 import { loadWordDetail, loadWordSearchIndex } from '../wordDetails'
+import { wordLengthClass } from '../wordDisplay'
 import { WordDetailSheet } from './WordDetailSheet'
 
 interface SearchScreenProps {
@@ -105,7 +106,7 @@ export function SearchScreen({
         {!query ? (
           <div className="search-empty">
             <strong>{words.length} 个词都可以查</strong>
-            <p>搜中文时会同时匹配大纲释义和红宝书补充释义；结果页优先显示大纲原文。</p>
+            <p>搜中文时会同时匹配大纲原释义和已通过质量校验的红宝书补充释义。</p>
           </div>
         ) : searchResult.matches.length ? (
           <>
@@ -118,7 +119,7 @@ export function SearchScreen({
                 const meaning = word.meaning
                 return (
                   <button className="search-row" type="button" key={word.id} onClick={() => setSelectedWordId(word.id)}>
-                    <span className="search-word">
+                    <span className={`search-word ${wordLengthClass(word.word)}`}>
                       <strong>{word.word}</strong>
                       <small>{word.phonetic}</small>
                     </span>

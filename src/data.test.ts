@@ -5,6 +5,15 @@ import wordDetails from './data/word-details.json'
 import wordDetailsMeta from './data/word-details-meta.json'
 import type { WordDetailEntry } from './types'
 
+function syllabusExamSense(meaning: string) {
+  return meaning
+    .replace(/^(?:(?:vt|vi|v|n|adj|adv|prep|pron|conj|num|art|aux)\.?\s*(?:\.\/|[./、])?\s*)+/i, '')
+    .trim()
+    .split(/[；;]/)
+    .slice(0, 4)
+    .join('；')
+}
+
 describe('vocabulary corpus', () => {
   it('contains every source row with complete fields', () => {
     expect(words).toHaveLength(5493)
@@ -65,6 +74,11 @@ describe('optional word details', () => {
       if (detail.coreMeaning) {
         expect(detail.coreMeaning).toMatch(/[\u3400-\u9fff]/)
         expect(detail.coreMeaning.length).toBeLessThanOrEqual(600)
+        expect(detail.coreMeaning).not.toMatch(/[�□■◆』]|[•·]{2,}|[…⋯][•·]|[•·][…⋯]/)
+        for (const [open, close] of [['（', '）'], ['(', ')'], ['［', '］'], ['[', ']']]) {
+          expect((detail.coreMeaning.match(new RegExp(`\\${open}`, 'g')) ?? []).length)
+            .toBe((detail.coreMeaning.match(new RegExp(`\\${close}`, 'g')) ?? []).length)
+        }
       }
 
       if (detail.redbook) {
@@ -111,6 +125,7 @@ describe('optional word details', () => {
           expect(phrase.years.length).toBeGreaterThan(0)
           expect(phrase.years.every((year) => year >= 2010 && year <= 2025)).toBe(true)
           expect(phrase.meaning).toMatch(/[\u3400-\u9fff]/)
+          expect(phrase.meaning).toBe(syllabusExamSense(words[detail.wordId].meaning))
           expect(phrase.contexts.length).toBeLessThanOrEqual(2)
           for (const context of phrase.contexts) {
             expect(context.text).toMatch(/[a-z]/i)
@@ -136,6 +151,11 @@ describe('optional word details', () => {
     const magnify = details.find((detail) => detail.wordId === words.find((word) => word.word === 'magnify')?.id)
     const traffic = details.find((detail) => detail.wordId === words.find((word) => word.word === 'traffic')?.id)
     const clash = details.find((detail) => detail.wordId === words.find((word) => word.word === 'clash')?.id)
+    const oppose = details.find((detail) => detail.wordId === words.find((word) => word.word === 'oppose')?.id)
+    const vegetarian = details.find((detail) => detail.wordId === words.find((word) => word.word === 'vegetarian')?.id)
+    const harassment = details.find((detail) => detail.wordId === words.find((word) => word.word === 'harassment')?.id)
+    const compass = details.find((detail) => detail.wordId === words.find((word) => word.word === 'compass')?.id)
+    const capitalMarch = details.find((detail) => detail.wordId === words.find((word) => word.word === 'March')?.id)
 
     expect(due?.coreMeaning).toContain('应支付的')
     expect(due?.collocations.some((item) => item.phrase === 'due to')).toBe(true)
@@ -159,6 +179,15 @@ describe('optional word details', () => {
     expect(clash?.coreMeaning).toContain('冲突')
     expect(clash?.coreMeaning).not.toContain('包围')
     expect(clash?.redbook?.sourcePage).toBe(244)
+    expect(oppose?.coreMeaning).toBeUndefined()
+    expect(oppose?.redbook).toBeUndefined()
+    expect(vegetarian?.coreMeaning).toBeUndefined()
+    expect(vegetarian?.redbook).toBeUndefined()
+    expect(harassment?.coreMeaning).toBeUndefined()
+    expect(harassment?.redbook).toBeUndefined()
+    expect(compass?.coreMeaning).toBeUndefined()
+    expect(compass?.redbook).toBeDefined()
+    expect(capitalMarch).toBeUndefined()
   })
 
   it('keeps exam examples free of known OCR and literal-translation failures', () => {

@@ -14,6 +14,8 @@
   --line: #d9d1c5;
   --line-strong: #a9a197;
   --accent: #9f3428;
+  --accent-strong: #78251d;
+  --accent-contrast: #fffaf3;
   --accent-soft: #edd9d4;
   --accent-wash: #f2e6e1;
   --shadow: 0 22px 70px rgba(42, 35, 27, 0.16);
@@ -414,12 +416,22 @@ input:focus-visible {
 }
 
 .search-word strong {
-  overflow-wrap: anywhere;
+  overflow: hidden;
   font-family: Georgia, "Times New Roman", serif;
   font-size: 28px;
   font-weight: 500;
   line-height: 1.08;
   letter-spacing: -0.02em;
+  text-overflow: clip;
+  white-space: nowrap;
+}
+
+.search-word.word-length-long strong {
+  font-size: 25px;
+}
+
+.search-word.word-length-extra-long strong {
+  font-size: 23px;
 }
 
 .search-word small {
@@ -608,7 +620,17 @@ input:focus-visible {
 }
 
 .word-row.mastered {
-  background: color-mix(in srgb, var(--accent-wash) 42%, transparent);
+  background: color-mix(in srgb, var(--accent-strong) 12%, var(--paper));
+  box-shadow: inset 4px 0 0 var(--accent-strong);
+}
+
+.word-row.mastered .word-number {
+  color: var(--accent-strong);
+  font-weight: 750;
+}
+
+.word-row.mastered .word-row-content {
+  border-left-color: var(--accent-strong);
 }
 
 .word-number {
@@ -639,12 +661,22 @@ input:focus-visible {
 }
 
 .word-copy strong {
-  overflow-wrap: anywhere;
+  overflow: hidden;
   font-family: var(--serif);
   font-size: clamp(36px, 8vw, 44px);
   font-weight: 500;
   line-height: 1.05;
   letter-spacing: -0.025em;
+  text-overflow: clip;
+  white-space: nowrap;
+}
+
+.word-copy.word-length-long strong {
+  font-size: clamp(33px, 7vw, 40px);
+}
+
+.word-copy.word-length-extra-long strong {
+  font-size: clamp(30px, 6vw, 36px);
 }
 
 .word-copy small {
@@ -692,7 +724,7 @@ input:focus-visible {
   justify-content: flex-start;
   gap: 7px;
   padding: 0;
-  border: 0;
+  border: 1px solid transparent;
   background: transparent;
   color: var(--muted);
   font-size: 12px;
@@ -710,12 +742,14 @@ input:focus-visible {
 }
 
 .word-actions .mastered-button.selected {
-  color: var(--accent);
+  border-color: var(--accent-strong);
+  background: var(--accent-strong);
+  color: var(--accent-contrast);
   font-weight: 700;
 }
 
 .word-actions .mastered-button.selected svg {
-  color: var(--accent);
+  color: var(--accent-contrast);
 }
 
 .study-footer {
@@ -828,11 +862,23 @@ input:focus-visible {
 }
 
 .detail-header h2 {
+  max-width: calc(100vw - 112px);
   margin: 0;
+  overflow: hidden;
   font-family: Georgia, serif;
   font-size: clamp(36px, 10vw, 52px);
   font-weight: 500;
   letter-spacing: -0.035em;
+  text-overflow: clip;
+  white-space: nowrap;
+}
+
+.detail-header h2.word-length-long {
+  font-size: clamp(32px, 8vw, 44px);
+}
+
+.detail-header h2.word-length-extra-long {
+  font-size: clamp(28px, 7vw, 38px);
 }
 
 .detail-header span {
@@ -1483,6 +1529,7 @@ input:focus-visible {
   }
 
   .word-topline {
+    grid-template-columns: minmax(0, 1fr);
     gap: 8px;
   }
 
@@ -1490,14 +1537,24 @@ input:focus-visible {
     font-size: 34px;
   }
 
+  .word-copy.word-length-long strong {
+    font-size: 31px;
+  }
+
+  .word-copy.word-length-extra-long strong {
+    font-size: 28px;
+  }
+
   .word-actions {
-    grid-template-columns: repeat(3, 48px);
-    gap: 0;
-    transform: translateX(8px);
+    grid-template-columns: repeat(3, 56px);
+    gap: 4px;
+    justify-self: start;
+    margin-top: 10px;
+    transform: none;
   }
 
   .word-actions button {
-    width: 48px;
+    width: 56px;
     min-height: 64px;
   }
 
@@ -1574,6 +1631,14 @@ input:focus-visible {
     font-size: 30px;
   }
 
+  .word-copy.word-length-long strong {
+    font-size: 28px;
+  }
+
+  .word-copy.word-length-extra-long strong {
+    font-size: 25px;
+  }
+
   .word-actions {
     grid-template-columns: repeat(3, 44px);
   }
@@ -1595,6 +1660,8 @@ input:focus-visible {
     --line: #3b3630;
     --line-strong: #5f574e;
     --accent: #df7b70;
+    --accent-strong: #a43b31;
+    --accent-contrast: #fff8f1;
     --accent-soft: #4c2d29;
     --accent-wash: #2b201d;
     --shadow: 0 24px 60px rgba(0, 0, 0, 0.4);

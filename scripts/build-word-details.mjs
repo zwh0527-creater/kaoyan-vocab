@@ -1,5 +1,6 @@
 import { createHash } from 'node:crypto'
 import { readFile, writeFile } from 'node:fs/promises'
+import { assessCoreMeaning, syllabusExamSense } from './word-detail-quality.mjs'
 
 function argument(name) {
   const index = process.argv.indexOf(name)
@@ -565,14 +566,6 @@ function buildExamEvidence(rawText) {
   return result
 }
 
-function examSense(coreMeaning, baseMeaning) {
-  const source = coreMeaning || baseMeaning
-  const cleaned = cleanText(source)
-    .replace(/^(?:(?:vt|vi|v|n|adj|adv|prep|pron|conj|num|art)\.?\s*[./、]?\s*)+/i, '')
-    .trim()
-  return cleaned.split(/[；;]/).slice(0, 4).join('；')
-}
-
 function examUsageHint(wordKey, phrase, context) {
   const tokens = phrase.toLowerCase().split(/\s+/)
   const targetIndex = tokens.findIndex((token) => wordCandidatesForToken(token, canonicalWordKeys).includes(wordKey))
@@ -622,11 +615,11 @@ function applyExamTranslations(item) {
   }
 }
 
-function enrichExamPhrase(wordKey, word, coreMeaning, item) {
+function enrichExamPhrase(wordKey, word, item) {
   const usage = examUsageHint(wordKey, item.phrase, item.contexts[0]?.text)
   return applyExamTranslations({
     ...item,
-    meaning: examSense(coreMeaning, word.meaning),
+    meaning: syllabusExamSense(word.meaning),
     ...(usage ? { usage } : {})
   })
 }
@@ -685,12 +678,18 @@ const details = []
 
 for (const word of words) {
   const key = word.word.toLowerCase()
-  const coreMeaning = meaningsByWord.get(key)
-  const collocations = candidatesByWord.get(key) ?? []
-  const examples = examplesByWord.get(key) ?? []
-  const relatedWords = relatedByWord.get(key) ?? []
-  const redbook = redbookInfoByWord.get(key)
-  const exam = examEvidenceByWord.get(key)
+  const sameHeadwordEntries = (idsByWord.get(key) ?? []).map((id) => words[id])
+  const rawCoreMeaning = meaningsByWord.get(key)
+  const coreIssue = rawCoreMeaning
+    ? assessCoreMeaning(word, rawCoreMeaning, sameHeadwordEntries)
+    : null
+  const discardRedbook = coreIssue === 'semantic-mismatch' || coreIssue === 'ambiguous-case'
+  const coreMeaning = coreIssue ? undefined : rawCoreMeaning
+  const collocations = discardRedbook ? [] : candidatesByWord.get(key) ?? []
+  const examples = discardRedbook ? [] : examplesByWord.get(key) ?? []
+  const relatedWords = discardRedbook ? [] : relatedByWord.get(key) ?? []
+  const redbook = discardRedbook ? undefined : redbookInfoByWord.get(key)
+  const exam = coreIssue === 'ambiguous-case' ? undefined : examEvidenceByWord.get(key)
   if (!coreMeaning && collocations.length === 0 && examples.length === 0 && relatedWords.length === 0 && !redbook && !exam) continue
   details.push({
     wordId: word.id,
@@ -704,7 +703,7 @@ for (const word of words) {
         count: exam.count,
         years: exam.years,
         phrases: exam.phrases
-          .map((item) => enrichExamPhrase(key, word, coreMeaning, item))
+          .map((item) => enrichExamPhrase(key, word, item))
           .filter((item) => item.contexts.length > 0)
       }
     } : {})

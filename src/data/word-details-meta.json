@@ -1,21 +1,21 @@
 {
   "version": 4,
   "corpusFingerprint": "2a79ed252105e107ca96314e8fd975e944457c1538133d8064efb98432171182",
-  "entryCount": 4703,
-  "coreMeaningCount": 3914,
-  "collocationCount": 1896,
-  "redbookEntryCount": 3929,
-  "collocationSectionCount": 1155,
+  "entryCount": 4696,
+  "coreMeaningCount": 3779,
+  "collocationCount": 1892,
+  "redbookEntryCount": 3919,
+  "collocationSectionCount": 1152,
   "unparsedCollocationSectionCount": 103,
-  "exampleCount": 4181,
+  "exampleCount": 4172,
   "relatedWordCount": 1459,
-  "examEntryCount": 2873,
-  "examPhraseCount": 4959,
-  "examContextCount": 5784,
-  "examTranslationCount": 5784,
+  "examEntryCount": 2871,
+  "examPhraseCount": 4956,
+  "examContextCount": 5780,
+  "examTranslationCount": 5780,
   "examYears": [
     2010,
     2025
   ],
-  "fingerprint": "c79f40926add225f76b62e1757259856c665ce21cb3368aef381d94dd8fcaa33"
+  "fingerprint": "e200bb5062fbc8cb0a5fe3fe5dbc603ef5360a0fed9041d8047bed78b7609b2f"
 }

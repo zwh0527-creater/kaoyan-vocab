@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "prepare:data": "node scripts/split-word-details.mjs",
+    "clean:meanings": "node scripts/clean-word-detail-meanings.mjs",
     "predev": "npm run prepare:data",
     "dev": "vite",
     "prebuild": "npm run prepare:data",

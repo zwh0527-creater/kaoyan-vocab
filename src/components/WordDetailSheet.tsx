@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { IconX } from '@tabler/icons-react'
 import type { RelatedWordEntry, WordDetailEntry, WordEntry } from '../types'
+import { wordLengthClass } from '../wordDisplay'
 
 interface WordDetailSheetProps {
   word: WordEntry
@@ -49,7 +50,7 @@ export function WordDetailSheet({ word, detail, loading, status, onClose }: Word
                 {status === 'mastered' ? '熟词' : status === 'pending' ? '本组已标熟' : '学习中'}
               </span> : null}
             </p>
-            <h2 id="detail-title">{word.word}</h2>
+            <h2 id="detail-title" className={wordLengthClass(word.word)}>{word.word}</h2>
             <span>{word.phonetic}</span>
           </div>
           <button ref={closeRef} className="detail-close" type="button" onClick={onClose} aria-label="关闭">
@@ -57,14 +58,14 @@ export function WordDetailSheet({ word, detail, loading, status, onClose }: Word
           </button>
         </header>
         <div className="detail-section meaning-section">
-          <h3>考研大纲释义</h3>
+          <h3>考研大纲原释义</h3>
           <p className="detail-meaning">{word.meaning}</p>
           <p className="source-page">来源：考研大纲词汇 PDF 第 {word.sourcePage} 页</p>
           {detail?.coreMeaning && detail.coreMeaning !== word.meaning ? (
             <div className="source-meaning">
-              <h4>红宝书释义</h4>
+              <h4>红宝书补充释义</h4>
               <p>{detail.coreMeaning}</p>
-              {detail.redbook?.sourcePage ? <small>来源：红宝书 PDF 第 {detail.redbook.sourcePage} 页</small> : null}
+              {detail.redbook?.sourcePage ? <small>来源：红宝书 PDF 第 {detail.redbook.sourcePage} 页 · 仅展示与大纲义项一致且结构完整的扫描内容</small> : null}
             </div>
           ) : null}
         </div>
