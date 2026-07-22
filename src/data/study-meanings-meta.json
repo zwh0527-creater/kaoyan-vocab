@@ -1,7 +1,7 @@
 {
   "version": 1,
   "wordCount": 5493,
-  "fingerprint": "657c6af68c67a1227284e95dfd805787e2cf4f3a52c32a99188d38ce98564bc7",
+  "fingerprint": "5e684ae27bf076dcd204a8856d6a7622457b826a5d748e103d52f66432f26fef",
   "authoritativeSource": {
     "name": "考研大纲词汇乱序版",
     "wordCount": 5493,
@@ -66,8 +66,8 @@
     "copiedIntoApp": false
   },
   "statusCounts": {
-    "curated": 132,
-    "triple-cross-checked": 4720,
+    "curated": 134,
+    "triple-cross-checked": 4718,
     "cross-checked": 638,
     "source-cross-checked": 3
   },
@@ -117,6 +117,7 @@
     "disastrous",
     "do",
     "due",
+    "dull",
     "e-mail",
     "elite",
     "ending",
@@ -174,6 +175,7 @@
     "provide",
     "provided",
     "report",
+    "romance",
     "round",
     "send",
     "set",
