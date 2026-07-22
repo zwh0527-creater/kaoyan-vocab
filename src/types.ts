@@ -3,8 +3,22 @@ export interface WordEntry {
   word: string
   phonetic: string
   meaning: string
+  studyMeaning?: string
+  studyMeaningStatus?: StudyMeaningStatus
   sourcePage: number
   originalOrder: number
+}
+
+export type StudyMeaningStatus =
+  | 'cross-checked'
+  | 'source-cross-checked'
+  | 'dictionary-reviewed'
+  | 'curated'
+
+export interface StudyMeaningEntry {
+  wordId: number
+  meaning: string
+  status: StudyMeaningStatus
 }
 
 export interface StudySummary {

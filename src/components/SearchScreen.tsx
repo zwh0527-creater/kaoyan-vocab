@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { searchWords } from '../search'
+import { studyMeaningFor } from '../studyMeanings'
 import type { WordDetailEntry, WordEntry } from '../types'
-import { loadWordDetail, loadWordSearchIndex } from '../wordDetails'
+import { loadWordDetail } from '../wordDetails'
 import { wordLengthClass } from '../wordDisplay'
 import { WordDetailSheet } from './WordDetailSheet'
 
@@ -24,21 +25,15 @@ export function SearchScreen({
 }: SearchScreenProps) {
   const inputRef = useRef<HTMLInputElement>(null)
   const [query, setQuery] = useState('')
-  const [detailMeaningMap, setDetailMeaningMap] = useState<Map<number, string> | null>(null)
   const [selectedDetail, setSelectedDetail] = useState<WordDetailEntry | undefined>()
   const [selectedWordId, setSelectedWordId] = useState<number | null>(null)
-  const [indexLoading, setIndexLoading] = useState(true)
   const [detailsLoading, setDetailsLoading] = useState(false)
   const mastered = useMemo(() => new Set(masteredIds), [masteredIds])
   const pending = useMemo(() => new Set(pendingMasteredIds), [pendingMasteredIds])
 
   useEffect(() => {
     inputRef.current?.focus()
-    void loadWordSearchIndex()
-      .then(setDetailMeaningMap)
-      .catch(() => onNotify('离线词条索引暂时无法载入'))
-      .finally(() => setIndexLoading(false))
-  }, [onNotify])
+  }, [])
 
   useEffect(() => {
     if (selectedWordId === null) {
@@ -63,8 +58,8 @@ export function SearchScreen({
   }, [onNotify, selectedWordId])
 
   const searchResult = useMemo(
-    () => searchWords(words, detailMeaningMap, query),
-    [detailMeaningMap, query, words]
+    () => searchWords(words, query),
+    [query, words]
   )
 
   const statusFor = (wordId: number): SearchStatus => {
@@ -102,11 +97,11 @@ export function SearchScreen({
         {query ? <button type="button" onClick={() => setQuery('')} aria-label="清空搜索">清空</button> : null}
       </div>
 
-      <section className="search-results" aria-live="polite" aria-busy={indexLoading}>
+      <section className="search-results" aria-live="polite">
         {!query ? (
           <div className="search-empty">
             <strong>{words.length} 个词都可以查</strong>
-            <p>搜中文时会同时匹配大纲原释义和已通过质量校验的红宝书补充释义。</p>
+            <p>搜中文时优先匹配逐词校订的常用义，同时保留原考研词表释义反查。</p>
           </div>
         ) : searchResult.matches.length ? (
           <>
@@ -116,7 +111,7 @@ export function SearchScreen({
             <div className="search-list">
               {searchResult.matches.map((word) => {
                 const status = statusFor(word.id)
-                const meaning = word.meaning
+                const meaning = studyMeaningFor(word)
                 return (
                   <button className="search-row" type="button" key={word.id} onClick={() => setSelectedWordId(word.id)}>
                     <span className={`search-word ${wordLengthClass(word.word)}`}>
@@ -132,8 +127,6 @@ export function SearchScreen({
               })}
             </div>
           </>
-        ) : indexLoading ? (
-          <p className="search-message">正在载入离线释义…</p>
         ) : (
           <div className="search-empty no-result">
             <strong>没有找到</strong>

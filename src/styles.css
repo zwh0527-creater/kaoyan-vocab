@@ -958,6 +958,36 @@ input:focus-visible {
   font-size: 11px;
 }
 
+.source-original {
+  margin-top: 18px;
+  padding-top: 15px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+}
+
+.source-original summary {
+  min-height: 44px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 44px;
+  cursor: pointer;
+}
+
+.source-original p {
+  margin: 8px 0 0;
+  color: var(--ink);
+  font-size: 14px;
+  line-height: 1.75;
+}
+
+.source-original small {
+  display: block;
+  margin-top: 7px;
+  color: var(--line-strong);
+  font-size: 11px;
+  line-height: 1.6;
+}
+
 .exam-summary {
   margin: 0;
   font-family: "Songti SC", "STSong", serif;

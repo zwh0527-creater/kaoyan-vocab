@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { IconX } from '@tabler/icons-react'
+import { studyMeaningFor, studyMeaningSourceLabel } from '../studyMeanings'
 import type { RelatedWordEntry, WordDetailEntry, WordEntry } from '../types'
 import { wordLengthClass } from '../wordDisplay'
 
@@ -35,6 +36,7 @@ export function WordDetailSheet({ word, detail, loading, status, onClose }: Word
     return groups
   }, {})
   const collocationSourcePage = detail?.collocations[0]?.sourcePage ?? detail?.redbook?.sourcePage
+  const studyMeaning = studyMeaningFor(word)
 
   return (
     <div className="detail-backdrop" role="presentation" onMouseDown={(event) => {
@@ -58,16 +60,14 @@ export function WordDetailSheet({ word, detail, loading, status, onClose }: Word
           </button>
         </header>
         <div className="detail-section meaning-section">
-          <h3>考研大纲原释义</h3>
-          <p className="detail-meaning">{word.meaning}</p>
-          <p className="source-page">来源：考研大纲词汇 PDF 第 {word.sourcePage} 页</p>
-          {detail?.coreMeaning && detail.coreMeaning !== word.meaning ? (
-            <div className="source-meaning">
-              <h4>红宝书补充释义</h4>
-              <p>{detail.coreMeaning}</p>
-              {detail.redbook?.sourcePage ? <small>来源：红宝书 PDF 第 {detail.redbook.sourcePage} 页 · 仅展示与大纲义项一致且结构完整的扫描内容</small> : null}
-            </div>
-          ) : null}
+          <h3>校订学习释义</h3>
+          <p className="detail-meaning">{studyMeaning}</p>
+          <p className="source-page">{studyMeaningSourceLabel(word.studyMeaningStatus)}</p>
+          <details className="source-original">
+            <summary>查看原考研词表释义</summary>
+            <p>{word.meaning}</p>
+            <small>来源：《考研大纲词汇乱序版》PDF 第 {word.sourcePage} 页，仅作原始资料记录</small>
+          </details>
         </div>
 
         {detail?.exam ? (
@@ -97,7 +97,7 @@ export function WordDetailSheet({ word, detail, loading, status, onClose }: Word
                             {context.translation}
                           </p>
                         ) : (
-                          <p className="exam-context-translation pending"><b>词义提示</b>{item.meaning}</p>
+                          <p className="exam-context-translation pending"><b>词义提示</b>{studyMeaning}</p>
                         )}
                       </blockquote>
                     ))}

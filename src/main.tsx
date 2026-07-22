@@ -1,9 +1,10 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App'
+import studyMeaningsUrl from './data/study-meanings.json?url'
 import wordsUrl from './data/words.json?url'
 import { startPwaRegistration } from './pwa'
-import type { WordEntry } from './types'
+import type { StudyMeaningEntry, WordEntry } from './types'
 import './styles.css'
 
 startPwaRegistration()
@@ -20,14 +21,30 @@ function renderApp(words: WordEntry[]) {
 
 root.render(<main className="bootstrap-screen"><span>正在打开词表…</span></main>)
 
-void fetch(wordsUrl)
-  .then((response) => {
-    if (!response.ok) throw new Error('Vocabulary request failed')
-    return response.json() as Promise<WordEntry[]>
+void Promise.all([fetch(wordsUrl), fetch(studyMeaningsUrl)])
+  .then(async ([wordsResponse, meaningsResponse]) => {
+    if (!wordsResponse.ok || !meaningsResponse.ok) throw new Error('Vocabulary request failed')
+    return Promise.all([
+      wordsResponse.json() as Promise<WordEntry[]>,
+      meaningsResponse.json() as Promise<StudyMeaningEntry[]>
+    ])
   })
-  .then((words) => {
-    if (!Array.isArray(words) || words.length === 0) throw new Error('Vocabulary is empty')
-    renderApp(words)
+  .then(([words, meanings]) => {
+    if (!Array.isArray(words) || words.length === 0 || meanings.length !== words.length) {
+      throw new Error('Vocabulary is incomplete')
+    }
+    const enrichedWords = words.map((word, index) => {
+      const studyMeaning = meanings[index]
+      if (studyMeaning.wordId !== word.id || !studyMeaning.meaning) {
+        throw new Error(`Meaning mismatch at ${word.word}`)
+      }
+      return {
+        ...word,
+        studyMeaning: studyMeaning.meaning,
+        studyMeaningStatus: studyMeaning.status
+      }
+    })
+    renderApp(enrichedWords)
   })
   .catch(() => {
     root.render(

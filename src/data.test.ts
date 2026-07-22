@@ -3,16 +3,9 @@ import words from './data/words.json'
 import meta from './data/corpus-meta.json'
 import wordDetails from './data/word-details.json'
 import wordDetailsMeta from './data/word-details-meta.json'
-import type { WordDetailEntry } from './types'
-
-function syllabusExamSense(meaning: string) {
-  return meaning
-    .replace(/^(?:(?:vt|vi|v|n|adj|adv|prep|pron|conj|num|art|aux)\.?\s*(?:\.\/|[./、])?\s*)+/i, '')
-    .trim()
-    .split(/[；;]/)
-    .slice(0, 4)
-    .join('；')
-}
+import studyMeanings from './data/study-meanings.json'
+import studyMeaningsMeta from './data/study-meanings-meta.json'
+import type { StudyMeaningEntry, WordDetailEntry } from './types'
 
 describe('vocabulary corpus', () => {
   it('contains every source row with complete fields', () => {
@@ -36,6 +29,34 @@ describe('vocabulary corpus', () => {
     expect(words.find((entry) => entry.word === 'bond')).toMatchObject({ phonetic: 'bɒnd', sourcePage: 21 })
     expect(words.find((entry) => entry.word === 'abound')).toMatchObject({ sourcePage: 91 })
     expect(words.at(-1)).toMatchObject({ word: 'rotate', sourcePage: 117 })
+  })
+
+  it('provides a complete, compact, source-traceable study meaning layer', () => {
+    const meanings = studyMeanings as StudyMeaningEntry[]
+    const statuses = new Set(['cross-checked', 'source-cross-checked', 'dictionary-reviewed', 'curated'])
+
+    expect(meanings).toHaveLength(words.length)
+    expect(studyMeaningsMeta.wordCount).toBe(words.length)
+    expect(studyMeaningsMeta.primarySource.name).toBe('ECDICT')
+    expect(studyMeaningsMeta.primarySource.license).toBe('MIT')
+    expect(studyMeaningsMeta.crossCheck.coveredWords).toBe(4883)
+    expect(studyMeaningsMeta.crossCheck.copiedIntoApp).toBe(false)
+    expect(Object.values(studyMeaningsMeta.statusCounts).reduce((sum, count) => sum + count, 0)).toBe(words.length)
+
+    for (const [index, entry] of meanings.entries()) {
+      expect(entry.wordId).toBe(index)
+      expect(entry.meaning).toMatch(/[\u3400-\u9fff]/)
+      expect(entry.meaning.length).toBeLessThanOrEqual(96)
+      expect(entry.meaning).not.toMatch(/\\n|\[(?:网络|计|医|法|经|化)\]/)
+      expect(statuses.has(entry.status)).toBe(true)
+    }
+
+    const meaningFor = (word: string) => meanings[words.find((entry) => entry.word === word)!.id].meaning
+    expect(meaningFor('odds')).toContain('可能性、几率')
+    expect(meaningFor('odds')).toContain('赔率')
+    expect(meaningFor('odds')).not.toContain('气味')
+    expect(meaningFor('traffic')).toContain('交通')
+    expect(meaningFor('they')).toContain('他们')
   })
 })
 
@@ -71,15 +92,7 @@ describe('optional word details', () => {
       expect(Boolean(detail.coreMeaning || detail.exam || detail.redbook || detail.collocations.length || detail.examples?.length || detail.relatedWords?.length)).toBe(true)
       expect(detail.collocations.length).toBeLessThanOrEqual(5)
 
-      if (detail.coreMeaning) {
-        expect(detail.coreMeaning).toMatch(/[\u3400-\u9fff]/)
-        expect(detail.coreMeaning.length).toBeLessThanOrEqual(600)
-        expect(detail.coreMeaning).not.toMatch(/[�□■◆』]|[•·]{2,}|[…⋯][•·]|[•·][…⋯]/)
-        for (const [open, close] of [['（', '）'], ['(', ')'], ['［', '］'], ['[', ']']]) {
-          expect((detail.coreMeaning.match(new RegExp(`\\${open}`, 'g')) ?? []).length)
-            .toBe((detail.coreMeaning.match(new RegExp(`\\${close}`, 'g')) ?? []).length)
-        }
-      }
+      expect(detail.coreMeaning).toBeUndefined()
 
       if (detail.redbook) {
         expect(detail.redbook.sourcePage).toBeGreaterThanOrEqual(1)
@@ -125,7 +138,6 @@ describe('optional word details', () => {
           expect(phrase.years.length).toBeGreaterThan(0)
           expect(phrase.years.every((year) => year >= 2010 && year <= 2025)).toBe(true)
           expect(phrase.meaning).toMatch(/[\u3400-\u9fff]/)
-          expect(phrase.meaning).toBe(syllabusExamSense(words[detail.wordId].meaning))
           expect(phrase.contexts.length).toBeLessThanOrEqual(2)
           for (const context of phrase.contexts) {
             expect(context.text).toMatch(/[a-z]/i)
@@ -142,7 +154,7 @@ describe('optional word details', () => {
     }
   })
 
-  it('prioritizes improved meanings and keeps verifiable English I samples', () => {
+  it('quarantines scanned meanings and keeps verifiable English I samples', () => {
     const details = wordDetails as WordDetailEntry[]
     const due = details.find((detail) => detail.wordId === 0)
     const obtain = details.find((detail) => detail.wordId === words.find((word) => word.word === 'obtain')?.id)
@@ -156,11 +168,12 @@ describe('optional word details', () => {
     const harassment = details.find((detail) => detail.wordId === words.find((word) => word.word === 'harassment')?.id)
     const compass = details.find((detail) => detail.wordId === words.find((word) => word.word === 'compass')?.id)
     const capitalMarch = details.find((detail) => detail.wordId === words.find((word) => word.word === 'March')?.id)
+    const odds = details.find((detail) => detail.wordId === words.find((word) => word.word === 'odds')?.id)
 
-    expect(due?.coreMeaning).toContain('应支付的')
+    expect(due?.coreMeaning).toBeUndefined()
     expect(due?.collocations.some((item) => item.phrase === 'due to')).toBe(true)
     expect(due?.exam?.phrases.some((item) => item.phrase === 'due to' && item.years.includes(2016))).toBe(true)
-    expect(obtain?.coreMeaning).toContain('获得')
+    expect(obtain?.coreMeaning).toBeUndefined()
     expect(obtain?.exam?.phrases.some((item) => item.phrase === 'obtained by' && item.years.includes(2024))).toBe(true)
     expect(neglect?.redbook?.hasCollocationSection).toBe(false)
     expect(neglect?.examples?.some((item) => item.sentence === "neglect one's health")).toBe(true)
@@ -168,16 +181,13 @@ describe('optional word details', () => {
     expect(neglect?.exam?.phrases.every((item) => item.meaning.includes('忽视'))).toBe(true)
     expect(initiate?.redbook?.hasCollocationSection).toBe(true)
     expect(initiate?.collocations.some((item) => item.phrase === 'initiate sb. into')).toBe(true)
-    expect(magnify?.coreMeaning).toContain('放大')
-    expect(magnify?.coreMeaning).not.toContain('物体')
+    expect(magnify?.coreMeaning).toBeUndefined()
     expect(magnify?.redbook?.sourcePage).toBe(13)
     expect(magnify?.examples?.some((item) => item.sentence.includes('magnifier'))).toBe(true)
-    expect(traffic?.coreMeaning).toContain('交通')
-    expect(traffic?.coreMeaning).not.toContain('触角')
+    expect(traffic?.coreMeaning).toBeUndefined()
     expect(traffic?.redbook?.sourcePage).toBe(307)
     expect(traffic?.examples?.some((item) => item.sentence.includes('passenger traffic'))).toBe(true)
-    expect(clash?.coreMeaning).toContain('冲突')
-    expect(clash?.coreMeaning).not.toContain('包围')
+    expect(clash?.coreMeaning).toBeUndefined()
     expect(clash?.redbook?.sourcePage).toBe(244)
     expect(oppose?.coreMeaning).toBeUndefined()
     expect(oppose?.redbook).toBeUndefined()
@@ -188,6 +198,14 @@ describe('optional word details', () => {
     expect(compass?.coreMeaning).toBeUndefined()
     expect(compass?.redbook).toBeDefined()
     expect(capitalMarch).toBeUndefined()
+    expect(odds?.exam?.phrases).toHaveLength(1)
+    expect(odds?.exam?.phrases[0]).toMatchObject({
+      phrase: 'at odds with',
+      meaning: '与……不一致；与……相冲突'
+    })
+    expect(odds?.exam?.phrases[0].contexts.every((context) => context.translationSource === 'curated')).toBe(true)
+    expect(odds?.collocations.some((item) => item.phrase === 'at odds with')).toBe(true)
+    expect(odds?.examples?.[0].sentence).toContain('make the odds even')
   })
 
   it('keeps exam examples free of known OCR and literal-translation failures', () => {

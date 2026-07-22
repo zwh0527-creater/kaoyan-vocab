@@ -20,9 +20,13 @@ const metaPath = argument('--meta')
 const corpusMetaPath = argument('--corpus-meta')
 const examTextPath = optionalArgument('--exam-text')
 const examTranslationsPath = optionalArgument('--exam-translations')
+const studyMeaningsPath = optionalArgument('--study-meanings')
 
 const words = JSON.parse(await readFile(wordsPath, 'utf8'))
 const corpusMeta = JSON.parse(await readFile(corpusMetaPath, 'utf8'))
+const studyMeanings = studyMeaningsPath
+  ? JSON.parse(await readFile(studyMeaningsPath, 'utf8'))
+  : []
 const rawLines = (await readFile(ocrPath, 'utf8')).split(/\r?\n/).filter(Boolean)
 const records = rawLines.map((line) => JSON.parse(line))
 const recordsByHeadword = new Map()
@@ -619,7 +623,7 @@ function enrichExamPhrase(wordKey, word, item) {
   const usage = examUsageHint(wordKey, item.phrase, item.contexts[0]?.text)
   return applyExamTranslations({
     ...item,
-    meaning: syllabusExamSense(word.meaning),
+    meaning: studyMeanings[word.id]?.meaning ?? syllabusExamSense(word.meaning),
     ...(usage ? { usage } : {})
   })
 }
@@ -684,7 +688,7 @@ for (const word of words) {
     ? assessCoreMeaning(word, rawCoreMeaning, sameHeadwordEntries)
     : null
   const discardRedbook = coreIssue === 'semantic-mismatch' || coreIssue === 'ambiguous-case'
-  const coreMeaning = coreIssue ? undefined : rawCoreMeaning
+  const coreMeaning = undefined
   const collocations = discardRedbook ? [] : candidatesByWord.get(key) ?? []
   const examples = discardRedbook ? [] : examplesByWord.get(key) ?? []
   const relatedWords = discardRedbook ? [] : relatedByWord.get(key) ?? []

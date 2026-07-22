@@ -15,6 +15,7 @@ import {
   togglePendingMastered
 } from '../studyEngine'
 import type { StudyStateV4, WordDetailEntry, WordEntry } from '../types'
+import { studyMeaningFor } from '../studyMeanings'
 import { loadWordDetail } from '../wordDetails'
 import { wordLengthClass } from '../wordDisplay'
 import { WordDetailSheet } from './WordDetailSheet'
@@ -171,6 +172,7 @@ export function StudyScreen({
           const isMastered = pendingMastered.has(id)
           const isReviewed = reviewedIds.has(id)
           const isMeaningVisible = revealedIds.has(id)
+          const studyMeaning = studyMeaningFor(word)
           return (
             <article
               className={`word-row${isMastered ? ' mastered' : ''}${isReviewed ? ' reviewed' : ''}`}
@@ -212,9 +214,9 @@ export function StudyScreen({
                   type="button"
                   onClick={() => toggleMeaning(id)}
                   aria-expanded={isMeaningVisible}
-                  aria-label={`${word.word} ${isMeaningVisible ? word.meaning : '轻触揭示释义'}`}
+                  aria-label={`${word.word} ${isMeaningVisible ? studyMeaning : '轻触揭示释义'}`}
                 >
-                  {isMeaningVisible ? word.meaning : '轻触揭示释义'}
+                  {isMeaningVisible ? studyMeaning : '轻触揭示释义'}
                 </button>
               </div>
             </article>

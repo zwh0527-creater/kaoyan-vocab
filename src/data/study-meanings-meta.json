@@ -1,0 +1,76 @@
+{
+  "version": 1,
+  "wordCount": 5493,
+  "fingerprint": "fe12da1072b50c1291249aa3571e6f74794ee6b307eaee895ccb4b4dead245ae",
+  "primarySource": {
+    "name": "ECDICT",
+    "url": "https://github.com/skywind3000/ECDICT",
+    "commit": "bc015ed2e24a7abef49fc6dbbb7fe32c1dadaf8b",
+    "license": "MIT",
+    "sha256": "1a6947e04785db63613a92e14903cdae7954f7e84860b10e68e5c7cbb3f9c3cf"
+  },
+  "crossCheck": {
+    "name": "english-vocabulary postgraduate list",
+    "url": "https://github.com/KyleBing/english-vocabulary",
+    "commit": "8814e02b40f69a2a6e016dbde087010304fcedfc",
+    "sha256": "75504c26f732303414c818c4d6d42d56844cef2c1d771317b2e80d4ec3882469",
+    "coveredWords": 4883,
+    "agreement": {
+      "high": 4721,
+      "medium": 142,
+      "low": 20
+    },
+    "copiedIntoApp": false
+  },
+  "statusCounts": {
+    "source-cross-checked": 609,
+    "cross-checked": 4862,
+    "curated": 22
+  },
+  "curatedWords": [
+    "achieve",
+    "adverb",
+    "among",
+    "customer",
+    "cyberspace",
+    "denote",
+    "ending",
+    "goods",
+    "internet",
+    "laptop",
+    "nonsense",
+    "noun",
+    "odds",
+    "pronoun",
+    "sit",
+    "sometimes",
+    "somewhat",
+    "they",
+    "valve",
+    "verb",
+    "versus",
+    "whereas"
+  ],
+  "lowAgreementWords": [
+    "achieve",
+    "adverb",
+    "among",
+    "customer",
+    "cyberspace",
+    "denote",
+    "ending",
+    "goods",
+    "internet",
+    "laptop",
+    "nonsense",
+    "noun",
+    "pronoun",
+    "sit",
+    "sometimes",
+    "somewhat",
+    "valve",
+    "verb",
+    "versus",
+    "whereas"
+  ]
+}

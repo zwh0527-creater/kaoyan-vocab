@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import type { WordEntry } from '../types'
+import { studyMeaningFor } from '../studyMeanings'
 
 const PAGE_SIZE = 120
 
@@ -51,7 +52,7 @@ export function MasteredBookScreen({ masteredIds, words, onBack, onRestore }: Ma
             <article className="mastered-row" key={word.id}>
               <div>
                 <strong>{word.word}</strong>
-                <p>{word.meaning}</p>
+                <p>{studyMeaningFor(word)}</p>
               </div>
               <button type="button" onClick={() => onRestore(word.id)}>重新学习</button>
             </article>

@@ -5,10 +5,12 @@ import { assessCoreMeaning, syllabusExamSense } from './word-detail-quality.mjs'
 const wordsPath = process.argv[2] ?? 'src/data/words.json'
 const detailsPath = process.argv[3] ?? 'src/data/word-details.json'
 const metaPath = process.argv[4] ?? 'src/data/word-details-meta.json'
+const studyMeaningsPath = process.argv[5] ?? 'src/data/study-meanings.json'
 
 const words = JSON.parse(await readFile(wordsPath, 'utf8'))
 const details = JSON.parse(await readFile(detailsPath, 'utf8'))
 const meta = JSON.parse(await readFile(metaPath, 'utf8'))
+const studyMeanings = JSON.parse(await readFile(studyMeaningsPath, 'utf8'))
 const wordById = new Map(words.map((word) => [word.id, word]))
 const wordsByHeadword = new Map()
 
@@ -21,6 +23,46 @@ for (const word of words) {
 
 const issueCounts = new Map()
 let examMeaningUpdateCount = 0
+
+function applyCuratedCorrections(word, detail) {
+  if (word.word.toLowerCase() !== 'odds') return detail
+  const contexts = (detail.exam?.phrases ?? [])
+    .flatMap((phrase) => phrase.contexts)
+    .filter((context, index, all) => all.findIndex((candidate) => candidate.text === context.text) === index)
+    .map((context) => ({
+      ...context,
+      translation: context.year === 2024
+        ? '监管范围的缩小，对建筑商、采矿经营者以及其他经常与环保规定发生冲突的商业利益方来说，是一次胜利。'
+        : '这种自上而下的时尚业观念早已过时，也与伊丽莎白·克莱因历时三年批判“快时尚”的《Overdressed》一书所描绘的狂热世界格格不入。',
+      translationSource: 'curated'
+    }))
+  return {
+    ...detail,
+    collocations: [
+      { phrase: 'at odds with', meaning: '与……不一致；与……相冲突', relevance: 'english-1', source: 'redbook', sourcePage: 265 },
+      { phrase: 'It makes no odds.', meaning: '没有关系；没有差别', relevance: 'postgraduate', source: 'redbook', sourcePage: 265 },
+      { phrase: "What's the odds?", meaning: '有什么要紧的？', relevance: 'postgraduate', source: 'redbook', sourcePage: 265 }
+    ],
+    examples: [{
+      sentence: 'Do you believe your efforts can make the odds even?',
+      meaning: '你相信自己的努力能让双方机会均等吗？',
+      sourcePage: 265
+    }],
+    ...(detail.exam ? {
+      exam: {
+        ...detail.exam,
+        phrases: [{
+          phrase: 'at odds with',
+          count: detail.exam.count,
+          years: detail.exam.years,
+          meaning: '与……不一致；与……相冲突',
+          usage: '结构：be at odds with + 名词，表示“与……不一致、相冲突”',
+          contexts
+        }]
+      }
+    } : {})
+  }
+}
 
 const cleanedDetails = details.flatMap((detail) => {
   const word = wordById.get(detail.wordId)
@@ -35,8 +77,9 @@ const cleanedDetails = details.flatMap((detail) => {
 
   if (coreIssue) {
     issueCounts.set(coreIssue, (issueCounts.get(coreIssue) ?? 0) + 1)
-    delete cleaned.coreMeaning
   }
+  if (cleaned.coreMeaning) issueCounts.set('redbook-meaning-quarantined', (issueCounts.get('redbook-meaning-quarantined') ?? 0) + 1)
+  delete cleaned.coreMeaning
 
   if (isAmbiguousCase || isSemanticMismatch) {
     delete cleaned.redbook
@@ -47,14 +90,15 @@ const cleanedDetails = details.flatMap((detail) => {
 
   if (isAmbiguousCase) delete cleaned.exam
   for (const phrase of cleaned.exam?.phrases ?? []) {
-    const nextMeaning = syllabusExamSense(word.meaning)
+    const nextMeaning = studyMeanings[word.id]?.meaning ?? syllabusExamSense(word.meaning)
     if (phrase.meaning !== nextMeaning) examMeaningUpdateCount += 1
     phrase.meaning = nextMeaning
   }
 
-  const hasContent = cleaned.coreMeaning || cleaned.exam || cleaned.redbook ||
-    cleaned.collocations.length || cleaned.examples?.length || cleaned.relatedWords?.length
-  return hasContent ? [cleaned] : []
+  const curated = applyCuratedCorrections(word, cleaned)
+  const hasContent = curated.exam || curated.redbook || curated.collocations.length ||
+    curated.examples?.length || curated.relatedWords?.length
+  return hasContent ? [curated] : []
 })
 
 const serialized = JSON.stringify(cleanedDetails)

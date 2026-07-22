@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import wordDetailsMeta from './data/word-details-meta.json'
 import corpusMeta from './data/corpus-meta.json'
+import studyMeaningsMeta from './data/study-meanings-meta.json'
 import { MasteredBookScreen } from './components/MasteredBookScreen'
 import { SearchScreen } from './components/SearchScreen'
 import { StudyScreen } from './components/StudyScreen'
@@ -395,7 +396,7 @@ function SettingsScreen({ state, onBack, onExport, onImport, onReset }: Settings
         <h2>词表</h2>
         <div className="source-note">
           <strong>{corpusMeta.wordCount} 条乱序词汇</strong>
-          <p>基础词条整理自《考研大纲词汇乱序版》，详情页始终先显示大纲原释义；{wordDetailsMeta.coreMeaningCount} 个词另有红宝书补充释义，收录 {wordDetailsMeta.collocationCount} 条固定搭配、{wordDetailsMeta.exampleCount} 条红宝书例句与 {wordDetailsMeta.relatedWordCount} 条相关词记录；{wordDetailsMeta.examEntryCount} 个词带有 2010—2025 英语一真题语境，并提供 {wordDetailsMeta.examTranslationCount} 条对应译文。App 不包含原 PDF。</p>
+          <p>全部 {studyMeaningsMeta.wordCount} 个词已与 ECDICT 逐词核对，其中 {studyMeaningsMeta.crossCheck.coveredWords} 个又与独立考研词库交叉检查，{studyMeaningsMeta.statusCounts.curated} 个冲突或异常词经过人工校订。学习页优先显示校订后的常用义；原考研词表释义只在详情页留档，红宝书扫描释义不再作为主释义。另收录 {wordDetailsMeta.collocationCount} 条红宝书固定搭配、{wordDetailsMeta.examEntryCount} 个英语一真题词条。App 不包含原 PDF。</p>
         </div>
       </section>
 
