@@ -41,6 +41,20 @@ SPECIALIZED_LINE = re.compile(
 SUBJECT_LABEL = re.compile(
     r"\[(?:网络|计|计算机|医|医学|法|法律|经|经济|化|化学|机|机械|电子|航天|农业|地质|数学|物理|生物|贸易|金融|建筑|测绘|军事)\]"
 )
+POS_TOKEN = r"(?:interj|prep|pron|conj|adj|adv|aux|art|num|int|det|vt|vi|ad|n|v|a)"
+POS_MARKER = re.compile(
+    rf"(?<![A-Za-z])(?P<pos>{POS_TOKEN}(?:[.．](?:[/&]+)?{POS_TOKEN})*)[.．]",
+    re.IGNORECASE,
+)
+POS_FAMILIES = {
+    "a": "adj",
+    "adj": "adj",
+    "ad": "adv",
+    "adv": "adv",
+    "v": "v",
+    "vt": "v",
+    "vi": "v",
+}
 
 CURATED_MEANINGS = {
     "a": "art.一（个）；每一（个）；任一（个）",
@@ -245,6 +259,148 @@ def clean_source_meaning(value: str) -> str:
     return re.sub(r"\s+", " ", value).strip(" ;；,，.")
 
 
+def meaning_inventory(value: str) -> Counter[str]:
+    """Character inventory used to prove automatic ordering neither adds nor drops source text."""
+    return Counter(re.sub(r"[\s;；,，.．]", "", value))
+
+
+def split_senses(value: str) -> list[str]:
+    """Split top-level sense separators without breaking parenthetical notes."""
+    parts: list[str] = []
+    current: list[str] = []
+    depth = 0
+    opening = "（([【"
+    closing = "）)]】"
+    for character in value:
+        if character in opening:
+            depth += 1
+        elif character in closing and depth:
+            depth -= 1
+        if character in ";；,，" and depth == 0:
+            part = "".join(current).strip()
+            if part:
+                parts.append(part)
+            current = []
+        else:
+            current.append(character)
+    part = "".join(current).strip()
+    if part:
+        parts.append(part)
+    return parts
+
+
+def parse_meaning_groups(value: str) -> list[dict]:
+    matches = list(POS_MARKER.finditer(value))
+    if not matches:
+        return [{"pos": "", "label": "", "senses": split_senses(value)}]
+
+    groups: list[dict] = []
+    leading = value[:matches[0].start()].strip(" ;；,，")
+    if leading:
+        groups.append({"pos": "", "label": "", "senses": split_senses(leading)})
+    for index, match in enumerate(matches):
+        end = matches[index + 1].start() if index + 1 < len(matches) else len(value)
+        label = match.group("pos")
+        content = value[match.end():end].strip(" ;；,，")
+        senses = split_senses(content)
+        if senses:
+            pos_parts = [
+                POS_FAMILIES.get(part.casefold(), part.casefold())
+                for part in re.split(r"[.．/&]+", label)
+                if part
+            ]
+            groups.append({
+                "pos": "/".join(dict.fromkeys(pos_parts)),
+                "label": label,
+                "senses": senses,
+            })
+    return groups
+
+
+def priority_order_meaning(source_meaning: str, references: list[str]) -> tuple[str, bool]:
+    """Reorder only source senses, using public exam-list order as ranking evidence."""
+    source_groups = parse_meaning_groups(source_meaning)
+    if sum(len(group["senses"]) for group in source_groups) < 2:
+        return source_meaning, False
+
+    ranked_references: list[dict] = []
+    for reference_index, reference in enumerate(references):
+        position = 0
+        for group_index, group in enumerate(parse_meaning_groups(reference)):
+            for sense_index, sense in enumerate(group["senses"]):
+                characters = chinese_characters(sense)
+                if characters:
+                    ranked_references.append({
+                        "rank": reference_index * 1000 + position,
+                        "reference_index": reference_index,
+                        "group_index": group_index,
+                        "sense_index": sense_index,
+                        "pos": group["pos"],
+                        "characters": characters,
+                    })
+                position += 1
+    if not ranked_references:
+        return source_meaning, False
+
+    def sense_match(sense: str, pos: str) -> dict | None:
+        characters = chinese_characters(sense)
+        if not characters:
+            return None
+        matches = []
+        for reference in ranked_references:
+            source_pos = set(pos.split("/"))
+            reference_pos = set(reference["pos"].split("/"))
+            if source_pos and reference_pos and source_pos.isdisjoint(reference_pos):
+                continue
+            overlap = len(characters & reference["characters"])
+            score = overlap / min(len(characters), len(reference["characters"]))
+            enough_evidence = overlap >= 2 or min(len(characters), len(reference["characters"])) == 1
+            if enough_evidence and score >= 0.60:
+                matches.append(reference)
+        return min(matches, key=lambda item: item["rank"]) if matches else None
+
+    ranked_groups = []
+    for group_index, group in enumerate(source_groups):
+        ranked_senses = []
+        for sense_index, sense in enumerate(group["senses"]):
+            match = sense_match(sense, group["pos"])
+            ranked_senses.append((match is None, match["rank"] if match else 0, sense_index, sense, match))
+        may_reorder_senses = any(
+            item[4]
+            and item[4]["reference_index"] == 0
+            and item[4]["sense_index"] == 0
+            for item in ranked_senses
+        )
+        if may_reorder_senses:
+            ranked_senses.sort(key=lambda item: item[:3])
+        group_rank = min((item[1] for item in ranked_senses if not item[0]), default=None)
+        ranked_groups.append((group_rank is None, group_rank or 0, group_index, group, ranked_senses))
+    may_reorder_groups = any(
+        sense[4]
+        and sense[4]["reference_index"] == 0
+        and sense[4]["group_index"] == 0
+        for _, _, _, _, ranked_senses in ranked_groups
+        for sense in ranked_senses
+    )
+    if may_reorder_groups:
+        ranked_groups.sort(key=lambda item: item[:3])
+
+    group_order_changed = [item[2] for item in ranked_groups] != list(range(len(source_groups)))
+    sense_order_changed = any(
+        [sense[2] for sense in ranked_senses] != list(range(len(group["senses"])))
+        for _, _, _, group, ranked_senses in ranked_groups
+    )
+    if not group_order_changed and not sense_order_changed:
+        return source_meaning, False
+
+    rendered_groups = []
+    for _, _, _, group, ranked_senses in ranked_groups:
+        content = "；".join(item[3] for item in ranked_senses)
+        rendered_groups.append(f"{group['label']}.{content}" if group["label"] else content)
+    ordered = " ".join(rendered_groups)
+    return ordered, ordered != source_meaning
+
+
 def reference_meaning(entry: dict) -> str:
     parts = []
     for translation in entry.get("translations", []):
@@ -304,6 +460,7 @@ def main() -> None:
     low_agreement_words: list[str] = []
     source_only_words: list[str] = []
     unresolved_conflict_words: list[str] = []
+    priority_reordered_words: list[str] = []
     entries = []
 
     for word in words:
@@ -359,14 +516,24 @@ def main() -> None:
         if key in CURATED_MEANINGS:
             primary_meaning = CURATED_MEANINGS[key]
             status = "curated"
-        elif candidates and qwerty_candidates and best_agreement >= 0.20 and best_qwerty_agreement >= 0.20:
-            status = "triple-cross-checked"
-        elif (candidates and best_agreement >= 0.20) or (qwerty_candidates and best_qwerty_agreement >= 0.20):
-            status = "cross-checked"
-        elif candidates:
-            status = "dictionary-reviewed"
         else:
-            status = "source-cross-checked"
+            ordering_references = list(qwerty_candidates)
+            if best_reference_meaning:
+                ordering_references.append(best_reference_meaning)
+            primary_meaning, reordered = priority_order_meaning(primary_meaning, ordering_references)
+            if meaning_inventory(primary_meaning) != meaning_inventory(clean_source_meaning(source_meaning)):
+                raise ValueError(f"Priority ordering changed source content: {word['word']}")
+            if reordered:
+                priority_reordered_words.append(str(word["word"]))
+
+            if candidates and qwerty_candidates and best_agreement >= 0.20 and best_qwerty_agreement >= 0.20:
+                status = "triple-cross-checked"
+            elif (candidates and best_agreement >= 0.20) or (qwerty_candidates and best_qwerty_agreement >= 0.20):
+                status = "cross-checked"
+            elif candidates:
+                status = "dictionary-reviewed"
+            else:
+                status = "source-cross-checked"
 
         independent_scores = [
             score
@@ -446,6 +613,12 @@ def main() -> None:
         "validationScope": {
             "agreementMeaning": "自动交叉核对只确认词头和至少一个已有义项相符，不代表常用义完整",
             "curatedMeaning": "人工校订项补充已确认的常见义、考研义或修正明显错误",
+        },
+        "priorityOrdering": {
+            "rule": "同一词条优先显示公开考研词库中靠前的基础义和常见义；只重排大纲已有义项，不自动增删释义",
+            "primaryReference": qwerty_reference_paths[0].name if qwerty_reference_paths else None,
+            "reorderedWords": len(priority_reordered_words),
+            "curatedWords": len(CURATED_MEANINGS),
         },
         "curatedWords": sorted(CURATED_MEANINGS),
         "lowAgreementWords": sorted(low_agreement_words),

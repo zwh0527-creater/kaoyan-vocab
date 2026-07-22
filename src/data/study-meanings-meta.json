@@ -1,7 +1,7 @@
 {
   "version": 1,
   "wordCount": 5493,
-  "fingerprint": "5e684ae27bf076dcd204a8856d6a7622457b826a5d748e103d52f66432f26fef",
+  "fingerprint": "e66c9534b0c5536b629f989362184291b0647b4f1dff1f35386009957bdd8c17",
   "authoritativeSource": {
     "name": "考研大纲词汇乱序版",
     "wordCount": 5493,
@@ -74,6 +74,12 @@
   "validationScope": {
     "agreementMeaning": "自动交叉核对只确认词头和至少一个已有义项相符，不代表常用义完整",
     "curatedMeaning": "人工校订项补充已确认的常见义、考研义或修正明显错误"
+  },
+  "priorityOrdering": {
+    "rule": "同一词条优先显示公开考研词库中靠前的基础义和常见义；只重排大纲已有义项，不自动增删释义",
+    "primaryReference": "2025KaoYanHongBaoShu.json",
+    "reorderedWords": 2246,
+    "curatedWords": 134
   },
   "curatedWords": [
     "a",

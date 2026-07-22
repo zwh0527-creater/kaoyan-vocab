@@ -47,6 +47,8 @@ describe('vocabulary corpus', () => {
     expect(studyMeaningsMeta.qwertyCrossCheck.copiedIntoApp).toBe(false)
     expect(studyMeaningsMeta.unresolvedConflictWords).toEqual([])
     expect(studyMeaningsMeta.statusCounts.curated).toBe(134)
+    expect(studyMeaningsMeta.priorityOrdering.primaryReference).toBe('2025KaoYanHongBaoShu.json')
+    expect(studyMeaningsMeta.priorityOrdering.reorderedWords).toBe(2246)
     expect(Object.values(studyMeaningsMeta.statusCounts).reduce((sum, count) => sum + count, 0)).toBe(words.length)
 
     for (const [index, entry] of meanings.entries()) {
@@ -70,6 +72,9 @@ describe('vocabulary corpus', () => {
     expect(meaningFor('romance')).toContain('浪漫')
     expect(meaningFor('romance')).toContain('恋情')
     expect(meaningFor('romance')).toContain('谈恋爱')
+    expect(meaningFor('charge')).toMatch(/^n\./)
+    expect(meaningFor('impact').indexOf('影响')).toBeLessThan(meaningFor('impact').indexOf('冲击'))
+    expect(meaningFor('objective')).toMatch(/^a\./)
     expect(meaningFor('traffic')).toContain('交通')
     expect(meaningFor('they')).toContain('他们')
     expect(meaningFor('show')).toContain('显示')
