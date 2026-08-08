@@ -31,6 +31,20 @@ describe('vocabulary corpus', () => {
     expect(words.at(-1)).toMatchObject({ word: 'rotate', sourcePage: 117 })
   })
 
+  it('reconciles 5493 source rows with the PDF pagination and intentional duplicates', () => {
+    const pageCounts = new Map<number, number>()
+    for (const word of words) pageCounts.set(word.sourcePage, (pageCounts.get(word.sourcePage) ?? 0) + 1)
+
+    for (let page = 1; page <= 116; page += 1) expect(pageCounts.get(page)).toBe(47)
+    expect(pageCounts.get(117)).toBe(41)
+    expect(116 * 47 + 41).toBe(words.length)
+
+    expect(words.filter((entry) => entry.word === 'coordinate')).toMatchObject([
+      { sourcePage: 40, meaning: 'a.同等的 n.同等者,坐标 vt.协作，协调' },
+      { sourcePage: 61, meaning: 'a.同等的,并列的;坐标的 n.坐标' }
+    ])
+  })
+
   it('provides a complete, compact, source-traceable study meaning layer', () => {
     const meanings = studyMeanings as StudyMeaningEntry[]
     const statuses = new Set(['triple-cross-checked', 'cross-checked', 'source-cross-checked', 'dictionary-reviewed', 'curated'])
@@ -60,22 +74,23 @@ describe('vocabulary corpus', () => {
     }
 
     const meaningFor = (word: string) => meanings[words.find((entry) => entry.word === word)!.id].meaning
-    expect(meaningFor('odds')).toContain('可能性、几率')
+    expect(meaningFor('odds')).toMatch(/^n\.可能性、几率/)
     expect(meaningFor('odds')).toContain('赔率')
     expect(meaningFor('odds')).not.toContain('气味')
+    expect(meaningFor('magnitude')).toMatch(/^n\.大小；规模/)
     expect(meaningFor('magnitude')).toContain('重要性')
     expect(meaningFor('magnitude')).toContain('规模')
     expect(meaningFor('magnitude')).toContain('震级')
-    expect(meaningFor('dull')).toContain('无聊')
+    expect(meaningFor('dull')).toMatch(/^adj\.枯燥、无聊/)
     expect(meaningFor('dull')).toContain('暗淡')
     expect(meaningFor('dull')).toContain('使变钝')
-    expect(meaningFor('romance')).toContain('浪漫')
+    expect(meaningFor('romance')).toMatch(/^n\.浪漫；恋爱、恋情/)
     expect(meaningFor('romance')).toContain('恋情')
     expect(meaningFor('romance')).toContain('谈恋爱')
     expect(meaningFor('charge')).toMatch(/^n\./)
     expect(meaningFor('impact').indexOf('影响')).toBeLessThan(meaningFor('impact').indexOf('冲击'))
     expect(meaningFor('objective')).toMatch(/^a\./)
-    expect(meaningFor('traffic')).toContain('交通')
+    expect(meaningFor('traffic')).toMatch(/^n\.交通/)
     expect(meaningFor('they')).toContain('他们')
     expect(meaningFor('show')).toContain('显示')
     expect(meaningFor('which')).toContain('定语从句')

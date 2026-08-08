@@ -12,6 +12,8 @@ interface SearchScreenProps {
   pendingMasteredIds: number[]
   onBack: () => void
   onNotify: (message: string) => void
+  onSavePersonalMeaning: (wordId: number, meaning: string) => void
+  onRestoreDefaultMeaning: (wordId: number) => void
 }
 
 type SearchStatus = 'mastered' | 'pending' | 'learning'
@@ -21,7 +23,9 @@ export function SearchScreen({
   masteredIds,
   pendingMasteredIds,
   onBack,
-  onNotify
+  onNotify,
+  onSavePersonalMeaning,
+  onRestoreDefaultMeaning
 }: SearchScreenProps) {
   const inputRef = useRef<HTMLInputElement>(null)
   const [query, setQuery] = useState('')
@@ -142,6 +146,8 @@ export function SearchScreen({
           loading={detailsLoading}
           status={selectedStatus}
           onClose={() => setSelectedWordId(null)}
+          onSavePersonalMeaning={onSavePersonalMeaning}
+          onRestoreDefaultMeaning={onRestoreDefaultMeaning}
         />
       ) : null}
     </main>

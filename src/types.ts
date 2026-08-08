@@ -3,6 +3,7 @@ export interface WordEntry {
   word: string
   phonetic: string
   meaning: string
+  personalMeaning?: string
   studyMeaning?: string
   studyMeaningStatus?: StudyMeaningStatus
   sourcePage: number
@@ -111,6 +112,27 @@ export interface BackupV4 {
   exportedAt: string
   corpusFingerprint: string
   state: StudyStateV4
+}
+
+export interface MeaningOverrideV1 {
+  wordId: number
+  meaning: string
+  updatedAt: string
+}
+
+export interface MeaningOverrideStoreV1 {
+  version: 1
+  corpusFingerprint: string
+  entries: MeaningOverrideV1[]
+}
+
+export interface BackupV5 {
+  format: 'kaoyan-vocab-backup'
+  version: 5
+  exportedAt: string
+  corpusFingerprint: string
+  state: StudyStateV4
+  meaningOverrides: MeaningOverrideV1[]
 }
 
 export interface CollocationEntry {

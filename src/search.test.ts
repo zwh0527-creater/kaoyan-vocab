@@ -19,6 +19,14 @@ describe('word search', () => {
     expect(searchWords(words, '疏忽').matches.map((word) => word.word)).toEqual(['negligent', 'neglect'])
   })
 
+  it('prioritizes a personal meaning for display and Chinese reverse lookup', () => {
+    const personalized = words.map((word) => word.id === 1
+      ? { ...word, personalMeaning: '拿到；取得' }
+      : word)
+    expect(searchWords(personalized, '拿到').matches.map((word) => word.word)).toEqual(['obtain'])
+    expect(searchWords(personalized, '获得').matches.map((word) => word.word)).toEqual(['obtain'])
+  })
+
   it('limits rendered results while keeping the total count', () => {
     const result = searchWords(words, 'n', 1)
     expect(result.total).toBe(3)

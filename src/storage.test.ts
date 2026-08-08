@@ -1,15 +1,24 @@
 import { describe, expect, it } from 'vitest'
 import { createInitialState } from './studyEngine'
-import { createBackup, isValidStudyState, parseBackup } from './storage'
+import { createBackup, isValidStudyState, parseBackup, parseBackupBundle } from './storage'
 import type { BackupV1, BackupV3, StudyStateV1, StudyStateV3 } from './types'
 
 const ids = Array.from({ length: 60 }, (_, index) => index)
 
-describe('v4 backup validation', () => {
-  it('round-trips a valid V4 backup', () => {
+describe('v5 backup validation', () => {
+  it('round-trips progress and personal meanings in a valid V5 backup', () => {
     const state = createInitialState(ids, 'fingerprint', '2026-07-12')
-    const parsed = parseBackup(JSON.stringify(createBackup(state)), 'fingerprint', ids)
-    expect(parsed).toEqual(state)
+    const meaningOverrides = [{
+      wordId: 9,
+      meaning: 'n.交通；往来',
+      updatedAt: '2026-08-09T00:00:00.000Z'
+    }]
+    const parsed = parseBackupBundle(
+      JSON.stringify(createBackup(state, meaningOverrides)),
+      'fingerprint',
+      ids
+    )
+    expect(parsed).toEqual({ state, meaningOverrides })
   })
 
   it('rejects another corpus without changing the caller state', () => {
@@ -99,5 +108,30 @@ describe('v4 backup validation', () => {
 
   it('rejects invalid JSON before producing a replacement state', () => {
     expect(() => parseBackup('{broken', 'fingerprint', ids)).toThrow('备份文件格式不正确')
+  })
+
+  it('rejects damaged personal meanings before returning any replacement state', () => {
+    const state = createInitialState(ids, 'fingerprint', '2026-07-12')
+    const backup = createBackup(state, [{
+      wordId: 9,
+      meaning: 'n.交通',
+      updatedAt: '2026-08-09T00:00:00.000Z'
+    }])
+    backup.meaningOverrides[0].wordId = 999
+    expect(() => parseBackupBundle(JSON.stringify(backup), 'fingerprint', ids))
+      .toThrow('个人释义已损坏')
+  })
+
+  it('imports a V4 backup without clearing existing personal meanings', () => {
+    const state = createInitialState(ids, 'fingerprint', '2026-07-12')
+    const v4Backup = {
+      format: 'kaoyan-vocab-backup',
+      version: 4,
+      exportedAt: '2026-07-12T00:00:00.000Z',
+      corpusFingerprint: 'fingerprint',
+      state
+    }
+    expect(parseBackupBundle(JSON.stringify(v4Backup), 'fingerprint', ids))
+      .toEqual({ state, meaningOverrides: null })
   })
 })
