@@ -81,6 +81,22 @@ export function createInitialState(
   }
 }
 
+export function restartLearning(
+  state: StudyStateV4,
+  allWordIds: number[],
+  sessionDate = studyDateKey()
+): StudyStateV4 {
+  const validIds = new Set(allWordIds)
+  const masteredIds = state.masteredIds.filter((id) => validIds.has(id))
+  const mastered = new Set(masteredIds)
+  const learnableIds = allWordIds.filter((id) => !mastered.has(id))
+
+  return {
+    ...createInitialState(learnableIds, state.corpusFingerprint, sessionDate),
+    masteredIds
+  }
+}
+
 export function dailyGroupCount(state: StudyStateV4) {
   return Math.ceil(state.dailyBatch.length / GROUP_SIZE)
 }

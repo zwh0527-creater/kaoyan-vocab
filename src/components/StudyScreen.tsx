@@ -27,6 +27,8 @@ interface StudyScreenProps {
   onBack: () => void
   onCompleteGroup: () => void
   onNotify: (message: string) => void
+  onSavePersonalMeaning: (wordId: number, meaning: string) => void
+  onRestoreDefaultMeaning: (wordId: number) => void
 }
 
 export function StudyScreen({
@@ -35,7 +37,9 @@ export function StudyScreen({
   onStateChange,
   onBack,
   onCompleteGroup,
-  onNotify
+  onNotify,
+  onSavePersonalMeaning,
+  onRestoreDefaultMeaning
 }: StudyScreenProps) {
   const groupIds = currentGroupIds(state)
   const pendingMastered = useMemo(() => new Set(state.pendingMasteredIds), [state.pendingMasteredIds])
@@ -245,6 +249,8 @@ export function StudyScreen({
           loading={detailsLoading}
           status={pendingMastered.has(selectedDetailWord.id) ? 'pending' : 'learning'}
           onClose={() => setDetailWordId(null)}
+          onSavePersonalMeaning={onSavePersonalMeaning}
+          onRestoreDefaultMeaning={onRestoreDefaultMeaning}
         />
       ) : null}
     </main>

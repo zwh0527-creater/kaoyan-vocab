@@ -5,11 +5,14 @@ import {
   migrateV2ToV3,
   migrateV3ToV4
 } from './studyEngine'
+import { isValidMeaningOverrides } from './meaningOverrides'
 import type {
   BackupV1,
   BackupV2,
   BackupV3,
   BackupV4,
+  BackupV5,
+  MeaningOverrideV1,
   StudyStateV1,
   StudyStateV2,
   StudyStateV3,
@@ -234,18 +237,22 @@ export function saveStudyState(state: StudyStateV4) {
   localStorage.setItem(STORAGE_KEY_V4, JSON.stringify(state))
 }
 
-export function createBackup(state: StudyStateV4): BackupV4 {
+export function createBackup(
+  state: StudyStateV4,
+  meaningOverrides: MeaningOverrideV1[] = []
+): BackupV5 {
   return {
     format: 'kaoyan-vocab-backup',
-    version: 4,
+    version: 5,
     exportedAt: new Date().toISOString(),
     corpusFingerprint: state.corpusFingerprint,
-    state
+    state,
+    meaningOverrides
   }
 }
 
-export function downloadBackup(state: StudyStateV4) {
-  const backup = createBackup(state)
+export function downloadBackup(state: StudyStateV4, meaningOverrides: MeaningOverrideV1[] = []) {
+  const backup = createBackup(state, meaningOverrides)
   const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' })
   const url = URL.createObjectURL(blob)
   const link = document.createElement('a')
@@ -261,6 +268,20 @@ export function parseBackup(
   allWordIds: number[],
   now = new Date()
 ): StudyStateV4 {
+  return parseBackupBundle(raw, corpusFingerprint, allWordIds, now).state
+}
+
+export interface ParsedBackupBundle {
+  state: StudyStateV4
+  meaningOverrides: MeaningOverrideV1[] | null
+}
+
+export function parseBackupBundle(
+  raw: string,
+  corpusFingerprint: string,
+  allWordIds: number[],
+  now = new Date()
+): ParsedBackupBundle {
   let parsed: unknown
   try {
     parsed = JSON.parse(raw)
@@ -268,34 +289,40 @@ export function parseBackup(
     throw new Error('备份文件格式不正确')
   }
   if (!parsed || typeof parsed !== 'object') throw new Error('备份文件格式不正确')
-  const backup = parsed as Partial<BackupV1 | BackupV2 | BackupV3 | BackupV4>
+  const backup = parsed as Partial<BackupV1 | BackupV2 | BackupV3 | BackupV4 | BackupV5>
   if (
     backup.format !== 'kaoyan-vocab-backup' ||
-    (backup.version !== 1 && backup.version !== 2 && backup.version !== 3 && backup.version !== 4)
+    (backup.version !== 1 && backup.version !== 2 && backup.version !== 3 && backup.version !== 4 && backup.version !== 5)
   ) {
     throw new Error('这不是“考研单词”的有效备份')
   }
   if (backup.corpusFingerprint !== corpusFingerprint) throw new Error('备份使用的词表版本不同')
 
   const validIds = new Set(allWordIds)
+  if (backup.version === 5) {
+    if (!isValidStudyState(backup.state, corpusFingerprint, validIds)) throw new Error('备份内容已损坏')
+    if (!isValidMeaningOverrides(backup.meaningOverrides, validIds)) throw new Error('备份中的个人释义已损坏')
+    return { state: backup.state, meaningOverrides: backup.meaningOverrides }
+  }
+
   if (backup.version === 4) {
     if (!isValidStudyState(backup.state, corpusFingerprint, validIds)) throw new Error('备份内容已损坏')
-    return backup.state
+    return { state: backup.state, meaningOverrides: null }
   }
 
   if (backup.version === 3) {
     if (!isValidStudyStateV3(backup.state, corpusFingerprint, validIds)) throw new Error('备份内容已损坏')
-    return migrateV3ToV4(backup.state)
+    return { state: migrateV3ToV4(backup.state), meaningOverrides: null }
   }
 
   if (backup.version === 2) {
     if (!isValidStudyStateV2(backup.state, corpusFingerprint, validIds)) throw new Error('备份内容已损坏')
-    return migrateV3ToV4(migrateV2ToV3(backup.state, now))
+    return { state: migrateV3ToV4(migrateV2ToV3(backup.state, now)), meaningOverrides: null }
   }
 
   if (!isValidStudyStateV1(backup.state, corpusFingerprint, validIds)) throw new Error('备份内容已损坏')
   const migratedV2 = migrateV1ToV2(backup.state, allWordIds, backup.state.sessionDate)
   const migrated = migrateV3ToV4(migrateV2ToV3(migratedV2, now))
   if (!isValidStudyState(migrated, corpusFingerprint, validIds)) throw new Error('备份内容已损坏')
-  return migrated
+  return { state: migrated, meaningOverrides: null }
 }

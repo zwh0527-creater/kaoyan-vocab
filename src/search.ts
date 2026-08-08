@@ -23,10 +23,19 @@ export function searchWords(
   for (const word of words) {
     const studyMeaning = studyMeaningFor(word)
     if (isChineseSearch) {
+      const personalIndex = word.personalMeaning?.indexOf(needle) ?? -1
+      const calibratedIndex = word.studyMeaning?.indexOf(needle) ?? -1
       const coreIndex = studyMeaning.indexOf(needle)
       const sourceIndex = word.meaning.indexOf(needle)
-      if (coreIndex < 0 && sourceIndex < 0) continue
-      ranked.push({ word, rank: coreIndex >= 0 ? coreIndex : 100 + sourceIndex })
+      if (personalIndex < 0 && calibratedIndex < 0 && coreIndex < 0 && sourceIndex < 0) continue
+      const rank = personalIndex >= 0
+        ? personalIndex
+        : calibratedIndex >= 0
+          ? 50 + calibratedIndex
+          : coreIndex >= 0
+            ? 50 + coreIndex
+            : 100 + sourceIndex
+      ranked.push({ word, rank })
       continue
     }
 

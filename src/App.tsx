@@ -11,13 +11,20 @@ import {
   currentGroupIds,
   dailyGroupCount,
   nextStudyDayBoundary,
+  restartLearning,
   restoreMastered,
   rolloverToDate,
   roundRemaining,
   studyDateKey
 } from './studyEngine'
-import { downloadBackup, loadStudyState, parseBackup, saveStudyState } from './storage'
-import type { StudyStateV4, WordEntry } from './types'
+import { downloadBackup, loadStudyState, parseBackupBundle, saveStudyState } from './storage'
+import {
+  loadMeaningOverrides,
+  removeMeaningOverride,
+  saveMeaningOverrides,
+  upsertMeaningOverride
+} from './meaningOverrides'
+import type { MeaningOverrideV1, StudyStateV4, WordEntry } from './types'
 import { checkPwaUpdate, subscribeToPwaUpdate, updatePwa } from './pwa'
 
 type Screen = 'home' | 'study' | 'group-summary' | 'summary' | 'settings' | 'mastered' | 'search'
@@ -41,9 +48,26 @@ function isIosSafari() {
 }
 
 function App({ words }: { words: WordEntry[] }) {
-  const wordMap = useMemo(() => new Map(words.map((word) => [word.id, word])), [words])
   const allWordIds = useMemo(() => words.map((word) => word.id), [words])
   const [state, setState] = useState<StudyStateV4>(() => initializeState(allWordIds))
+  const [meaningOverrides, setMeaningOverrides] = useState<MeaningOverrideV1[]>(
+    () => loadMeaningOverrides(corpusMeta.fingerprint, allWordIds)
+  )
+  const overrideMap = useMemo(
+    () => new Map(meaningOverrides.map((entry) => [entry.wordId, entry.meaning])),
+    [meaningOverrides]
+  )
+  const personalizedWords = useMemo(
+    () => words.map((word) => {
+      const personalMeaning = overrideMap.get(word.id)
+      return personalMeaning ? { ...word, personalMeaning } : word
+    }),
+    [overrideMap, words]
+  )
+  const wordMap = useMemo(
+    () => new Map(personalizedWords.map((word) => [word.id, word])),
+    [personalizedWords]
+  )
   const [screen, setScreen] = useState<Screen>('home')
   const [groupSummary, setGroupSummary] = useState<GroupSummary | null>(null)
   const [toasts, setToasts] = useState<Toast[]>([])
@@ -66,6 +90,14 @@ function App({ words }: { words: WordEntry[] }) {
       notify('进度保存失败，请导出备份后检查浏览器存储')
     }
   }, [notify, state])
+
+  useEffect(() => {
+    try {
+      saveMeaningOverrides(corpusMeta.fingerprint, meaningOverrides)
+    } catch {
+      notify('个人释义保存失败，请导出备份后检查浏览器存储')
+    }
+  }, [meaningOverrides, notify])
 
   useEffect(() => {
     let boundaryTimer = 0
@@ -129,25 +161,40 @@ function App({ words }: { words: WordEntry[] }) {
   const importBackup = async (file: File) => {
     try {
       const now = new Date()
-      const restored = parseBackup(await file.text(), corpusMeta.fingerprint, allWordIds, now)
-      setState(rolloverToDate(restored, studyDateKey(now)))
+      const restored = parseBackupBundle(await file.text(), corpusMeta.fingerprint, allWordIds, now)
+      setState(rolloverToDate(restored.state, studyDateKey(now)))
+      if (restored.meaningOverrides !== null) setMeaningOverrides(restored.meaningOverrides)
       setScreen('home')
-      notify('备份已恢复')
+      notify(restored.meaningOverrides === null ? '学习进度已恢复，现有个人释义已保留' : '进度和个人释义已恢复')
     } catch (error) {
       notify(error instanceof Error ? error.message : '备份无法导入')
     }
   }
 
   const resetProgress = () => {
-    setState(createInitialState(allWordIds, corpusMeta.fingerprint, studyDateKey()))
+    setState((current) => restartLearning(current, allWordIds, studyDateKey()))
     setScreen('home')
-    notify('已重新开始第 1 轮')
+    notify('已重新开始第 1 轮，熟词本已保留')
   }
 
   const restoreWord = (wordId: number) => {
     setState((current) => restoreMastered(current, wordId, allWordIds))
     notify(`${wordMap.get(wordId)?.word ?? '这个词'} 已放回下一轮`)
   }
+
+  const savePersonalMeaning = useCallback((wordId: number, meaning: string) => {
+    try {
+      setMeaningOverrides((current) => upsertMeaningOverride(current, wordId, meaning))
+      notify(`${wordMap.get(wordId)?.word ?? '这个词'} 的个人释义已保存`)
+    } catch (error) {
+      notify(error instanceof Error ? error.message : '个人释义无法保存')
+    }
+  }, [notify, wordMap])
+
+  const restoreDefaultMeaning = useCallback((wordId: number) => {
+    setMeaningOverrides((current) => removeMeaningOverride(current, wordId))
+    notify(`${wordMap.get(wordId)?.word ?? '这个词'} 已恢复默认释义`)
+  }, [notify, wordMap])
 
   return (
     <div className="app-shell">
@@ -172,15 +219,19 @@ function App({ words }: { words: WordEntry[] }) {
           onBack={() => setScreen('home')}
           onCompleteGroup={finishGroup}
           onNotify={notify}
+          onSavePersonalMeaning={savePersonalMeaning}
+          onRestoreDefaultMeaning={restoreDefaultMeaning}
         />
       ) : null}
       {screen === 'search' ? (
         <SearchScreen
-          words={words}
+          words={personalizedWords}
           masteredIds={state.masteredIds}
           pendingMasteredIds={state.pendingMasteredIds}
           onBack={() => setScreen('home')}
           onNotify={notify}
+          onSavePersonalMeaning={savePersonalMeaning}
+          onRestoreDefaultMeaning={restoreDefaultMeaning}
         />
       ) : null}
       {screen === 'group-summary' && groupSummary ? (
@@ -196,7 +247,7 @@ function App({ words }: { words: WordEntry[] }) {
       {screen === 'mastered' ? (
         <MasteredBookScreen
           masteredIds={state.masteredIds}
-          words={words}
+          words={personalizedWords}
           onBack={() => setScreen('home')}
           onRestore={restoreWord}
         />
@@ -205,7 +256,7 @@ function App({ words }: { words: WordEntry[] }) {
         <SettingsScreen
           state={state}
           onBack={() => setScreen('home')}
-          onExport={() => downloadBackup(state)}
+          onExport={() => downloadBackup(state, meaningOverrides)}
           onImport={importBackup}
           onCheckUpdate={() => {
             void checkPwaUpdate().then((checked) => {
@@ -378,10 +429,10 @@ function SettingsScreen({ state, onBack, onExport, onImport, onCheckUpdate, onRe
       <section className="settings-group">
         <h2>学习进度</h2>
         <button className="settings-row" type="button" onClick={onExport}>
-          <span><strong>导出备份</strong><small>保存当前轮次、小组位置和熟词本</small></span><b>导出</b>
+          <span><strong>导出备份</strong><small>保存进度、熟词本和个人校订释义</small></span><b>导出</b>
         </button>
         <button className="settings-row" type="button" onClick={() => inputRef.current?.click()}>
-          <span><strong>导入备份</strong><small>兼容旧版进度，只接受当前词表</small></span><b>选择文件</b>
+          <span><strong>导入备份</strong><small>新版恢复个人释义；旧备份不会清空现有校订</small></span><b>选择文件</b>
         </button>
         <input
           ref={inputRef}
@@ -408,14 +459,14 @@ function SettingsScreen({ state, onBack, onExport, onImport, onCheckUpdate, onRe
       <section className="settings-group">
         <h2>词表</h2>
         <div className="source-note">
-          <strong>{corpusMeta.wordCount} 条乱序词汇</strong>
-          <p>全部 {studyMeaningsMeta.wordCount} 个词以考研大纲释义为底，并用 ECDICT 核对词头；其中 {studyMeaningsMeta.qwertyCrossCheck.coveredWords} 个又与 Qwerty Learner 公开考研词表交叉检查，{studyMeaningsMeta.crossCheck.coveredWords} 个与另一份独立考研词库复核，{studyMeaningsMeta.statusCounts.curated} 个冲突、缺项或常见义问题经过人工校订。同一词条会参考公开考研词库，把基础义、常见义排在前面；自动程序只重排大纲已有义项，不擅自添加释义。自动交叉检查只说明词头和已有义项相符，不代表常见义已经完整；发现遗漏会继续人工补正。红宝书扫描释义不作为主释义。另收录 {wordDetailsMeta.collocationCount} 条红宝书固定搭配、{wordDetailsMeta.examEntryCount} 个英语一真题词条。App 不包含原 PDF。</p>
+          <strong>PDF 实际收录 {corpusMeta.wordCount} 条词条</strong>
+          <p>前 116 页各 47 条，末页 41 条；两个 coordinate 条目释义不同，按原书保留。全部 {studyMeaningsMeta.wordCount} 个词以考研大纲释义为底，并用 ECDICT 核对词头；其中 {studyMeaningsMeta.qwertyCrossCheck.coveredWords} 个又与 Qwerty Learner 公开考研词表交叉检查，{studyMeaningsMeta.crossCheck.coveredWords} 个与另一份独立考研词库复核，{studyMeaningsMeta.statusCounts.curated} 个冲突、缺项或常见义问题经过人工校订。同一词条会参考公开考研词库，把基础义、常见义排在前面；自动程序只重排大纲已有义项，不擅自添加释义。自动交叉检查只说明词头和已有义项相符，不代表常见义已经完整；发现遗漏会继续人工补正。红宝书扫描释义不作为主释义。另收录 {wordDetailsMeta.collocationCount} 条红宝书固定搭配、{wordDetailsMeta.examEntryCount} 个英语一真题词条。App 不包含原 PDF。</p>
         </div>
       </section>
 
       <section className="settings-group danger-zone">
         <h2>重新开始</h2>
-        <button className="danger-button" type="button" onClick={() => setResetStep(1)}>清空全部学习进度</button>
+        <button className="danger-button" type="button" onClick={() => setResetStep(1)}>重新学习未熟词</button>
       </section>
 
       {resetStep > 0 ? (
@@ -424,15 +475,15 @@ function SettingsScreen({ state, onBack, onExport, onImport, onCheckUpdate, onRe
             {resetStep === 1 ? (
               <>
                 <h2 id="reset-title">先留一份备份</h2>
-                <p>清空后无法撤销，熟词本也会清空。建议先导出备份。</p>
+                <p>当前轮次和小组位置会重置，熟词本不会清空。建议先导出备份。</p>
                 <button className="secondary-button" type="button" onClick={onExport}>导出备份</button>
                 <button className="danger-button" type="button" onClick={() => setResetStep(2)}>继续重置</button>
               </>
             ) : (
               <>
                 <h2 id="reset-title">确定从第 1 轮重来？</h2>
-                <p>当前轮次、小组位置和熟词本都会被清除。</p>
-                <button className="danger-button solid" type="button" onClick={onReset}>确认清空</button>
+                <p>未标熟词会从第 1 轮重新开始；熟词本保持不变。</p>
+                <button className="danger-button solid" type="button" onClick={onReset}>确认重新学习</button>
               </>
             )}
             <button className="text-button modal-cancel" type="button" onClick={() => setResetStep(0)}>取消</button>

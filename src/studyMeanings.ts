@@ -1,7 +1,7 @@
 import type { StudyMeaningStatus, WordEntry } from './types'
 
 export function studyMeaningFor(word: WordEntry) {
-  return word.studyMeaning?.trim() || word.meaning
+  return word.personalMeaning?.trim() || word.studyMeaning?.trim() || word.meaning
 }
 
 export function studyMeaningSourceLabel(status?: StudyMeaningStatus) {

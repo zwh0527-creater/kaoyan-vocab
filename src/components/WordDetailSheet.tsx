@@ -1,5 +1,6 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { IconX } from '@tabler/icons-react'
+import { MAX_PERSONAL_MEANING_LENGTH, normalizePersonalMeaning } from '../meaningOverrides'
 import { studyMeaningFor, studyMeaningSourceLabel } from '../studyMeanings'
 import type { RelatedWordEntry, WordDetailEntry, WordEntry } from '../types'
 import { wordLengthClass } from '../wordDisplay'
@@ -10,11 +11,24 @@ interface WordDetailSheetProps {
   loading: boolean
   status?: 'mastered' | 'pending' | 'learning'
   onClose: () => void
+  onSavePersonalMeaning: (wordId: number, meaning: string) => void
+  onRestoreDefaultMeaning: (wordId: number) => void
 }
 
-export function WordDetailSheet({ word, detail, loading, status, onClose }: WordDetailSheetProps) {
+export function WordDetailSheet({
+  word,
+  detail,
+  loading,
+  status,
+  onClose,
+  onSavePersonalMeaning,
+  onRestoreDefaultMeaning
+}: WordDetailSheetProps) {
   const closeRef = useRef<HTMLButtonElement>(null)
+  const editorRef = useRef<HTMLTextAreaElement>(null)
   const previousFocus = useRef<HTMLElement | null>(null)
+  const [editingMeaning, setEditingMeaning] = useState(false)
+  const [meaningDraft, setMeaningDraft] = useState('')
 
   useEffect(() => {
     previousFocus.current = document.activeElement instanceof HTMLElement ? document.activeElement : null
@@ -29,6 +43,10 @@ export function WordDetailSheet({ word, detail, loading, status, onClose }: Word
     }
   }, [onClose])
 
+  useEffect(() => {
+    if (editingMeaning) editorRef.current?.focus()
+  }, [editingMeaning])
+
   const relatedGroups = detail?.relatedWords?.reduce<Record<string, RelatedWordEntry[]>>((groups, item) => {
     const group = groups[item.relation] ?? []
     group.push(item)
@@ -37,6 +55,20 @@ export function WordDetailSheet({ word, detail, loading, status, onClose }: Word
   }, {})
   const collocationSourcePage = detail?.collocations[0]?.sourcePage ?? detail?.redbook?.sourcePage
   const studyMeaning = studyMeaningFor(word)
+  const hasPersonalMeaning = Boolean(word.personalMeaning?.trim())
+  const defaultMeaning = word.studyMeaning?.trim() || word.meaning
+
+  const beginMeaningEdit = () => {
+    setMeaningDraft(studyMeaning)
+    setEditingMeaning(true)
+  }
+
+  const saveMeaning = () => {
+    const meaning = normalizePersonalMeaning(meaningDraft)
+    if (!meaning) return
+    onSavePersonalMeaning(word.id, meaning)
+    setEditingMeaning(false)
+  }
 
   return (
     <div className="detail-backdrop" role="presentation" onMouseDown={(event) => {
@@ -60,9 +92,55 @@ export function WordDetailSheet({ word, detail, loading, status, onClose }: Word
           </button>
         </header>
         <div className="detail-section meaning-section">
-          <h3>校订学习释义</h3>
+          <h3>{hasPersonalMeaning ? '我的学习释义' : '校订学习释义'}</h3>
           <p className="detail-meaning">{studyMeaning}</p>
-          <p className="source-page">{studyMeaningSourceLabel(word.studyMeaningStatus)}</p>
+          <p className="source-page">
+            {hasPersonalMeaning ? '个人校订 · 仅保存在本机和备份中' : studyMeaningSourceLabel(word.studyMeaningStatus)}
+          </p>
+          {editingMeaning ? (
+            <div className="meaning-editor">
+              <label htmlFor={`personal-meaning-${word.id}`}>我认可的学习释义</label>
+              <textarea
+                ref={editorRef}
+                id={`personal-meaning-${word.id}`}
+                value={meaningDraft}
+                maxLength={MAX_PERSONAL_MEANING_LENGTH}
+                rows={3}
+                onChange={(event) => setMeaningDraft(event.target.value)}
+              />
+              <div className="meaning-editor-meta">
+                <small>把最基础、最常见的意思放在最前面。</small>
+                <span>{meaningDraft.length}/{MAX_PERSONAL_MEANING_LENGTH}</span>
+              </div>
+              <div className="meaning-editor-actions">
+                <button type="button" onClick={() => setEditingMeaning(false)}>取消</button>
+                <button
+                  className="solid"
+                  type="button"
+                  disabled={!normalizePersonalMeaning(meaningDraft)}
+                  onClick={saveMeaning}
+                >保存释义</button>
+              </div>
+            </div>
+          ) : (
+            <div className="meaning-actions">
+              <button type="button" onClick={beginMeaningEdit}>
+                {hasPersonalMeaning ? '修改个人释义' : '校订释义'}
+              </button>
+              {hasPersonalMeaning ? (
+                <button className="restore-meaning" type="button" onClick={() => onRestoreDefaultMeaning(word.id)}>
+                  恢复默认
+                </button>
+              ) : null}
+            </div>
+          )}
+          {hasPersonalMeaning ? (
+            <details className="source-original">
+              <summary>查看默认校订释义</summary>
+              <p>{defaultMeaning}</p>
+              <small>{studyMeaningSourceLabel(word.studyMeaningStatus)}</small>
+            </details>
+          ) : null}
           <details className="source-original">
             <summary>查看原考研词表释义</summary>
             <p>{word.meaning}</p>

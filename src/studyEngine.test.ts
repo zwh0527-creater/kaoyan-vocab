@@ -11,6 +11,7 @@ import {
   migrateV2ToV3,
   migrateV3ToV4,
   nextStudyDayBoundary,
+  restartLearning,
   restoreMastered,
   rolloverToDate,
   roundRemaining,
@@ -200,6 +201,29 @@ describe('study engine v4', () => {
     expect(after.nextRoundQueue).toEqual([2])
     expect(after.dailyBatch).toEqual(originalBatch)
     expect(after.allCompleted).toBe(false)
+  })
+
+  it('restarts every unmastered word while preserving the mastered book', () => {
+    const masteredIds = [42, 1, 300]
+    const learnableIds = ids.filter((id) => !masteredIds.includes(id))
+    const before: StudyStateV4 = {
+      ...createInitialState(learnableIds, 'fingerprint', '2026-07-12'),
+      round: 4,
+      masteredIds
+    }
+
+    const after = restartLearning(before, ids, '2026-07-20')
+
+    expect(after.round).toBe(1)
+    expect(after.sessionDate).toBe('2026-07-20')
+    expect(after.masteredIds).toEqual(masteredIds)
+    expect(after.dailyBatch).toEqual(learnableIds.slice(0, 300))
+    expect(after.currentQueue).toEqual(learnableIds.slice(300))
+    expect(after.nextRoundQueue).toEqual([])
+    expect(after.completedGroups).toBe(0)
+    expect(after.reviewedWordIds).toEqual([])
+    expect(after.pendingMasteredIds).toEqual([])
+    expect(new Set([...after.dailyBatch, ...after.currentQueue])).toEqual(new Set(learnableIds))
   })
 
   it('keeps the next-round queue in corpus order after restored and newly completed words meet', () => {
