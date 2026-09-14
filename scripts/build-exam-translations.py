@@ -17,107 +17,8 @@ from pathlib import Path
 from typing import Callable
 
 
-CURATED_SUBSTRING_TRANSLATIONS = (
-    (
-        "give the commission explicit authority once and for all",
-        "它需要明确赋予委员会权力，一劳永逸地禁止宽带服务商干预其网络上的数据流量，并制定清晰规则，保护互联网的开放与创新。",
-    ),
-    (
-        "may help expand user traffic for all companies concerned",
-        "除了带来收入，其他营销商的存在还会让该网站显得更客观，使企业有机会了解其他公司营销活动的吸引力，并可能帮助所有相关企业扩大用户流量。",
-    ),
-    (
-        "Curbs on business-method claims would be a dramatic about-face",
-        "限制商业方法专利申请将是一次戏剧性的立场逆转，因为正是联邦巡回上诉法院在 1998 年的所谓“道富银行案”判决中引入了这类专利，并批准了一项关于汇集共同基金资产方法的专利。",
-    ),
-    (
-        "made efforts to curb their impact on labor and the environment",
-        "虽然包括推出绿色“环保自觉系列”的 H&M 在内，几家快时尚公司已努力减少其对劳工和环境的影响，但克莱因认为，持久的改变只能由消费者促成。",
-    ),
-    (
-        "really hit home that this is something that has to be protected",
-        "黄石公园历史学家艾丽西亚·墨菲说：“这些可视化资料，尤其是那些照片，让人真切意识到，这里确实是必须保护的地方。”",
-    ),
-    (
-        "executives and headhunters have adhered to the rule",
-        "多年来，高管和猎头一直奉行一条规则：最有吸引力的首席执行官候选人，往往是那些必须从别处挖来的人。",
-    ),
-    (
-        "The traditional rule was it's safer to stay where you are",
-        "一位猎头说：“传统规则是留在原位更稳妥，但如今这一规则已经被彻底颠倒了。”",
-    ),
-    (
-        "forced him to eat his words and stand down",
-        "但接连曝出的尴尬丑闻，以及共和党左翼在近期欧洲议会选举中大受欢迎，迫使他收回前言并辞职。",
-    ),
-    (
-        "bank shares rose and the changes enhance",
-        "然而，银行股价上涨了；这些调整还扩大了某游说团体委婉所称的“管理层运用判断的空间”。",
-    ),
-    (
-        "departed as president of Bank of America in August",
-        "利亚姆·麦吉于 8 月卸任美国银行总裁时，给出的解释出人意料地坦率。",
-    ),
-    (
-        "Bank of England's top economist, Andrew Haldane",
-        "英格兰银行首席经济学家安德鲁·霍尔丹表示，上市公司中的“短期主义”，即追求快速获利的倾向，已经愈演愈烈。",
-    ),
-    (
-        "companies are banking on the halo effect",
-        "它也没有说明，企业在制定公益政策时有多大程度是在押注“光环效应”，而非其他可能的好处。",
-    ),
-    (
-        "The sharp hit to growth predicted around the world and in the UK",
-        "预计全球和英国经济增长将遭受重创，这可能导致我们赖以维持福祉和推动增长的日常公共服务水平下降。",
-    ),
-    (
-        "become a sudden hit in the new world of text-to-image AI generation",
-        "他在文生图人工智能这个新兴领域突然走红。",
-    ),
-    (
-        "we've known what we've known due to artifacts that have survived",
-        "数千年来，我们对过去的认识来自留存至今的文物；而这些文物往往是在其最初创造者疏于照管的情况下保存下来的。",
-    ),
-    (
-        "Beavers build dams and birds make nests",
-        "海狸筑坝，鸟类筑巢。",
-    ),
-    (
-        "go to my CD shelf or boot up my computer",
-        "我只需走到 CD 架前，或者打开电脑，再从 iTunes 下载更多录制好的音乐。",
-    ),
-    (
-        "the industry would get cracking on responding to DNT requests",
-        "2 月，美国联邦贸易委员会与数字广告联盟达成一致：广告行业将立即着手响应“禁止追踪”（DNT）请求。",
-    ),
-    (
-        "The zoology program at my university attracts students",
-        "我校的动物学专业吸引了许多学生；对他们而言，参观动物园是促使其选择生物科学专业的一段关键成长经历。",
-    ),
-    (
-        "The Federal Circuit's action comes in the wake",
-        "此前最高法院接连作出多项判决，缩小了对专利权人的保护范围；联邦巡回上诉法院正是在这一背景下采取了行动。",
-    ),
-    (
-        "The Gutenberg printing press transformed civilisation",
-        "古腾堡印刷机改变文明，靠的并非改变书写本身，而是降低书写成本；若没有纸张这一常被忽视的技术同时大幅降低书写载体的价格，它也难有多大作为。",
-    ),
-    (
-        "Latin phrase 'sapere aude' or 'dare to know'",
-        "这种主动求知、理解既有信息的行为，被拉丁语“sapere aude”（意为“敢于求知”）概括出来；康德在《回答这个问题：什么是启蒙？》一文中使用了这一说法。",
-    ),
-    (
-        "The nail hoard was discovered in 1960",
-        "这批铁钉于 1960 年在一个四米深的坑中被发现，坑上覆盖着两米厚的砾石。",
-    ),
-    (
-        "executives who don't get the nod also may wish to move on",
-        "面对股东压力，董事会会仔细审查接班计划；没有获选的高管也可能因此选择离职。",
-    ),
-    (
-        '"The Heart of the Matter" never gets to the heart of the matter',
-        "遗憾的是，这份耗时两年半完成的《问题的核心》报告始终没有触及真正的核心：顶尖高校所谓自由教育中实际存在的不自由本质。",
-    ),
+CURATED_TRANSLATIONS = json.loads(
+    (Path(__file__).parent / "data" / "exam-translation-overrides.json").read_text(encoding="utf-8")
 )
 
 
@@ -511,10 +412,8 @@ def translate_with_transformers(
 
 
 def curated_translation(text: str) -> str | None:
-    for needle, translation in CURATED_SUBSTRING_TRANSLATIONS:
-        if needle.lower() in text.lower():
-            return translation
-    return None
+    entry = CURATED_TRANSLATIONS.get(text)
+    return entry["translation"] if entry else None
 
 
 def attach_translations(details: list[dict], cache: dict[str, dict[str, str]]) -> list[dict]:
@@ -526,12 +425,12 @@ def attach_translations(details: list[dict], cache: dict[str, dict[str, str]]) -
                 if not translated:
                     continue
                 translated_contexts.append({
-                    **context,
+                    **{key: value for key, value in context.items() if key != "translationQuestion"},
                     "translation": translated["translation"],
                     "translationSource": translated["source"],
                     **(
                         {"translationQuestion": int(translated["question"])}
-                        if translated.get("question")
+                        if translated.get("source") == "official-answer" and translated.get("question")
                         else {}
                     ),
                 })
@@ -644,6 +543,13 @@ def main() -> None:
             chinese_characters = len(re.findall(r"[\u3400-\u9fff]", value.get("translation", "")))
             if english_words and chinese_characters / english_words < args.repair_ratio:
                 del cache[text]
+
+    # Apply shared corrections before computing pending work: reviewed sentences
+    # never need a model, even after --replace-machine or cache deletion.
+    for text in contexts:
+        override = curated_translation(text)
+        if override:
+            cache[text] = {"translation": override, "source": "curated"}
 
     pending = [text for text in contexts if text not in cache]
     print(f"contexts={len(contexts)} pending={len(pending)} official={official_count}", flush=True)

@@ -6,6 +6,8 @@
   "scripts": {
     "prepare:data": "node scripts/split-word-details.mjs",
     "clean:meanings": "node scripts/clean-word-detail-meanings.mjs",
+    "clean:translations": "node scripts/sync-exam-translations.mjs",
+    "audit:translations": "node scripts/audit-exam-translations.mjs --check",
     "predev": "npm run prepare:data",
     "dev": "vite",
     "prebuild": "npm run prepare:data",
