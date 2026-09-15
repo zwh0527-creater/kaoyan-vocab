@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto'
 import { readFile, writeFile } from 'node:fs/promises'
 import { assessCoreMeaning, syllabusExamSense } from './word-detail-quality.mjs'
+import { applyTranslationOverrides, attachTranslation } from './exam-translation-quality.mjs'
 
 function argument(name) {
   const index = process.argv.indexOf(name)
@@ -43,9 +44,9 @@ const selectedRecords = records.filter((record) => {
   const bestHeaderHeight = Math.max(...grouped.map((item) => Number(item.headerHeight ?? 0)))
   return Number(record.headerHeight ?? 0) === bestHeaderHeight
 })
-const examTranslations = examTranslationsPath
+const examTranslations = applyTranslationOverrides(examTranslationsPath
   ? JSON.parse(await readFile(examTranslationsPath, 'utf8'))
-  : {}
+  : {})
 const idsByWord = new Map()
 
 for (const word of words) {
@@ -606,12 +607,7 @@ function applyExamTranslations(item) {
   const contexts = item.contexts.flatMap((context) => {
     const translated = examTranslations[context.text]
     if (!translated) return examTranslationsPath ? [] : [context]
-    return [{
-      ...context,
-      translation: translated.translation,
-      translationSource: translated.source,
-      ...(translated.question ? { translationQuestion: Number(translated.question) } : {})
-    }]
+    return [attachTranslation(context, translated)]
   })
   return {
     ...item,

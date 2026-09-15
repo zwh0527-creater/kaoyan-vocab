@@ -1,12 +1,15 @@
 import { createHash } from 'node:crypto'
 import { readFile, writeFile } from 'node:fs/promises'
 import { assessCoreMeaning, syllabusExamSense } from './word-detail-quality.mjs'
+import { applyTranslationOverrides, attachTranslation } from './exam-translation-quality.mjs'
 
 const wordsPath = process.argv[2] ?? 'src/data/words.json'
 const detailsPath = process.argv[3] ?? 'src/data/word-details.json'
 const metaPath = process.argv[4] ?? 'src/data/word-details-meta.json'
 const studyMeaningsPath = process.argv[5] ?? 'src/data/study-meanings.json'
 const redbookRecoveriesPath = new URL('./data/redbook-collocation-recoveries.json', import.meta.url)
+const translationsPath = process.argv[6] ?? new URL('./data/exam-translations.json', import.meta.url)
+const translations = applyTranslationOverrides(JSON.parse(await readFile(translationsPath, 'utf8')))
 
 const words = JSON.parse(await readFile(wordsPath, 'utf8'))
 const details = JSON.parse(await readFile(detailsPath, 'utf8'))
@@ -49,13 +52,6 @@ function applyCuratedCorrections(word, detail) {
   const contexts = (nextDetail.exam?.phrases ?? [])
     .flatMap((phrase) => phrase.contexts)
     .filter((context, index, all) => all.findIndex((candidate) => candidate.text === context.text) === index)
-    .map((context) => ({
-      ...context,
-      translation: context.year === 2024
-        ? '监管范围的缩小，对建筑商、采矿经营者以及其他经常与环保规定发生冲突的商业利益方来说，是一次胜利。'
-        : '这种自上而下的时尚业观念早已过时，也与伊丽莎白·克莱因历时三年批判“快时尚”的《Overdressed》一书所描绘的狂热世界格格不入。',
-      translationSource: 'curated'
-    }))
   return {
     ...nextDetail,
     collocations: [
@@ -116,6 +112,13 @@ const cleanedDetails = details.flatMap((detail) => {
   }
 
   const curated = applyCuratedCorrections(word, cleaned)
+  for (const phrase of curated.exam?.phrases ?? []) {
+    phrase.contexts = phrase.contexts.map((context) => {
+      const translated = translations[context.text]
+      if (!translated) throw new Error(`Missing translation: ${context.text}`)
+      return attachTranslation(context, translated)
+    })
+  }
   const hasContent = curated.exam || curated.redbook || curated.collocations.length ||
     curated.examples?.length || curated.relatedWords?.length
   return hasContent ? [curated] : []
@@ -144,6 +147,7 @@ meta.fingerprint = createHash('sha256').update(serialized).digest('hex')
 
 await writeFile(detailsPath, `${JSON.stringify(cleanedDetails, null, 2)}\n`)
 await writeFile(metaPath, `${JSON.stringify(meta, null, 2)}\n`)
+await writeFile(translationsPath, `${JSON.stringify(translations)}\n`)
 
 console.log(JSON.stringify({
   before: details.length,

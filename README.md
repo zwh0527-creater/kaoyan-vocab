@@ -31,6 +31,19 @@ npm test
 npm run build
 ```
 
+## 真题译文校订
+
+`scripts/data/exam-translation-overrides.json` 按完整英文原句保存校订和原因；标为“校订译文”，不会冒充官方答案。新增校订后运行 `npm run clean:translations`，会同步翻译缓存、所有词条引用和详情指纹，不改词义与学习数据；开发或构建时会重新生成详情分块。Node 与 Python 数据生成器读取同一份校订表，避免重新生成时退回旧机器译文。仅官方译文保留答案题号。
+
+```bash
+node scripts/audit-exam-translations.mjs --check
+node scripts/audit-exam-translations.mjs --output /tmp/exam-translation-review.json
+```
+
+审查队列按原句去重，保留年份、词条和短语定位。优先级 0 是来源不一致、缺失译文或残留题号等数据错误；1 是疑似漏译、译文未结束或 OCR 问题；2 是其余机器译文；3 是未触发规则的非机器译文。字数比和标点仅用于排序，需要逐句核对，不能据此批量认定译文正确或错误。`--check` 只在出现优先级 0 时失败。
+
+本轮统一已有校订，并修复 `day-jobs` 和核电站事故句的漏译。剩余机器译文按队列继续审查；首屏性能另行测量，当前不调整离线缓存策略。
+
 ## 发布
 
 推送到 `main` 后，GitHub Actions 会运行测试、构建 `dist/`，并发布到 GitHub Pages。仓库公开可访问，但不会内置原 PDF，也不接入分析服务。
