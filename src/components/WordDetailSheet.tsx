@@ -57,6 +57,9 @@ export function WordDetailSheet({
   const studyMeaning = studyMeaningFor(word)
   const hasPersonalMeaning = Boolean(word.personalMeaning?.trim())
   const defaultMeaning = word.studyMeaning?.trim() || word.meaning
+  const examContexts = detail?.exam?.phrases.flatMap((phrase) => phrase.contexts) ?? []
+  const examYears = [...new Set(examContexts.map((context) => context.year))].sort((a, b) => a - b)
+  const examSampleCount = new Set(examContexts.map((context) => `${context.year}:${context.text}`)).size
 
   const beginMeaningEdit = () => {
     setMeaningDraft(studyMeaning)
@@ -151,22 +154,23 @@ export function WordDetailSheet({
         {detail?.exam ? (
           <div className="detail-section exam-section">
             <h3>英语一真题</h3>
-            <p className="exam-summary">2010—2025 真题正文中检出 {detail.exam.count} 处</p>
-            <p className="exam-years">涉及年份：{detail.exam.years.join('、')}</p>
-            <p className="exam-note">“官方译文”来自本机答案资料；“校订译文”经过人工核对；其余辅助翻译由本地模型生成，只帮助理解上下文，不作为单词释义依据，遇到生硬处以英文原句为准。</p>
+            <p className="exam-summary">收录 {examSampleCount} 条真题语境</p>
+            <p className="exam-years">例句年份：{examYears.join('、')}</p>
+            <p className="exam-note">“官方译文”来自与原句对应的本机答案资料；“校订译文”由 AI 对照原句逐条校订，用于理解上下文，不作为单词释义依据。</p>
             {detail.exam.phrases.length ? (
               <ol className="exam-phrase-list">
                 {detail.exam.phrases.map((item) => (
                   <li key={item.phrase}>
                     <div className="exam-phrase-heading">
                       <strong>{item.phrase}</strong>
-                      <span>{item.years.join('、')} 年{item.count > 1 ? ` · ${item.count} 处` : ''}</span>
+                      <span>{[...new Set(item.contexts.map((context) => context.year))].sort((a, b) => a - b).join('、')} 年</span>
                     </div>
                     {item.usage ? <p className="exam-usage"><b>用法</b>{item.usage}</p> : null}
                     {item.contexts.map((context) => (
                       <blockquote className="exam-context" key={`${context.year}-${context.text}`}>
-                        <small>{context.year} 年真题语境</small>
+                        <small>{context.year} 年真题语境{context.sourcePages?.length ? ` · 合集 PDF 第 ${context.sourcePages.join('、')} 页` : ''}</small>
                         <p className="exam-context-original">{context.text}</p>
+                        {context.sourceNote ? <p className="exam-note">原文说明：{context.sourceNote}</p> : null}
                         {context.translation ? (
                           <p className="exam-context-translation">
                             <b>{context.translationSource === 'official-answer'

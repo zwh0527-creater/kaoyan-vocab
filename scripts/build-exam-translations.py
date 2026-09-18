@@ -20,6 +20,30 @@ from typing import Callable
 CURATED_TRANSLATIONS = json.loads(
     (Path(__file__).parent / "data" / "exam-translation-overrides.json").read_text(encoding="utf-8")
 )
+CONTEXT_REVIEW = json.loads(
+    (Path(__file__).parent / "data" / "exam-context-review.json").read_text(encoding="utf-8")
+)
+REVIEWS_BY_TEXT = {}
+for entry in CONTEXT_REVIEW["entries"]:
+    REVIEWS_BY_TEXT[entry["originalText"]] = entry
+    if entry.get("text"):
+        REVIEWS_BY_TEXT[entry["text"]] = entry
+
+
+def review_context(context: dict) -> dict | None:
+    review = REVIEWS_BY_TEXT.get(context.get("text"))
+    if not review:
+        return dict(context)
+    if review["decision"] == "exclude":
+        return None
+    result = {**context, "text": review.get("text", context["text"])}
+    if len(review.get("sourceYears", [])) == 1:
+        result["year"] = review["sourceYears"][0]
+    if review.get("sourcePages"):
+        result["sourcePages"] = review["sourcePages"]
+    if review.get("sourceNote"):
+        result["sourceNote"] = review["sourceNote"]
+    return result
 
 
 OCR_LITERAL_REPLACEMENTS = {
@@ -122,6 +146,9 @@ def clean_translation(value: str) -> str:
 
 
 def normalize_context(value: str) -> str:
+    review = REVIEWS_BY_TEXT.get(value)
+    if review and review["decision"] != "exclude":
+        return review.get("text", value)
     text = str(value or "").replace("\u00a0", " ").replace("、", ",")
     text = text.replace("“", '"').replace("”", '"').replace("‘", "'").replace("’", "'")
     for source, target in OCR_LITERAL_REPLACEMENTS.items():
@@ -259,10 +286,16 @@ def apply_explicit_official_answers(
     for entry in details:
         for phrase in entry.get("exam", {}).get("phrases", []):
             for context in phrase.get("contexts", []):
+                review = REVIEWS_BY_TEXT.get(context["text"])
+                if review and not review.get("verifiedOfficial"):
+                    continue
                 marker = re.match(r"^\s*['\"]?\s*\(\s*(4[6-9]|50)\s*\)", context["text"])
                 if not marker:
                     continue
-                key = (context.get("year"), int(marker.group(1)))
+                reviewed = review_context(context)
+                if reviewed is None:
+                    continue
+                key = (reviewed.get("year"), int(marker.group(1)))
                 if key not in answers:
                     continue
                 normalized = normalize_context(context["text"])
@@ -281,6 +314,8 @@ def clean_details_and_cache(
 ) -> tuple[list[dict], dict[str, dict[str, str]], dict[str, int]]:
     remapped_cache: dict[str, dict[str, str]] = {}
     for original, value in existing_cache.items():
+        if review_context({"text": original}) is None:
+            continue
         normalized = normalize_context(original)
         current = remapped_cache.get(normalized)
         if current is None or value.get("source") in {"official-answer", "curated"}:
@@ -299,10 +334,15 @@ def clean_details_and_cache(
             seen_contexts: set[str] = set()
             for context in phrase.get("contexts", []):
                 stats["seen"] += 1
+                reviewed = review_context(context)
+                if reviewed is None:
+                    stats["filtered"] += 1
+                    continue
+                context = reviewed
                 normalized = normalize_context(context.get("text", ""))
                 if normalized != context.get("text"):
                     stats["normalized"] += 1
-                if not reliable_context(normalized):
+                if normalized not in REVIEWS_BY_TEXT and not reliable_context(normalized):
                     stats["filtered"] += 1
                     continue
                 if normalized in seen_contexts:
@@ -312,6 +352,8 @@ def clean_details_and_cache(
                 contexts.append({
                     "text": normalized,
                     "year": context["year"],
+                    **({"sourcePages": context["sourcePages"]} if context.get("sourcePages") else {}),
+                    **({"sourceNote": context["sourceNote"]} if context.get("sourceNote") else {}),
                     **(
                         {"translationQuestion": context["translationQuestion"]}
                         if context.get("translationQuestion")
@@ -547,6 +589,10 @@ def main() -> None:
     # Apply shared corrections before computing pending work: reviewed sentences
     # never need a model, even after --replace-machine or cache deletion.
     for text in contexts:
+        review = REVIEWS_BY_TEXT.get(text)
+        if review and review.get("verifiedOfficial"):
+            cache[text] = {"translation": review["answerTranslation"], "source": "official-answer",
+                           "question": review["answerQuestion"]}
         override = curated_translation(text)
         if override:
             cache[text] = {"translation": override, "source": "curated"}
@@ -583,6 +629,10 @@ def main() -> None:
                 "source": "curated" if curated else "local-machine",
             }
     for text in contexts:
+        review = REVIEWS_BY_TEXT.get(text)
+        if review and review.get("verifiedOfficial"):
+            cache[text] = {"translation": review["answerTranslation"], "source": "official-answer",
+                           "question": review["answerQuestion"]}
         override = curated_translation(text)
         if override:
             cache[text] = {"translation": override, "source": "curated"}

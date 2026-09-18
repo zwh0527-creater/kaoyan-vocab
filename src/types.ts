@@ -155,6 +155,8 @@ export interface ExamPhraseEntry {
     translation?: string
     translationSource?: 'official-answer' | 'curated' | 'local-machine'
     translationQuestion?: number
+    sourcePages?: number[]
+    sourceNote?: string
   }>
 }
 
