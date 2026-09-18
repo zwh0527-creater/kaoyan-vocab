@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto'
 import { readFile, writeFile } from 'node:fs/promises'
 import { assessCoreMeaning, syllabusExamSense } from './word-detail-quality.mjs'
-import { applyTranslationOverrides, attachTranslation } from './exam-translation-quality.mjs'
+import { applyTranslationOverrides, attachTranslation, reviewContext, pruneEmptyExamEntries } from './exam-translation-quality.mjs'
 
 const wordsPath = process.argv[2] ?? 'src/data/words.json'
 const detailsPath = process.argv[3] ?? 'src/data/word-details.json'
@@ -113,12 +113,15 @@ const cleanedDetails = details.flatMap((detail) => {
 
   const curated = applyCuratedCorrections(word, cleaned)
   for (const phrase of curated.exam?.phrases ?? []) {
-    phrase.contexts = phrase.contexts.map((context) => {
-      const translated = translations[context.text]
-      if (!translated) throw new Error(`Missing translation: ${context.text}`)
-      return attachTranslation(context, translated)
+    phrase.contexts = phrase.contexts.flatMap((context) => {
+      const reviewed = reviewContext(context)
+      if (!reviewed) return []
+      const translated = translations[reviewed.text]
+      if (!translated) throw new Error(`Missing translation: ${reviewed.text}`)
+      return [attachTranslation(reviewed, translated)]
     })
   }
+  pruneEmptyExamEntries([curated])
   const hasContent = curated.exam || curated.redbook || curated.collocations.length ||
     curated.examples?.length || curated.relatedWords?.length
   return hasContent ? [curated] : []

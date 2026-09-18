@@ -275,7 +275,8 @@ describe('optional word details', () => {
     expect(translationFor('expand user traffic')).toContain('用户流量')
     expect(translationFor('really hit home')).toContain('真切意识到')
     expect(translationFor('one headhunter')).toContain('猎头')
-    expect(translationFor('eat his words and stand down')).toContain('收回前言并辞职')
+    // The subject is King Juan Carlos, so stand down means abdicate here.
+    expect(translationFor('eat his words and stand down')).toContain('收回前言并退位')
     expect(translationFor("Latin phrase 'sapere aude'")).toContain('康德')
   })
 })

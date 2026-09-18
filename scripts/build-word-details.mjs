@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto'
 import { readFile, writeFile } from 'node:fs/promises'
 import { assessCoreMeaning, syllabusExamSense } from './word-detail-quality.mjs'
-import { applyTranslationOverrides, attachTranslation } from './exam-translation-quality.mjs'
+import { applyTranslationOverrides, attachTranslation, reviewContext, examYearFromPage, pruneEmptyExamEntries } from './exam-translation-quality.mjs'
 
 function argument(name) {
   const index = process.argv.indexOf(name)
@@ -457,8 +457,8 @@ function buildExamEvidence(rawText) {
   let currentYear = null
 
   for (const page of rawText.split('\f')) {
-    const yearMatch = page.match(/(20(?:1\d|2[0-5]))\s*年/)
-    if (yearMatch) currentYear = Number(yearMatch[1])
+    const pageYear = examYearFromPage(page)
+    if (pageYear) currentYear = pageYear
     if (!currentYear) continue
 
     const fragments = page
@@ -605,9 +605,11 @@ function examUsageHint(wordKey, phrase, context) {
 
 function applyExamTranslations(item) {
   const contexts = item.contexts.flatMap((context) => {
-    const translated = examTranslations[context.text]
-    if (!translated) return examTranslationsPath ? [] : [context]
-    return [attachTranslation(context, translated)]
+    const reviewed = reviewContext(context)
+    if (!reviewed) return []
+    const translated = examTranslations[reviewed.text]
+    if (!translated) return examTranslationsPath ? [] : [reviewed]
+    return [attachTranslation(reviewed, translated)]
   })
   return {
     ...item,
@@ -674,7 +676,7 @@ for (const record of selectedRecords) {
 }
 
 const examEvidenceByWord = buildExamEvidence(examText)
-const details = []
+let details = []
 
 for (const word of words) {
   const key = word.word.toLowerCase()
@@ -710,6 +712,7 @@ for (const word of words) {
   })
 }
 
+details = pruneEmptyExamEntries(details)
 const serialized = JSON.stringify(details)
 const fingerprint = createHash('sha256').update(serialized).digest('hex')
 const coreMeaningCount = details.filter((detail) => detail.coreMeaning).length
